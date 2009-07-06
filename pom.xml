@@ -4,14 +4,14 @@
    <parent>
       <groupId>org.jvnet.hudson.plugins</groupId>
       <artifactId>plugin</artifactId>
-      <version>1.310</version>
+      <version>1.314</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <artifactId>cppcheck</artifactId>
    <packaging>hpi</packaging>
    <name>Hudson CppCheck Plug-in</name>
-   <version>0.3-SNAPSHOT</version>
+   <version>0.1-SNAPSHOT</version>
    <url>http://wiki.hudson-ci.org/display/HUDSON/Cppcheck+Plugin</url>
 
    <dependencies>
