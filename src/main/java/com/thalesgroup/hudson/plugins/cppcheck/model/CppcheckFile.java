@@ -33,6 +33,8 @@ public class CppcheckFile implements Serializable{
 	
 	private int lineNumber;
 	
+	private String severity;
+	
 	private String cppCheckId;
 	
 	private String message;
@@ -67,6 +69,14 @@ public class CppcheckFile implements Serializable{
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(String severity) {
+		this.severity = severity;
 	}
 	
 	

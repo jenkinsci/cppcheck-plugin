@@ -23,5 +23,5 @@
 *******************************************************************************/
 -->
 <div>
-  This plugin parses Cppcheck output files to produce project and build reports.
+  This plug-in collects the <a href="http://cppcheck.wiki.sourceforge.net/">Cppcheck</a> analysis results of the project and visualizes the found errors.
 </div>

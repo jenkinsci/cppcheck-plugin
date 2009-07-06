@@ -24,32 +24,26 @@
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-  xmlns:i="jelly:fmt" xmlns:local="local">
+  xmlns:i="jelly:fmt" xmlns:g="/jelly/cppcheck" xmlns:local="local">
   <st:header name="Content-Type" value="text/html;charset=UTF-8" />
- 
   <table class="pane sortable" id="files">
     <tr>
       <td class="pane-header">Filename</td>
       <td class="pane-header" style="width:2em">LineNumber</td>
       <td class="pane-header" style="width:2em">CppCheckId</td>
+      <td class="pane-header" style="width:2em">Severity</td>
       <td class="pane-header" style="width:60%">Message</td>
     </tr>
-    
-
-        <tbody>
-    
+    <tbody>
         <j:forEach var="elt" items="${it.report.errors}">    
 	        <tr>
-	          <td class="pane">${elt.filename}</td>
-	          <td class="pane">${elt.lineNumber}</td>
-	          <td class="pane">${elt.cppCheckId}</td>
-	          <td class="pane">${elt.message}</td>
+	          <g:format value="${elt.filename}" severity="${elt.severity}"/>
+	          <g:format value="${elt.lineNumber}" severity="${elt.severity}"/>
+	          <g:format value="${elt.cppCheckId}" severity="${elt.severity}"/>
+	          <g:format value="${elt.severity}" severity="${elt.severity}"/>
+	          <g:format value="${elt.message}" severity="${elt.severity}"/>
 	        </tr>
 		</j:forEach>
-    </tbody>
-    
- 
+    </tbody>    
   </table>
-
-
 </j:jelly>

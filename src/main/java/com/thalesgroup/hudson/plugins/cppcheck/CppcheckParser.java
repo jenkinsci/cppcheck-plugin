@@ -70,18 +70,24 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
 			throw new AbortException("Parsing file error");
 		}
 		
-		List errors = new ArrayList();
-		CppcheckFile cppcheckFile;
-		
 		Element results = document.getRootElement();
-		List list = results.getChildren();		
+		List list = results.getChildren();	
+		
+		List<CppcheckFile> errors = new ArrayList<CppcheckFile>();		
+		CppcheckFile cppcheckFile;
 		for (int i = 0; i < list.size(); i++) {
 			Element elt = (Element) list.get(i);
 			
 			cppcheckFile = new CppcheckFile();
 			cppcheckFile.setFilename(elt.getAttributeValue("file"));
+			//line can be optional
+			String lineAtr=null;
+			if ((lineAtr=elt.getAttributeValue("line"))!=null){
+				cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+			}
+			
 			cppcheckFile.setCppCheckId(elt.getAttributeValue("id"));
-			cppcheckFile.setLineNumber(Integer.parseInt(elt.getAttributeValue("line")));
+			cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
 			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
 			errors.add(cppcheckFile);
 		}

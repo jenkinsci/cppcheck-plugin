@@ -1,0 +1,21 @@
+
+<j:jelly xmlns:j="jelly:core"  xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <x:element name="format">
+		<x:attribute name="value"></x:attribute>
+		<x:attribute name="severity"></x:attribute>
+		<j:if test="${value==null}">
+			<td class="pane"></td>
+		</j:if>
+		<j:if test="${value=='0'}">
+			<td class="pane"></td>
+		</j:if>		
+		<j:if test="${!(value==null) and !(value=='0')}">
+			<j:if test="${severity=='all'}">
+				<td class="pane"><b>${value}</b></td>
+			</j:if>
+			<j:if test="${! (severity=='all')}">
+				<td class="pane">${value}</td>
+			</j:if>
+		</j:if>
+    </x:element>
+</j:jelly>

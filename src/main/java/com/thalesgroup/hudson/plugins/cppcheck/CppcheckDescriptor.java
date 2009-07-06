@@ -46,4 +46,19 @@ public class CppcheckDescriptor extends Descriptor<Publisher> {
     public String getDisplayName() {
         return "Publish Cppcheck test result report";
     }
+    
+    @Override
+    public final String getHelpFile() {
+        return getPluginRoot() + "help.html";
+    }
+
+    /**
+     * Returns the root folder of this plug-in.
+     *
+     * @return the name of the root folder of this plug-in
+     */
+    public String getPluginRoot() {
+        return "/plugin/cppcheck/";
+    }
+
 }

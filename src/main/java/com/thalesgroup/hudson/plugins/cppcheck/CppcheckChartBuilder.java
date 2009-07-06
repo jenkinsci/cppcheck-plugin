@@ -51,7 +51,7 @@ public class CppcheckChartBuilder {
     }
 
     public static JFreeChart buildChart(CppcheckBuildAction action){
-        JFreeChart chart = ChartFactory.createStackedAreaChart(null, null, "Number of modules", buildDataset(action), PlotOrientation.VERTICAL, true, false, true);
+        JFreeChart chart = ChartFactory.createStackedAreaChart(null, null, "Number of errors", buildDataset(action), PlotOrientation.VERTICAL, true, false, true);
 
         chart.setBackgroundPaint(Color.white);
 
