@@ -32,15 +32,53 @@ public class CppcheckReport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<CppcheckFile> errors;
+    private List<CppcheckFile> everyErrors;
 
-	public List<CppcheckFile> getErrors() {
-		return errors;
-	}
+	private List<CppcheckFile> allErrors;
+    
+    private List<CppcheckFile> styleErrors;
 
-	public void setErrors(List<CppcheckFile> errors) {
-		this.errors = errors;
-	}
-	
-	
+    private List<CppcheckFile> allStyleErrors;
+
+    private List<CppcheckFile> errorErrors;
+
+    public List<CppcheckFile> getEveryErrors() {
+        return everyErrors;
+    }
+
+    public List<CppcheckFile> getAllErrors() {
+        return allErrors;
+    }
+
+    public List<CppcheckFile> getStyleErrors() {
+        return styleErrors;
+    }
+
+    public List<CppcheckFile> getAllStyleErrors() {
+        return allStyleErrors;
+    }
+
+    public List<CppcheckFile> getErrorErrors() {
+        return errorErrors;
+    }
+
+    public void setEveryErrors(List<CppcheckFile> everyErrors) {
+        this.everyErrors = everyErrors;
+    }
+
+    public void setAllErrors(List<CppcheckFile> allErrors) {
+        this.allErrors = allErrors;
+    }
+
+    public void setStyleErrors(List<CppcheckFile> styleErrors) {
+        this.styleErrors = styleErrors;
+    }
+
+    public void setAllStyleErrors(List<CppcheckFile> allStyleErrors) {
+        this.allStyleErrors = allStyleErrors;
+    }
+
+    public void setErrorErrors(List<CppcheckFile> errorErrors) {
+        this.errorErrors = errorErrors;
+    }
 }

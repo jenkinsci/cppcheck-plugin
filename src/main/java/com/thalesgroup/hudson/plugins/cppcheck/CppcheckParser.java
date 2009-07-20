@@ -73,7 +73,13 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
 		Element results = document.getRootElement();
 		List list = results.getChildren();	
 		
-		List<CppcheckFile> errors = new ArrayList<CppcheckFile>();		
+        List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
+	    List<CppcheckFile> allErrors= new ArrayList<CppcheckFile>();
+        List<CppcheckFile> styleErrors= new ArrayList<CppcheckFile>();
+        List<CppcheckFile> allStyleErrors= new ArrayList<CppcheckFile>();
+        List<CppcheckFile> errorErrors= new ArrayList<CppcheckFile>();        
+
+
 		CppcheckFile cppcheckFile;
 		for (int i = 0; i < list.size(); i++) {
 			Element elt = (Element) list.get(i);
@@ -89,10 +95,28 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
 			cppcheckFile.setCppCheckId(elt.getAttributeValue("id"));
 			cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
 			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
-			errors.add(cppcheckFile);
+
+            if ("all".equals(cppcheckFile.getSeverity())){
+                allErrors.add(cppcheckFile);
+            }
+            else if ("style".equals(cppcheckFile.getSeverity())){
+                styleErrors.add(cppcheckFile);
+            }
+            else if ("all style".equals(cppcheckFile.getSeverity())){
+                allStyleErrors.add(cppcheckFile);
+            }
+            else if ("error".equals(cppcheckFile.getSeverity())){
+                errorErrors.add(cppcheckFile);
+            }
+			everyErrors.add(cppcheckFile);
 		}
 
-		cppCheckReport.setErrors(errors);
+		cppCheckReport.setEveryErrors(everyErrors);
+        cppCheckReport.setAllErrors(allErrors);
+        cppCheckReport.setStyleErrors(styleErrors);
+        cppCheckReport.setAllStyleErrors(allStyleErrors);
+        cppCheckReport.setErrorErrors(errorErrors);
+
 		return cppCheckReport;
 	}
 

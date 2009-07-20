@@ -58,17 +58,6 @@ public class CppcheckProjectAction implements Action, Serializable {
         return URL_NAME;
     }
     
-    /**
-     *
-     * Redirects the index page to the last result.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @throws IOException
-     *             in case of an error
-     */
     public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
         AbstractBuild<?, ?> build = getLastFinishedBuild();
         if (build != null) {
@@ -76,12 +65,6 @@ public class CppcheckProjectAction implements Action, Serializable {
         }
     }
 
-    /**
-     * Returns the last finished build.
-     *
-     * @return the last finished build or <code>null</code> if there is no
-     *         such build
-     */
     public AbstractBuild<?, ?> getLastFinishedBuild() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();
         while (lastBuild != null && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
@@ -101,17 +84,7 @@ public class CppcheckProjectAction implements Action, Serializable {
         return false;
     }
 
-    /**
-     * Display the trend map. Delegates to the the associated
-     * {@link ResultAction}.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @throws IOException
-     *             in case of an error
-     */
+
     public void doTrendMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
         AbstractBuild<?,?> lastBuild = this.getLastFinishedBuild();
         CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
@@ -124,18 +97,6 @@ public class CppcheckProjectAction implements Action, Serializable {
                 CHART_HEIGHT);
     }
 
-    /**
-     * Display the trend graph. Delegates to the the associated
-     * {@link ResultAction}.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @throws IOException
-     *             in case of an error in
-     *             {@link ResultAction#doGraph(StaplerRequest, StaplerResponse, int)}
-     */
     public void doTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
         AbstractBuild<?,?> lastBuild = this.getLastFinishedBuild();
         CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);

@@ -43,7 +43,6 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleInsets;
 
 
-
 public class CppcheckChartBuilder {
 
     private CppcheckChartBuilder(){
@@ -92,17 +91,15 @@ public class CppcheckChartBuilder {
             if(result != null){
                 CppcheckReport report = result.getReport();
                 NumberOnlyBuildLabel buildLabel = new NumberOnlyBuildLabel(action.getBuild());
-                if (report.getErrors() ==null)
-                	builder.add(0, "Number of module", buildLabel);
+                if (report.getEveryErrors() ==null)
+                	builder.add(0, "Number of errors", buildLabel);
                 else
-                	builder.add(report.getErrors().size(), "Number of errors", buildLabel);
+                	builder.add(report.getEveryErrors().size(), "Number of errors", buildLabel);
             }
             action = action.getPreviousAction();
         }while(action != null);
 
         return builder.build();
     }
-    
 
-    
 }

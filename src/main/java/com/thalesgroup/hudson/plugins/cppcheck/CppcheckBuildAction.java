@@ -23,22 +23,25 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
+import hudson.model.*;
+
 import java.io.Serializable;
 import org.kohsuke.stapler.StaplerProxy;
+import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.*;
 
 
-public class CppcheckBuildAction implements Action, Serializable, StaplerProxy {
+public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, HealthReportingAction {
 
     public static final String URL_NAME = "cppcheckResult";
 
     private AbstractBuild<?,?> build;
     private CppcheckResult result;
+    private CppcheckHealthReportThresholds cppcheckHealthReportThresholds;
 
-    public CppcheckBuildAction(AbstractBuild<?,?> build, CppcheckResult result){
+    public CppcheckBuildAction(AbstractBuild<?,?> build, CppcheckResult result, CppcheckHealthReportThresholds cppcheckHealthReportThresholds){
         this.build = build;
         this.result = result;
+        this.cppcheckHealthReportThresholds=cppcheckHealthReportThresholds;
     }
 
     public String getIconFileName() {
@@ -99,5 +102,103 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy {
     public Object getTarget() {
         return this.result;
     }
+    
+    public  boolean isHealthyReportEnabled(CppcheckHealthReportThresholds cppcheckHealthReportThresholds) {
+        if (isValid(cppcheckHealthReportThresholds.getHealthy()) && isValid(cppcheckHealthReportThresholds.getUnHealthy())) {
+            int healthyNumber = convert(cppcheckHealthReportThresholds.getHealthy());
+            int unHealthyNumber = convert(cppcheckHealthReportThresholds.getUnHealthy());
+            return unHealthyNumber > healthyNumber;
+        }
+        return false;
+    }
+
+
+    public HealthReport getBuildHealth() {
+        if (cppcheckHealthReportThresholds == null) {
+            // no thresholds => no report
+            return null;
+        }
+
+        if (isHealthyReportEnabled(cppcheckHealthReportThresholds)) {
+            int percentage;
+            int counter =  getNumberErrors(cppcheckHealthReportThresholds.getThresholdLimit(),false);
+            
+            if (counter < convert(cppcheckHealthReportThresholds.getHealthy())) {
+                percentage = 100;
+            }
+            else if (counter > convert(cppcheckHealthReportThresholds.getUnHealthy())) {
+                percentage = 0;
+            }
+            else {
+                percentage = 100 - ((counter - convert(cppcheckHealthReportThresholds.getHealthy())) * 100
+                        / (convert(cppcheckHealthReportThresholds.getUnHealthy()) - convert(cppcheckHealthReportThresholds.getHealthy())));
+            }
+            return new HealthReport(percentage, "Build stability for " + cppcheckHealthReportThresholds.getThresholdLimit() + " severity.");
+        }
+        return null;
+    }
+
+
+    public int getNumberErrors(String thresholdLimit, boolean newError){
+
+        int nbErrors= 0;
+        int nbPreviousError=0;
+        CppcheckResult previousResult=getPreviousResult();
+
+        if ("all".equals(thresholdLimit)){
+            nbErrors= getResult().getReport().getAllErrors().size();
+            if (previousResult!=null){
+                  previousResult.getReport().getAllErrors().size();
+            }
+        }
+        else if ("style".equals(thresholdLimit)){
+            nbErrors= getResult().getReport().getStyleErrors().size();
+            if (previousResult!=null){
+                  previousResult.getReport().getStyleErrors().size();
+            }
+
+        }
+        else if ("all style".equals(thresholdLimit)){
+            nbErrors= getResult().getReport().getAllStyleErrors().size();
+            if (previousResult!=null){
+                  previousResult.getReport().getAllStyleErrors().size();
+            }
+
+        }
+        else if ("error".equals(thresholdLimit)){
+            nbErrors= getResult().getReport().getErrorErrors().size();
+            if (previousResult!=null){
+                  previousResult.getReport().getErrorErrors().size();
+            }
+
+        }
+        else{
+            nbErrors= getResult().getReport().getEveryErrors().size();
+            if (previousResult!=null){
+                  previousResult.getReport().getEveryErrors().size();
+            }
+        }
+
+        if (newError)   {
+            if (previousResult!=null){
+                return nbErrors-nbPreviousError;
+            }
+            else {
+                return 0;
+            }
+        }
+        else
+            return  nbErrors;
+    }
+
+
+    static boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
+        if (errorCount > 0 && isValid(errorThreshold)) {
+            return errorCount > convert(errorThreshold);
+        }
+        return false;
+    }
+
+
 
 }

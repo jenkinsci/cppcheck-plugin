@@ -23,10 +23,14 @@
 *******************************************************************************/
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
 
-	<f:entry title="Cppcheck metric file path">
-		<f:textbox name="metricFilePath" value="${instance.metricFilePath}"/>
-	</f:entry>
+    <f:entry title="Cppcheck results">
+        <f:textbox name="metricFilePath" value="${instance.metricFilePath}"/>
+    </f:entry>
+
+    <f:advanced>
+        <u:thresholds id="cppcheck"/>
+    </f:advanced>
 
 </j:jelly>

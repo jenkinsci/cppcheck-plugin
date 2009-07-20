@@ -79,6 +79,4 @@ public class CppcheckFile implements Serializable{
 		this.severity = severity;
 	}
 	
-	
-	
 }

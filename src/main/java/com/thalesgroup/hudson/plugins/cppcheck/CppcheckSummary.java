@@ -23,8 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-
-
 public class CppcheckSummary {
 
     private CppcheckSummary(){
@@ -41,18 +39,47 @@ public class CppcheckSummary {
     public static String createReportSummaryDetails(CppcheckReport report, CppcheckReport previousReport){
 
     	StringBuilder builder = new StringBuilder();
-  
-    
+
         builder.append("<li>");               
         builder.append("Number of errors :");
-        builder.append(report.getErrors().size());
+        builder.append(report.getEveryErrors().size());
         if(previousReport != null){
-            printDifference(report.getErrors().size(), previousReport.getErrors().size(), builder);
+            printDifference(report.getEveryErrors().size(), previousReport.getEveryErrors().size(), builder);
+        }
+        builder.append("</li>"); 
+
+        builder.append("<li>");
+        builder.append("Number of errors for the severity 'all':");
+        builder.append(report.getAllErrors().size());
+        if(previousReport != null){
+            printDifference(report.getAllErrors().size(), previousReport.getAllErrors().size(), builder);
         }
         builder.append("</li>");
-        
- 
-        
+
+        builder.append("<li>");
+        builder.append("Number of errors for the severity 'style':");
+        builder.append(report.getStyleErrors().size());
+        if(previousReport != null){
+            printDifference(report.getStyleErrors().size(), previousReport.getStyleErrors().size(), builder);
+        }
+        builder.append("</li>");            
+
+        builder.append("<li>");
+        builder.append("Number of errors for the severity 'all style':");
+        builder.append(report.getAllStyleErrors().size());
+        if(previousReport != null){
+            printDifference(report.getAllStyleErrors().size(), previousReport.getAllStyleErrors().size(), builder);
+        }
+        builder.append("</li>");
+
+        builder.append("<li>");
+        builder.append("Number of errors for the severity 'error':");
+        builder.append(report.getErrorErrors().size());
+        if(previousReport != null){
+            printDifference(report.getErrorErrors().size(), previousReport.getErrorErrors().size(), builder);
+        }
+        builder.append("</li>");
+
         return builder.toString();
     }
 

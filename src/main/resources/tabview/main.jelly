@@ -30,7 +30,7 @@
     
       <j:choose>
 		<br/>    	    		
-        <j:when test="${it.report.errors == null}">
+        <j:when test="${it.report.everyErrors == null}">
             <div>Not available</div>
         </j:when>
         <j:otherwise>

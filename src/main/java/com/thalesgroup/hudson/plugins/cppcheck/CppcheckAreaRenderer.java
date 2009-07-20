@@ -39,14 +39,7 @@ public class CppcheckAreaRenderer extends StackedAreaRenderer2 {
     /** Base URL of the graph links. */
     private final String url;
 
-    /**
-     * Creates a new instance of <code>AbstractAreaRenderer</code>.
-     *
-     * @param url
-     *            base URL of the graph links
-     * @param toolTipProvider
-     *            tooltip provider for the clickable map
-     */
+
     public CppcheckAreaRenderer(final String url) {
         super();
         this.url = "/" + url + "/";

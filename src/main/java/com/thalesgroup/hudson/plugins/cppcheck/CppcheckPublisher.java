@@ -25,36 +25,59 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Descriptor;
-import hudson.model.Result;
+import hudson.Extension;
+import hudson.matrix.MatrixProject;
+import hudson.model.*;
+import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Serializable;
+
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
-
-public class CppcheckPublisher extends Publisher implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-
-	public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
+public class CppcheckPublisher extends Publisher {
 
     private final String metricFilePath;
-    
-    public Descriptor<Publisher> getDescriptor() {
+
+    private final String threshold;
+
+    private final String newThreshold;
+
+    private final String failureThreshold;
+
+    private final String newFailureThreshold;
+
+    private final String healthy;
+
+    private final String unHealthy;
+
+    private final String thresholdLimit;
+
+    @Override
+    public CppcheckDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
-    
+
     @DataBoundConstructor
-    public CppcheckPublisher(String metricFilePath){
+    public CppcheckPublisher(final String metricFilePath,
+                               final String threshold,
+                               final String newThreshold,
+                               final String failureThreshold,
+                               final String newFailureThreshold,
+                               final String healthy,
+                               final String unHealthy,
+                               final String thresholdLimit) {
+
         this.metricFilePath = metricFilePath;
+        this.threshold=threshold;
+        this.newFailureThreshold=newFailureThreshold;
+        this.newThreshold=newThreshold;
+        this.failureThreshold=failureThreshold;
+        this.healthy=healthy;
+        this.unHealthy=unHealthy;
+        this.thresholdLimit=thresholdLimit;
     }
 
     @Override
@@ -92,19 +115,83 @@ public class CppcheckPublisher extends Publisher implements Serializable{
                 return false;
             }
 
+            CppcheckHealthReportThresholds cppcheckHealthReportThresholds=
+                 new CppcheckHealthReportThresholds(threshold,newThreshold,failureThreshold,newFailureThreshold,healthy,unHealthy, thresholdLimit);
+
             CppcheckResult result = new CppcheckResult(report, build);
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result);
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckHealthReportThresholds);
             build.addAction(buildAction);
-            
+
+
+            Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
+                   logger, buildAction.getNumberErrors(thresholdLimit,false), buildAction.getNumberErrors(thresholdLimit,true),cppcheckHealthReportThresholds);
+
+            if (buildResult != Result.SUCCESS) {
+                build.setResult(buildResult);
+            }
+
             listener.getLogger().println("End Processing cppcheck results");
         }
         return true;
+    }
+
+    @Extension    
+    public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
+
+    public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
+
+        public CppcheckDescriptor() {
+            super(CppcheckPublisher.class);
+        }
+               
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return FreeStyleProject.class.isAssignableFrom(jobType) || MatrixProject.class.isAssignableFrom(jobType);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "Publish Cppcheck test result report";
+        }
+
+        @Override
+        public final String getHelpFile() {
+            return getPluginRoot() + "help.html";
+        }
+
+        public String getPluginRoot() {
+            return "/plugin/cppcheck/";
+        }
     }
 
 	public String getMetricFilePath() {
 		return metricFilePath;
 	}
 
+    public String getThreshold() {
+        return threshold;
+    }
 
-    
+    public String getNewThreshold() {
+        return newThreshold;
+    }
+
+    public String getFailureThreshold() {
+        return failureThreshold;
+    }
+
+    public String getNewFailureThreshold() {
+        return newFailureThreshold;
+    }
+
+    public String getHealthy() {
+        return healthy;
+    }
+
+    public String getUnHealthy() {
+        return unHealthy;
+    }
+
+    public String getThresholdLimit() {
+        return thresholdLimit;
+    }
 }
