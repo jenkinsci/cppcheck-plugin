@@ -29,7 +29,9 @@ public class CppcheckFile implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private String filename;
+	private Integer key;
+	
+	private String fileName;
 	
 	private int lineNumber;
 	
@@ -39,12 +41,12 @@ public class CppcheckFile implements Serializable{
 	
 	private String message;
 
-	public String getFilename() {
-		return filename;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setFileName(String filename) {
+		this.fileName = filename;
 	}
 
 	public int getLineNumber() {
@@ -78,5 +80,15 @@ public class CppcheckFile implements Serializable{
 	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
+
+	public Integer getKey() {
+		return key;
+	}
+
+	public void setKey(Integer key) {
+		this.key = key;
+	}
+	
+	
 	
 }

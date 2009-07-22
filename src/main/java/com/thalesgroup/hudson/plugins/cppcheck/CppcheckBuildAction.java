@@ -27,6 +27,9 @@ import hudson.model.*;
 
 import java.io.Serializable;
 import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
 import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.*;
 
 
@@ -198,7 +201,5 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         }
         return false;
     }
-
-
 
 }

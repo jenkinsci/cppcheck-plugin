@@ -37,7 +37,10 @@
     <tbody>
         <j:forEach var="elt" items="${it.report.everyErrors}">    
 	        <tr>
-	          <g:format value="${elt.filename}" severity="${elt.severity}"/>
+	          <td class="pane">
+	          	<a href="source.${elt.key}">${elt.fileName}</a>
+	          </td>
+	         
 	          <g:format value="${elt.lineNumber}" severity="${elt.severity}"/>
 	          <g:format value="${elt.cppCheckId}" severity="${elt.severity}"/>
 	          <g:format value="${elt.severity}" severity="${elt.severity}"/>

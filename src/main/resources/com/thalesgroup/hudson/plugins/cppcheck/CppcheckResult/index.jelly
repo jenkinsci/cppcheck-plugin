@@ -28,7 +28,7 @@
 	<l:layout norefresh="true">
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
-			<h1>Cppcheck results</h1>
+			<h1>Cppcheck Result</h1>
 	        <st:include page="/tabview/main.jelly" />
 		</l:main-panel>
 	</l:layout>

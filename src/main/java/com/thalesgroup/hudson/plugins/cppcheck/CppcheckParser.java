@@ -32,7 +32,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,14 +80,17 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
         List<CppcheckFile> styleErrors= new ArrayList<CppcheckFile>();
         List<CppcheckFile> allStyleErrors= new ArrayList<CppcheckFile>();
         List<CppcheckFile> errorErrors= new ArrayList<CppcheckFile>();        
-
+        Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
 
 		CppcheckFile cppcheckFile;
 		for (int i = 0; i < list.size(); i++) {
 			Element elt = (Element) list.get(i);
 			
 			cppcheckFile = new CppcheckFile();
-			cppcheckFile.setFilename(elt.getAttributeValue("file"));
+			
+			
+			cppcheckFile.setKey(i+1);
+			cppcheckFile.setFileName(elt.getAttributeValue("file"));
 			//line can be optional
 			String lineAtr=null;
 			if ((lineAtr=elt.getAttributeValue("line"))!=null){
@@ -109,6 +114,8 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
                 errorErrors.add(cppcheckFile);
             }
 			everyErrors.add(cppcheckFile);
+			
+			agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
 		}
 
 		cppCheckReport.setEveryErrors(everyErrors);
@@ -116,7 +123,8 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
         cppCheckReport.setStyleErrors(styleErrors);
         cppCheckReport.setAllStyleErrors(allStyleErrors);
         cppCheckReport.setErrorErrors(errorErrors);
-
+        cppCheckReport.setInternalMap(agregateMap);
+              
 		return cppCheckReport;
 	}
 

@@ -27,6 +27,13 @@ import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 
 import java.io.Serializable;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
 
 public class CppcheckResult implements Serializable {
@@ -64,4 +71,32 @@ public class CppcheckResult implements Serializable {
             return this.displayName;
         }
     }
+    
+    /**
+     * Returns the dynamic result of the selection element.
+     *
+     * @param link
+     *            the link to identify the sub page to show
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @return the dynamic result of the analysis (detail page).
+     */
+     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+    	 
+    	 if (link.startsWith("source.")) { 
+    		 Map<Integer, CppcheckFile> agregateMap = report.getInternalMap();
+    		 if (agregateMap!=null){
+    			 CppcheckFile vCppcheckFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link,"source.")));  
+    			 if (vCppcheckFile==null){
+    				 throw new IllegalArgumentException("Error for retrieving the source file with link:"+link);
+    			 }
+    			 return new CppcheckSource(owner, vCppcheckFile);
+    		 }
+    	 }
+    	 return null;    
+     }
+    
+    
 }

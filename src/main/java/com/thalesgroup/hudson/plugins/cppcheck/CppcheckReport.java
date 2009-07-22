@@ -25,6 +25,7 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
@@ -32,6 +33,8 @@ public class CppcheckReport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Map<Integer, CppcheckFile> internalMap;
+	
     private List<CppcheckFile> everyErrors;
 
 	private List<CppcheckFile> allErrors;
@@ -81,4 +84,14 @@ public class CppcheckReport implements Serializable {
     public void setErrorErrors(List<CppcheckFile> errorErrors) {
         this.errorErrors = errorErrors;
     }
+
+	public Map<Integer, CppcheckFile> getInternalMap() {
+		return internalMap;
+	}
+
+	public void setInternalMap(Map<Integer, CppcheckFile> internalMap) {
+		this.internalMap = internalMap;
+	}
+    
+    
 }
