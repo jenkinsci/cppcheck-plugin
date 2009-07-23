@@ -28,15 +28,9 @@
      
      <st:header name="Content-Type" value="text/html;charset=UTF-8" />
     
-      <j:choose>
-		<br/>    	    		
-        <j:when test="${it.report.everyErrors == null}">
-            <div>Not available</div>
-        </j:when>
-        <j:otherwise>
-    		<st:include page="summary.jelly" /> 
-        </j:otherwise>
-	  </j:choose> 
-
+     <j:if test="${it.report.everyErrors != null and it.report.everyErrors.size() != 0}">
+        <h2>Details</h2>
+    	<st:include page="summary.jelly" /> 
+     </j:if>
 
 </j:jelly>

@@ -96,7 +96,7 @@ public class CppcheckChartBuilder {
                 else
                 	builder.add(report.getEveryErrors().size(), "Number of errors", buildLabel);
             }
-            action = action.getPreviousAction();
+            action = result.getPreviousAction();
         }while(action != null);
 
         return builder.build();

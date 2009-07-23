@@ -24,7 +24,6 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 import hudson.model.AbstractBuild;
-import hudson.model.ModelObject;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -41,9 +40,9 @@ public class CppcheckResult implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private CppcheckReport report;
-    private AbstractBuild owner;
+	private AbstractBuild<?,?> owner;
 
-    public CppcheckResult(CppcheckReport report, AbstractBuild<?,?> owner){
+    public CppcheckResult(CppcheckReport report,  AbstractBuild<?,?> owner){
         this.report = report;
         this.owner = owner;
     }
@@ -55,22 +54,7 @@ public class CppcheckResult implements Serializable {
     public AbstractBuild<?,?> getOwner(){
         return owner;
     }
-
-
-
-    private static class BreadCrumbResult extends CppcheckResult implements ModelObject {
-
-        private String displayName = null;
-        
-        public BreadCrumbResult(CppcheckReport report, AbstractBuild<?,?> owner, String displayName){
-            super(report, owner);
-            this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return this.displayName;
-        }
-    }
+    
     
     /**
      * Returns the dynamic result of the selection element.
@@ -98,5 +82,50 @@ public class CppcheckResult implements Serializable {
     	 return null;    
      }
     
-    
+     public String getSummary(){
+         return CppcheckSummary.createReportSummary(report);
+     }
+
+     public String getDetails(){
+         return CppcheckSummary.createReportSummaryDetails(report,getPreviousReport());
+     }
+     
+     private CppcheckReport getPreviousReport(){
+         CppcheckResult previous = this.getPreviousResult();
+         if(previous == null){
+             return null;
+         }else{
+            return previous.getReport();
+         }
+     }
+
+     CppcheckResult getPreviousResult(){
+         CppcheckBuildAction previousAction = getPreviousAction();
+         CppcheckResult previousResult = null;
+         if(previousAction != null){
+             previousResult = previousAction.getResult();
+         }
+         
+         return previousResult;
+     }
+
+     CppcheckBuildAction getPreviousAction(){
+         AbstractBuild<?,?> previousBuild = owner.getPreviousBuild();
+         if(previousBuild != null){
+             return previousBuild.getAction(CppcheckBuildAction.class);
+         }
+         return null;
+     }
+     
+     public int getNewNumberErrors(){
+    	 CppcheckResult previousCppcheckResult = getPreviousResult();
+    	 if (previousCppcheckResult==null){
+    		 return 0;
+    	 }
+    	 else {
+    		 int diff = report.getNumberErrors()-previousCppcheckResult.getReport().getNumberErrors();
+    		 return (diff>0)?diff:0;
+    	 }
+     }
+
 }

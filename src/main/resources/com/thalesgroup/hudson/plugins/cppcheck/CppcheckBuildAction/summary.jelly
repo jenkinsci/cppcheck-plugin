@@ -29,9 +29,9 @@
 	xmlns:f="/lib/form"
     xmlns:i="jelly:fmt">
     <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">
-		${it.summary}
+		${it.result.summary}
 		<ul>
-		${it.details}
+		${it.result.details}
 		</ul>
 	</t:summary>
 </j:jelly>

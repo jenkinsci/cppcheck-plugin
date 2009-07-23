@@ -23,14 +23,16 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.model.*;
+import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.convert;
+import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.isValid;
+import hudson.model.AbstractBuild;
+import hudson.model.Action;
+import hudson.model.HealthReport;
+import hudson.model.HealthReportingAction;
 
 import java.io.Serializable;
-import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
-import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.*;
+import org.kohsuke.stapler.StaplerProxy;
 
 
 public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, HealthReportingAction {
@@ -52,51 +54,19 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
     }
 
     public String getDisplayName() {
-        return "Cppcheck Results";
+        return "Cppcheck Result";
     }
 
     public String getUrlName() {
         return URL_NAME;
     }
 
-    public String getSummary(){
-        return CppcheckSummary.createReportSummary(result.getReport(), this.getPreviousReport());
-    }
 
-    public String getDetails(){
-        return CppcheckSummary.createReportSummaryDetails(result.getReport(), this.getPreviousReport());
-    }
 
     public CppcheckResult getResult(){
         return this.result;
     }
 
-    private CppcheckReport getPreviousReport(){
-        CppcheckResult previous = this.getPreviousResult();
-        if(previous == null){
-            return null;
-        }else{
-           return previous.getReport();
-        }
-    }
-
-    CppcheckResult getPreviousResult(){
-        CppcheckBuildAction previousAction = this.getPreviousAction();
-        CppcheckResult previousResult = null;
-        if(previousAction != null){
-            previousResult = previousAction.getResult();
-        }
-        
-        return previousResult;
-    }
-
-    CppcheckBuildAction getPreviousAction(){
-        AbstractBuild<?,?> previousBuild = this.build.getPreviousBuild();
-        if(previousBuild != null){
-            return previousBuild.getAction(CppcheckBuildAction.class);
-        }
-        return null;
-    }
 
     AbstractBuild<?,?> getBuild(){
         return this.build;
@@ -146,7 +116,7 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
 
         int nbErrors= 0;
         int nbPreviousError=0;
-        CppcheckResult previousResult=getPreviousResult();
+        CppcheckResult previousResult=result.getPreviousResult();
 
         if ("all".equals(thresholdLimit)){
             nbErrors= getResult().getReport().getAllErrors().size();
@@ -195,6 +165,7 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
     }
 
 
+    
     static boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
         if (errorCount > 0 && isValid(errorThreshold)) {
             return errorCount > convert(errorThreshold);

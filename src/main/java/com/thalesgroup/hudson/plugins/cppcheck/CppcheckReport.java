@@ -29,7 +29,7 @@ import java.util.Map;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
-public class CppcheckReport implements Serializable {
+public class CppcheckReport implements ICheckstyleReport, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,6 +44,8 @@ public class CppcheckReport implements Serializable {
     private List<CppcheckFile> allStyleErrors;
 
     private List<CppcheckFile> errorErrors;
+    
+    private List<CppcheckFile> noCategoryErrors;
 
     public List<CppcheckFile> getEveryErrors() {
         return everyErrors;
@@ -92,6 +94,16 @@ public class CppcheckReport implements Serializable {
 	public void setInternalMap(Map<Integer, CppcheckFile> internalMap) {
 		this.internalMap = internalMap;
 	}
-    
-    
+
+	public List<CppcheckFile> getNoCategoryErrors() {
+		return noCategoryErrors;
+	}
+
+	public void setNoCategoryErrors(List<CppcheckFile> noCategoryErrors) {
+		this.noCategoryErrors = noCategoryErrors;
+	}
+	
+	public int getNumberErrors(){
+		return (everyErrors==null)?0:everyErrors.size();
+	}
 }

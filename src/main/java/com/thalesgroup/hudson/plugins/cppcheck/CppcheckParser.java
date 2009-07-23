@@ -29,8 +29,11 @@ import hudson.remoting.VirtualChannel;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
@@ -51,35 +55,38 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
 	private FilePath resultFilePath;
 	private static final Logger LOGGER = Logger.getLogger(CppcheckParser.class.getName());
 
-	public CppcheckParser() {
-		resultFilePath = null;
-	}
 
 	public CppcheckParser(FilePath resultFilePath) {
+
+		if (resultFilePath==null){
+			throw new IllegalArgumentException("The cppcheck result file is mandatory.");
+		}
 		this.resultFilePath = resultFilePath;
 	}
 
-	public CppcheckReport invoke(java.io.File workspace, VirtualChannel channel) throws IOException {
-
+	private CppcheckReport parse(final File file) throws IOException,JDOMException {
 		CppcheckReport cppCheckReport = new CppcheckReport();
-
+		
 		Document document = null;
-		try {
-			SAXBuilder sxb = new SAXBuilder();
-			document = sxb.build(new InputStreamReader(new FileInputStream(new File(resultFilePath.toURI())), "UTF-8"));
-		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Parsing file error :" + e.toString());
-			throw new AbortException("Parsing file error");
-		}
+		SAXBuilder sxb = new SAXBuilder();
+		FileInputStream fis = new FileInputStream(file);
+		InputStreamReader isr = new InputStreamReader(fis);
+		
+		document = sxb.build(isr);
+		
+		fis.close();
+		isr.close();
 		
 		Element results = document.getRootElement();
 		List list = results.getChildren();	
 		
         List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
-	    List<CppcheckFile> allErrors= new ArrayList<CppcheckFile>();
-        List<CppcheckFile> styleErrors= new ArrayList<CppcheckFile>();
-        List<CppcheckFile> allStyleErrors= new ArrayList<CppcheckFile>();
-        List<CppcheckFile> errorErrors= new ArrayList<CppcheckFile>();        
+	    List<CppcheckFile> allErrors = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> styleErrors = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> allStyleErrors = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> errorErrors = new ArrayList<CppcheckFile>();      
+        List<CppcheckFile> noCategoryErrors = new ArrayList<CppcheckFile>();
+        
         Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
 
 		CppcheckFile cppcheckFile;
@@ -87,8 +94,7 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
 			Element elt = (Element) list.get(i);
 			
 			cppcheckFile = new CppcheckFile();
-			
-			
+
 			cppcheckFile.setKey(i+1);
 			cppcheckFile.setFileName(elt.getAttributeValue("file"));
 			//line can be optional
@@ -113,6 +119,9 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
             else if ("error".equals(cppcheckFile.getSeverity())){
                 errorErrors.add(cppcheckFile);
             }
+            else{
+            	noCategoryErrors.add(cppcheckFile);
+            }
 			everyErrors.add(cppcheckFile);
 			
 			agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
@@ -123,9 +132,30 @@ public class CppcheckParser implements FilePath.FileCallable<CppcheckReport> {
         cppCheckReport.setStyleErrors(styleErrors);
         cppCheckReport.setAllStyleErrors(allStyleErrors);
         cppCheckReport.setErrorErrors(errorErrors);
+        cppCheckReport.setNoCategoryErrors(noCategoryErrors);
         cppCheckReport.setInternalMap(agregateMap);
               
 		return cppCheckReport;
+	}
+	
+	public CppcheckReport invoke(java.io.File workspace, VirtualChannel channel) throws IOException {
+     	
+		try {
+            return parse(new File(resultFilePath.toURI()));
+        }
+        catch (FileNotFoundException fne) {
+			LOGGER.log(Level.SEVERE, "Parsing file error :" + fne.toString());
+			throw new AbortException(String.format("The %s file is not found", resultFilePath));
+        }
+        catch (JDOMException jdoe) {
+			LOGGER.log(Level.SEVERE, "Parsing file error :" + jdoe.toString());
+			throw new AbortException("Parsing file error");
+        }
+        catch (InterruptedException ie) {
+			LOGGER.log(Level.SEVERE, "Parsing file error :" + ie.toString());
+			throw new AbortException("Parsing file error");
+        }
+
 	}
 
 	public FilePath getResultFilePath() {

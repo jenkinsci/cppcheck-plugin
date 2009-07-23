@@ -23,17 +23,38 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
+
 public class CppcheckSummary {
 
     private CppcheckSummary(){
         super();
     }
 
-    public static String createReportSummary(CppcheckReport report, CppcheckReport previous){
-        StringBuilder builder = new StringBuilder();
-        builder.append("<a href=\"" + CppcheckBuildAction.URL_NAME + "\">Cppcheck Results</a>");
-        builder.append("\n");
-        return builder.toString();
+    public static String createReportSummary(ICheckstyleReport report){
+        
+        StringBuilder summary = new StringBuilder();
+        int nbErrors = report.getNumberErrors();
+
+        summary.append(Messages.getMessage("cppcheck.Errors_ProjectAction_Name"));
+        summary.append(": ");
+        if (nbErrors == 0){
+        	summary.append(Messages.getMessage("cppcheck.ResultAction.NoError"));
+        }
+        else {
+            summary.append("<a href=\""+CppcheckBuildAction.URL_NAME+"\">");
+        
+            if (nbErrors == 1) {
+            	summary.append(Messages.getMessage("cppcheck.ResultAction.OneError"));
+            }
+            else {
+            	summary.append(Messages.getMessage("cppcheck.ResultAction.MultipleErrors", nbErrors));
+            }
+            summary.append("</a>");
+        }
+        summary.append(".");
+        
+        return summary.toString();
     }
 
     public static String createReportSummaryDetails(CppcheckReport report, CppcheckReport previousReport){
@@ -41,7 +62,8 @@ public class CppcheckSummary {
     	StringBuilder builder = new StringBuilder();
 
         builder.append("<li>");               
-        builder.append("Number of errors :");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_TotalErrors"));
+        builder.append(": ");
         builder.append(report.getEveryErrors().size());
         if(previousReport != null){
             printDifference(report.getEveryErrors().size(), previousReport.getEveryErrors().size(), builder);
@@ -49,7 +71,8 @@ public class CppcheckSummary {
         builder.append("</li>"); 
 
         builder.append("<li>");
-        builder.append("Number of errors for the severity 'all':");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityAll"));
+        builder.append(": ");
         builder.append(report.getAllErrors().size());
         if(previousReport != null){
             printDifference(report.getAllErrors().size(), previousReport.getAllErrors().size(), builder);
@@ -57,7 +80,8 @@ public class CppcheckSummary {
         builder.append("</li>");
 
         builder.append("<li>");
-        builder.append("Number of errors for the severity 'style':");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityStyle"));
+        builder.append(": ");
         builder.append(report.getStyleErrors().size());
         if(previousReport != null){
             printDifference(report.getStyleErrors().size(), previousReport.getStyleErrors().size(), builder);
@@ -65,7 +89,8 @@ public class CppcheckSummary {
         builder.append("</li>");            
 
         builder.append("<li>");
-        builder.append("Number of errors for the severity 'all style':");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityAllStyle"));
+        builder.append(": ");
         builder.append(report.getAllStyleErrors().size());
         if(previousReport != null){
             printDifference(report.getAllStyleErrors().size(), previousReport.getAllStyleErrors().size(), builder);
@@ -73,12 +98,23 @@ public class CppcheckSummary {
         builder.append("</li>");
 
         builder.append("<li>");
-        builder.append("Number of errors for the severity 'error':");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityError"));
+        builder.append(": ");
         builder.append(report.getErrorErrors().size());
         if(previousReport != null){
             printDifference(report.getErrorErrors().size(), previousReport.getErrorErrors().size(), builder);
         }
         builder.append("</li>");
+        
+        
+        builder.append("<li>");
+        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityNoCategory"));
+        builder.append(": ");
+        builder.append(report.getNoCategoryErrors().size());
+        if(previousReport != null){
+            printDifference(report.getNoCategoryErrors().size(), previousReport.getNoCategoryErrors().size(), builder);
+        }
+        builder.append("</li>");        
 
         return builder.toString();
     }

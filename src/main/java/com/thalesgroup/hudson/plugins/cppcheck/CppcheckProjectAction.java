@@ -78,7 +78,7 @@ public class CppcheckProjectAction implements Action, Serializable {
         if (build != null) {
             CppcheckBuildAction resultAction = build.getAction(CppcheckBuildAction.class);
             if (resultAction != null) {
-                return resultAction.getPreviousResult() != null;
+                return resultAction.getResult().getPreviousResult() != null;
             }
         }
         return false;
