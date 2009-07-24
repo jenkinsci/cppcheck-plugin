@@ -29,7 +29,7 @@ import java.util.Map;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
-public class CppcheckReport implements ICheckstyleReport, Serializable {
+public class CppcheckReport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -103,7 +103,29 @@ public class CppcheckReport implements ICheckstyleReport, Serializable {
 		this.noCategoryErrors = noCategoryErrors;
 	}
 	
-	public int getNumberErrors(){
+	
+	
+	public int getNumberTotal(){
 		return (everyErrors==null)?0:everyErrors.size();
+	}
+	
+	public int getNumberSeverityAllStyle(){
+		return (allStyleErrors==null)?0:allStyleErrors.size();
+	}
+	
+	public int getNumberSeverityStyle(){
+		return (styleErrors==null)?0:styleErrors.size();
+	}
+	
+	public int getNumberSeverityErrors(){
+		return (errorErrors==null)?0:errorErrors.size();
+	}
+	
+	public int getNumberSeverityAll(){
+		return (allErrors==null)?0:allErrors.size();
+	}
+	
+	public int getNumberSeverityNoCategory(){
+		return (noCategoryErrors==null)?0:noCategoryErrors.size();
 	}
 }

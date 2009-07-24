@@ -23,8 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.convert;
-import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.isValid;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.HealthReport;
@@ -33,6 +31,8 @@ import hudson.model.HealthReportingAction;
 import java.io.Serializable;
 
 import org.kohsuke.stapler.StaplerProxy;
+
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
 
 public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, HealthReportingAction {
@@ -76,39 +76,9 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         return this.result;
     }
     
-    public  boolean isHealthyReportEnabled(CppcheckHealthReportThresholds cppcheckHealthReportThresholds) {
-        if (isValid(cppcheckHealthReportThresholds.getHealthy()) && isValid(cppcheckHealthReportThresholds.getUnHealthy())) {
-            int healthyNumber = convert(cppcheckHealthReportThresholds.getHealthy());
-            int unHealthyNumber = convert(cppcheckHealthReportThresholds.getUnHealthy());
-            return unHealthyNumber > healthyNumber;
-        }
-        return false;
-    }
-
 
     public HealthReport getBuildHealth() {
-        if (cppcheckHealthReportThresholds == null) {
-            // no thresholds => no report
-            return null;
-        }
-
-        if (isHealthyReportEnabled(cppcheckHealthReportThresholds)) {
-            int percentage;
-            int counter =  getNumberErrors(cppcheckHealthReportThresholds.getThresholdLimit(),false);
-            
-            if (counter < convert(cppcheckHealthReportThresholds.getHealthy())) {
-                percentage = 100;
-            }
-            else if (counter > convert(cppcheckHealthReportThresholds.getUnHealthy())) {
-                percentage = 0;
-            }
-            else {
-                percentage = 100 - ((counter - convert(cppcheckHealthReportThresholds.getHealthy())) * 100
-                        / (convert(cppcheckHealthReportThresholds.getUnHealthy()) - convert(cppcheckHealthReportThresholds.getHealthy())));
-            }
-            return new HealthReport(percentage, "Build stability for " + cppcheckHealthReportThresholds.getThresholdLimit() + " severity.");
-        }
-        return null;
+        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckHealthReportThresholds, getNumberErrors(cppcheckHealthReportThresholds.getThresholdLimit(),false));
     }
 
 
@@ -121,34 +91,34 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         if ("all".equals(thresholdLimit)){
             nbErrors= getResult().getReport().getAllErrors().size();
             if (previousResult!=null){
-                  previousResult.getReport().getAllErrors().size();
+            	nbPreviousError= previousResult.getReport().getAllErrors().size();
             }
         }
         else if ("style".equals(thresholdLimit)){
             nbErrors= getResult().getReport().getStyleErrors().size();
             if (previousResult!=null){
-                  previousResult.getReport().getStyleErrors().size();
+            	nbPreviousError=  previousResult.getReport().getStyleErrors().size();
             }
 
         }
         else if ("all style".equals(thresholdLimit)){
             nbErrors= getResult().getReport().getAllStyleErrors().size();
             if (previousResult!=null){
-                  previousResult.getReport().getAllStyleErrors().size();
+            	nbPreviousError=previousResult.getReport().getAllStyleErrors().size();
             }
 
         }
         else if ("error".equals(thresholdLimit)){
             nbErrors= getResult().getReport().getErrorErrors().size();
             if (previousResult!=null){
-                  previousResult.getReport().getErrorErrors().size();
+            	nbPreviousError=previousResult.getReport().getErrorErrors().size();
             }
 
         }
         else{
             nbErrors= getResult().getReport().getEveryErrors().size();
             if (previousResult!=null){
-                  previousResult.getReport().getEveryErrors().size();
+            	nbPreviousError=previousResult.getReport().getEveryErrors().size();
             }
         }
 
@@ -166,11 +136,6 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
 
 
     
-    static boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
-        if (errorCount > 0 && isValid(errorThreshold)) {
-            return errorCount > convert(errorThreshold);
-        }
-        return false;
-    }
+
 
 }

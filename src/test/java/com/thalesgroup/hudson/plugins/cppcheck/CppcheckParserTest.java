@@ -35,7 +35,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.jmock.Mockery;
+import static org.mockito.Mockito.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,19 +45,15 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 public class CppcheckParserTest extends AbstractWorkspaceTest{
 
 
-    private Mockery context;
     private VirtualChannel virtualChannel;
     
     @Before
     public void setUp() throws Exception {
         super.createWorkspace();
-
-        context = new Mockery();
-        virtualChannel = context.mock(VirtualChannel.class);
+        virtualChannel = mock(VirtualChannel.class);
     }
 
     
-
     @Test
     public void nonFile() throws Exception{
     	    	

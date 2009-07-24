@@ -21,32 +21,44 @@
  * THE SOFTWARE.                                                                *
  *******************************************************************************/
 
-package com.thalesgroup.hudson.plugins.cppcheck;
+package com.thalesgroup.hudson.plugins.cppcheck.util;
 
+import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.convert;
+import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.isValid;
 import hudson.model.Result;
+
 import java.io.PrintStream;
+
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds;
 
 public class CppcheckBuildResultEvaluator {
 
+    private boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
+        if (errorCount > 0 && isValid(errorThreshold)) {
+            return errorCount > convert(errorThreshold);
+        }
+        return false;
+    }
+	
     public Result evaluateBuildResult(
             final PrintStream logger,
             int errorsCount,
             int newErrorsCount,
             CppcheckHealthReportThresholds cppcheckHealthReportThresholds) {
                    
-        if (CppcheckBuildAction.isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getFailureThreshold())) {
+        if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getFailureThreshold())) {
             logger.println("Setting build status to FAILURE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getFailureThreshold());
             return Result.FAILURE;
         }
-        if (CppcheckBuildAction.isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewFailureThreshold())) {
+        if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewFailureThreshold())) {
             logger.println("Setting build status to FAILURE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewFailureThreshold());
             return Result.FAILURE;
         }
-        if (CppcheckBuildAction.isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getThreshold())) {
+        if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getThreshold())) {
             logger.println("Setting build status to UNSTABLE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getThreshold());
             return Result.UNSTABLE;
         }
-        if (CppcheckBuildAction.isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewThreshold())) {
+        if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewThreshold())) {
             logger.println("Setting build status to UNSTABLE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewThreshold());
             return Result.UNSTABLE;
         }

@@ -23,26 +23,48 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.FilePath;
-import hudson.Util;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import hudson.model.HealthReport;
+import junit.framework.Assert;
 
-import java.io.File;
+import org.junit.Before;
+import org.junit.Test;
 
-public abstract class AbstractWorkspaceTest {
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
-    protected File parentFile;
-    protected FilePath workspace;
+public class CppcheckBuildHealthEvaluatorTest {
 
-    public void createWorkspace() throws Exception {
-        parentFile = Util.createTempDir();
-        workspace = new FilePath(parentFile);
-        if (workspace.exists()) {
-            workspace.deleteRecursive();
-        }
-        workspace.mkdirs();
-    }
-
-    public void deleteWorkspace() throws Exception {
-        workspace.deleteRecursive();
-    }
+	
+	private CppcheckBuildHealthEvaluator cppcheckBuildHealthEvaluator;
+	CppcheckHealthReportThresholds cppcheckHealthReportThresholds;
+	
+	@Before
+	public void initialize(){				
+		cppcheckHealthReportThresholds=mock(CppcheckHealthReportThresholds.class);		
+		cppcheckBuildHealthEvaluator=new CppcheckBuildHealthEvaluator();		
+	}	
+	
+	private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity){
+		when(cppcheckHealthReportThresholds.getHealthy()).thenReturn(String.valueOf(healthy));
+		when(cppcheckHealthReportThresholds.getUnHealthy()).thenReturn(String.valueOf(unHealthy));
+		HealthReport healthReport= cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckHealthReportThresholds, errorsForSevrity);
+		return healthReport.getScore();
+	}
+	
+	@Test
+	public void testScore(){
+		Assert.assertEquals(0,processSetThreshold(0,10,11));
+		Assert.assertEquals(0,processSetThreshold(0,10,10));
+		Assert.assertEquals(10,processSetThreshold(0,10,9));
+		Assert.assertEquals(20,processSetThreshold(0,10,8));
+		Assert.assertEquals(30,processSetThreshold(0,10,7));
+		Assert.assertEquals(40,processSetThreshold(0,10,6));
+		Assert.assertEquals(50,processSetThreshold(0,10,5));
+		Assert.assertEquals(60,processSetThreshold(0,10,4));
+		Assert.assertEquals(70,processSetThreshold(0,10,3));
+		Assert.assertEquals(80,processSetThreshold(0,10,2));
+		Assert.assertEquals(90,processSetThreshold(0,10,1));
+		Assert.assertEquals(100,processSetThreshold(0,10,0));
+	}
 }

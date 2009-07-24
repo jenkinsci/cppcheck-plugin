@@ -28,13 +28,12 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 public class CppcheckSummary {
 
     private CppcheckSummary(){
-        super();
     }
 
-    public static String createReportSummary(ICheckstyleReport report){
+    public static String createReportSummary(CppcheckResult result){
         
         StringBuilder summary = new StringBuilder();
-        int nbErrors = report.getNumberErrors();
+        int nbErrors = result.getReport().getNumberTotal();
 
         summary.append(Messages.getMessage("cppcheck.Errors_ProjectAction_Name"));
         summary.append(": ");
@@ -57,76 +56,28 @@ public class CppcheckSummary {
         return summary.toString();
     }
 
-    public static String createReportSummaryDetails(CppcheckReport report, CppcheckReport previousReport){
+    
+ 
+    public static String createReportSummaryDetails(CppcheckResult result){
 
     	StringBuilder builder = new StringBuilder();
-
-        builder.append("<li>");               
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_TotalErrors"));
-        builder.append(": ");
-        builder.append(report.getEveryErrors().size());
-        if(previousReport != null){
-            printDifference(report.getEveryErrors().size(), previousReport.getEveryErrors().size(), builder);
-        }
-        builder.append("</li>"); 
-
-        builder.append("<li>");
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityAll"));
-        builder.append(": ");
-        builder.append(report.getAllErrors().size());
-        if(previousReport != null){
-            printDifference(report.getAllErrors().size(), previousReport.getAllErrors().size(), builder);
-        }
-        builder.append("</li>");
-
-        builder.append("<li>");
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityStyle"));
-        builder.append(": ");
-        builder.append(report.getStyleErrors().size());
-        if(previousReport != null){
-            printDifference(report.getStyleErrors().size(), previousReport.getStyleErrors().size(), builder);
-        }
-        builder.append("</li>");            
-
-        builder.append("<li>");
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityAllStyle"));
-        builder.append(": ");
-        builder.append(report.getAllStyleErrors().size());
-        if(previousReport != null){
-            printDifference(report.getAllStyleErrors().size(), previousReport.getAllStyleErrors().size(), builder);
-        }
-        builder.append("</li>");
-
-        builder.append("<li>");
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityError"));
-        builder.append(": ");
-        builder.append(report.getErrorErrors().size());
-        if(previousReport != null){
-            printDifference(report.getErrorErrors().size(), previousReport.getErrorErrors().size(), builder);
-        }
-        builder.append("</li>");
-        
-        
-        builder.append("<li>");
-        builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_ErrorsSeverityNoCategory"));
-        builder.append(": ");
-        builder.append(report.getNoCategoryErrors().size());
-        if(previousReport != null){
-            printDifference(report.getNoCategoryErrors().size(), previousReport.getNoCategoryErrors().size(), builder);
-        }
-        builder.append("</li>");        
-
+    	int nbNewErrors = result.getNewNumberErrors();
+    	
+    	builder.append("<li>");
+    	
+    	if (nbNewErrors==0){
+    		builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NoNewError"));
+    	}
+    	else if (nbNewErrors==1){
+    		builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NewOneError"));
+    	}
+    	else{
+			builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NewMultipleErrors"));
+	        builder.append(": ");
+	        builder.append(nbNewErrors);
+    	}
+	    builder.append("</li>"); 
+    	
         return builder.toString();
-    }
-
-    private static void printDifference(int current, int previous, StringBuilder builder){
-        float difference = current - previous;
-        builder.append(" (");
-
-        if(difference >= 0){
-            builder.append('+');
-        }
-        builder.append(difference);
-        builder.append(")");
     }
 }

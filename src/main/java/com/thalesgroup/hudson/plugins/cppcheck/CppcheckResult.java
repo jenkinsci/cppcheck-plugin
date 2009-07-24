@@ -83,11 +83,11 @@ public class CppcheckResult implements Serializable {
      }
     
      public String getSummary(){
-         return CppcheckSummary.createReportSummary(report);
+         return CppcheckSummary.createReportSummary(this);
      }
 
      public String getDetails(){
-         return CppcheckSummary.createReportSummaryDetails(report,getPreviousReport());
+         return CppcheckSummary.createReportSummaryDetails(this);
      }
      
      private CppcheckReport getPreviousReport(){
@@ -123,9 +123,9 @@ public class CppcheckResult implements Serializable {
     		 return 0;
     	 }
     	 else {
-    		 int diff = report.getNumberErrors()-previousCppcheckResult.getReport().getNumberErrors();
+    		 int diff = report.getNumberTotal()-previousCppcheckResult.getReport().getNumberTotal();
     		 return (diff>0)?diff:0;
     	 }
-     }
-
+     }     
+     
 }

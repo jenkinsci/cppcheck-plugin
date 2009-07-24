@@ -38,11 +38,35 @@
 				    </tr>
     			<tbody>
 			        <tr>
-	          			<td class="pane">${it.report.numberErrors}</td>
+	          			<td class="pane">${it.report.numberTotal}</td>
 	          			<td class="pane">${it.newNumberErrors}</td>
 					</tr>
 				</tbody>
-			 </table>		          				
+			 </table>	
+			 
+			 
+			 <h2>Summary</h2>
+			 <table class="pane sortable">
+    				<tr>
+      					<td class="pane-header">Total</td>
+      					<td class="pane-header" style="width:2em">Severity 'all'</td>
+      					<td class="pane-header" style="width:2em">Severity 'all style'</td>
+      					<td class="pane-header" style="width:2em">Severity 'style'</td>
+      					<td class="pane-header" style="width:2em">Severity 'error'</td>
+      					<td class="pane-header" style="width:2em">no category</td>
+				    </tr>
+    			<tbody>
+			        <tr>
+	          			<td class="pane">${it.report.numberTotal}</td>
+	          			<td class="pane">${it.report.numberSeverityAll}</td>
+	          			<td class="pane">${it.report.numberSeverityAllStyle}</td>
+	          			<td class="pane">${it.report.numberSeverityStyle}</td>
+	          			<td class="pane">${it.report.numberSeverityErrors}</td>
+	          			<td class="pane">${it.report.numberSeverityNoCategory}</td>
+					</tr>
+				</tbody>
+			 </table>			 
+			 	          				
 	        <st:include page="/tabview/main.jelly" />
 		</l:main-panel>
 	</l:layout>

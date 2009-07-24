@@ -37,6 +37,8 @@ import java.io.PrintStream;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+
 public class CppcheckPublisher extends Publisher {
 
     private final String metricFilePath;
