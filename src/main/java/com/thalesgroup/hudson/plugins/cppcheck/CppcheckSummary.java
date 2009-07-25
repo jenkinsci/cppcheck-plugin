@@ -27,8 +27,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
 public class CppcheckSummary {
 
-    private CppcheckSummary(){
-    }
+	private CppcheckSummary(){}
 
     public static String createReportSummary(CppcheckResult result){
         

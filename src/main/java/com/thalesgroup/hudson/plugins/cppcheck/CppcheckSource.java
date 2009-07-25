@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -46,9 +47,11 @@ import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
 
 
-public class CppcheckSource {
+public class CppcheckSource implements Serializable {
     
 	
+	private static final long serialVersionUID = 1L;
+
 	/** Offset of the source code generator. After this line the actual source file lines start. */
     protected static final int SOURCE_GENERATOR_OFFSET = 13;
     
@@ -79,31 +82,27 @@ public class CppcheckSource {
         this.cppcheckFile = cppcheckFile;
         initializeContent();
     }
-    
-    public String getTempName(final AbstractBuild<?, ?> owner, String fileName) {
-        if (fileName != null) {
-            return owner.getRootDir().getAbsolutePath() + "/" + "workspace-files" + "/" + Integer.toHexString(fileName.hashCode()) + ".tmp";
-        }
-        return StringUtils.EMPTY;
-    }    
-    
+
     private void initializeContent() {
-        InputStream file = null;
+        InputStream is = null;
         try {
-            File tempFile = new File(getTempName(owner, cppcheckFile.getFileName()));
-            if (tempFile.exists()) {
-                file = new FileInputStream(tempFile);
-            }
-            else {
-                file = new FileInputStream(new File(owner.getProject().getWorkspace()+ "/"+cppcheckFile.getFileName()));
-            }
-            splitSourceFile(highlightSource(file));
+        	//For absolute pathname
+        	File f= new File(cppcheckFile.getFileName());
+        	if (f.exists()){
+        		is= new FileInputStream(f);
+        	}
+        	
+        	//for relative path name
+        	else {
+        		is = new FileInputStream(new File(owner.getProject().getModuleRoot()+ "/"+cppcheckFile.getFileName()));
+        	}
+            splitSourceFile(highlightSource(is));
         }
         catch (IOException exception) {
             sourceCode = "Can't read file: " + exception.getLocalizedMessage();
         }
         finally {
-            IOUtils.closeQuietly(file);
+            IOUtils.closeQuietly(is);
         }
     }    
 
