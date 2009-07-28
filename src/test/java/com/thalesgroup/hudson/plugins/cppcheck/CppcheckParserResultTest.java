@@ -38,13 +38,8 @@ public class CppcheckParserResultTest extends AbstractWorkspaceTest{
 	@Test
 	public void testNoMatch() throws Exception{
 		CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(logger, "*.xml");
-		try{
-			cppcheckParserResult.invoke(new File(workspace.toURI()), channel);
-			Assert.fail("A pattern with no match files is not allowed.");
-		}
-		catch (Exception iae){
-			Assert.assertTrue(true);				
-		}
+		CppcheckReport report = cppcheckParserResult.invoke(new File(workspace.toURI()), channel);
+		Assert.assertEquals("A pattern with no match files is not allowed.", null, report);				
 	}
 	
 }
