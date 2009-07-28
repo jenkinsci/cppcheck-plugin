@@ -47,23 +47,23 @@ public class CppcheckBuildResultEvaluator {
             CppcheckHealthReportThresholds cppcheckHealthReportThresholds) {
                    
         if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getFailureThreshold())) {
-            logger.println("Setting build status to FAILURE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getFailureThreshold());
+        	Messages.log(logger,"Setting build status to FAILURE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getFailureThreshold());
             return Result.FAILURE;
         }
         if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewFailureThreshold())) {
-            logger.println("Setting build status to FAILURE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewFailureThreshold());
+        	Messages.log(logger,"Setting build status to FAILURE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewFailureThreshold());
             return Result.FAILURE;
         }
         if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getThreshold())) {
-            logger.println("Setting build status to UNSTABLE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getThreshold());
+        	Messages.log(logger,"Setting build status to UNSTABLE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getThreshold());
             return Result.UNSTABLE;
         }
         if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewThreshold())) {
-            logger.println("Setting build status to UNSTABLE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewThreshold());
+            Messages.log(logger,"Setting build status to UNSTABLE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewThreshold());
             return Result.UNSTABLE;
         }
 
-        logger.println("Not changing build status, since no threshold has been exceeded");
+        Messages.log(logger,"Not changing build status, since no threshold has been exceeded");
         return Result.SUCCESS;
     }
 

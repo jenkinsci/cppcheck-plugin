@@ -24,43 +24,33 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 
-import hudson.AbortException;
-import hudson.FilePath;
-import hudson.remoting.VirtualChannel;
-
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.List;
 
 import junit.framework.Assert;
-
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
 
-public class CppcheckParserTest extends AbstractWorkspaceTest{
+public class CppcheckParserTest {
 
 
-    private VirtualChannel virtualChannel;
+    CppcheckParser cppcheckParser;
     
     @Before
     public void setUp() throws Exception {
-        super.createWorkspace();
-        virtualChannel = mock(VirtualChannel.class);
+        cppcheckParser = new CppcheckParser();
     }
 
     
     @Test
-    public void nonFile() throws Exception{
-    	    	
+    public void nullFile() throws Exception {    	    	
     	try{
-    		CppcheckParser cppcheckParser = new CppcheckParser(null);
-    		cppcheckParser.invoke(new File(workspace.toURI()), virtualChannel);
-    		Assert.fail();
+    		cppcheckParser.parse(null);
+    		Assert.fail("null parameter is not allowed.");
     	}
     	catch (IllegalArgumentException iea){
     		Assert.assertTrue(true);
@@ -68,32 +58,49 @@ public class CppcheckParserTest extends AbstractWorkspaceTest{
     }	
     
     @Test
-    public void fileNotFound() throws Exception{
-    	    	
+    public void nonExistFile() throws Exception {    	    	
     	try{
-    		CppcheckParser cppcheckParser = new CppcheckParser(new FilePath(new File("notFound")));
-    		cppcheckParser.invoke(new File(workspace.toURI()), virtualChannel);
-    		Assert.fail();
+    		cppcheckParser.parse(new File("nonExistFile"));
+    		Assert.fail("A valid file is mandatory.");
     	}
-    	catch (AbortException ae){
+    	catch (IllegalArgumentException iea){
     		Assert.assertTrue(true);
     	}
-    }	
+    }    
     	
-    /**
-     * Tests parsing of a simple cppcheck file.
-     *
-     * @throws InvocationTargetException Signals that an I/O exception has occurred
-     */
+    	
     @Test
-    public void analyseCheckStyleFile() throws Exception {
-        URL url = this.getClass().getResource("testcppcheck1.xml");
-        
-		CppcheckParser cppcheckParser = new CppcheckParser(new FilePath(new File(url.toURI())));
-		CppcheckReport cppcheckReport = cppcheckParser.invoke(new File(workspace.toURI()), virtualChannel);       
-        
-        List<CppcheckFile> everyErrors = cppcheckReport.getEveryErrors();
-        
+    public void testcppcheck1() throws Exception {       
+		processCheckstyle("testcppcheck1.xml",13,2,0,1,8,2);	
+    }
+
+    @Test
+    public void testcppcheck2() throws Exception {       
+		processCheckstyle("testcppcheck2.xml",18,4,0,0,14,0);
+    }
+    
+    @Test
+    public void testcppcheckPart1() throws Exception {       
+		processCheckstyle("testcppcheck-part1.xml",3,0,0,1,2,0);
+    }
+    
+    @Test
+    public void testcppcheckPart2() throws Exception {  
+		processCheckstyle("testcppcheck-part2.xml",5,2,0,0,1,2);
+		
+    }
+		
+	private void processCheckstyle(String filename, 
+								   int nbErrors, 
+								   int nbAllErrors,
+								   int nbAllStyleErrors,
+								   int nbStyleErrors,
+								   int nbErrorsErrors,
+								   int nbNoCategoryErrors)	throws Exception{
+
+		CppcheckReport cppcheckReport = cppcheckParser.parse(new File(this.getClass().getResource(filename).toURI()));       
+
+        List<CppcheckFile> everyErrors = cppcheckReport.getEveryErrors();        
         List<CppcheckFile> allErrors = cppcheckReport.getAllErrors();
         List<CppcheckFile> styleErrors = cppcheckReport.getStyleErrors();
         List<CppcheckFile> allStyleErrors = cppcheckReport.getAllStyleErrors();
@@ -110,12 +117,12 @@ public class CppcheckParserTest extends AbstractWorkspaceTest{
         Assert.assertEquals("Wrong computing of list of errors", everyErrors.size(), 
         		noCategoryErrors.size()+ allStyleErrors.size() +  errosErrors.size()+ allErrors.size() + styleErrors.size());
         
-        Assert.assertEquals("Wrong total number of errors", 13, everyErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'all'", 2, allErrors.size());             
-        Assert.assertEquals("Wrong total number of errors for the severity 'allStyle'", 0, allStyleErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'style'", 1, styleErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'errors'", 8, errosErrors.size());
-        Assert.assertEquals("Wrong total number of errors with no category", 2, noCategoryErrors.size());
+        Assert.assertEquals("Wrong total number of errors", nbErrors, everyErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'all'", nbAllErrors, allErrors.size());             
+        Assert.assertEquals("Wrong total number of errors for the severity 'allStyle'", nbAllStyleErrors, allStyleErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'style'", nbStyleErrors, styleErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'errors'", nbErrorsErrors, errosErrors.size());
+        Assert.assertEquals("Wrong total number of errors with no category", nbNoCategoryErrors, noCategoryErrors.size());
     }
 	
 }

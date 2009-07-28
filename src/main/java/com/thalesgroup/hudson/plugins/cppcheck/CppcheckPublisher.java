@@ -23,25 +23,29 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.Extension;
 import hudson.matrix.MatrixProject;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.FreeStyleProject;
+import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
-import java.io.IOException;
 import java.io.PrintStream;
-
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
 public class CppcheckPublisher extends Publisher {
-
-    private final String metricFilePath;
+	
+    private final String cppcheckReportPattern;
 
     private final String threshold;
 
@@ -63,7 +67,7 @@ public class CppcheckPublisher extends Publisher {
     }
 
     @DataBoundConstructor
-    public CppcheckPublisher(final String metricFilePath,
+    public CppcheckPublisher(final String cppcheckReportPattern,
                                final String threshold,
                                final String newThreshold,
                                final String failureThreshold,
@@ -72,7 +76,7 @@ public class CppcheckPublisher extends Publisher {
                                final String unHealthy,
                                final String thresholdLimit) {
 
-        this.metricFilePath = metricFilePath;
+        this.cppcheckReportPattern = cppcheckReportPattern;
         this.threshold=threshold;
         this.newFailureThreshold=newFailureThreshold;
         this.newThreshold=newThreshold;
@@ -91,39 +95,39 @@ public class CppcheckPublisher extends Publisher {
         return result != Result.ABORTED && result != Result.FAILURE;
     }
 
+    
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener){
     	
         if(this.canContinue(build.getResult())){
-            
-        	listener.getLogger().println("Parsing cppcheck results");
+        	PrintStream logger = listener.getLogger();
         	
-        	FilePath workspace = build.getProject().getWorkspace();
-            PrintStream logger = listener.getLogger();
-            CppcheckParser parser = new CppcheckParser(new FilePath(build.getParent().getWorkspace(), metricFilePath));
+        	Messages.log(logger,"Starting the cppcheck analysis.");
+        	
+        	FilePath moduleRoot = build.getProject().getModuleRoot();
+            
+            CppcheckParserResult parser = new CppcheckParserResult(logger, getCppcheckReportPattern());
             
             CppcheckReport report;
             try{
-                report = workspace.act(parser);
+                report = moduleRoot.act(parser);
             
-            }catch(IOException ioe){
-                ioe.printStackTrace(logger);
-                build.setResult(Result.FAILURE);
-                return false;
+            }catch(Exception e){
+            	Messages.log(logger,"Error on cppcheck analysis: " + e);
+            	build.setResult(Result.FAILURE);
+                return false;            
+            }
             
-            }catch(InterruptedException ie){
-                ie.printStackTrace(logger);
-                build.setResult(Result.FAILURE);
-                return false;
+            if (report == null){
+            	build.setResult(Result.FAILURE);
+                return false;            	
             }
 
-            CppcheckHealthReportThresholds cppcheckHealthReportThresholds=
-                 new CppcheckHealthReportThresholds(threshold,newThreshold,failureThreshold,newFailureThreshold,healthy,unHealthy, thresholdLimit);
-
+            CppcheckHealthReportThresholds cppcheckHealthReportThresholds= 
+            	new CppcheckHealthReportThresholds(threshold,newThreshold,failureThreshold,newFailureThreshold,healthy,unHealthy, thresholdLimit);
             CppcheckResult result = new CppcheckResult(report, build);
             CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckHealthReportThresholds);
             build.addAction(buildAction);
-
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
                    logger, buildAction.getNumberErrors(thresholdLimit,false), buildAction.getNumberErrors(thresholdLimit,true),cppcheckHealthReportThresholds);
@@ -132,7 +136,7 @@ public class CppcheckPublisher extends Publisher {
                 build.setResult(buildResult);
             }
 
-            listener.getLogger().println("End Processing cppcheck results");
+            Messages.log(logger,"End of the cppcheck analysis.");
         }
         return true;
     }
@@ -165,8 +169,8 @@ public class CppcheckPublisher extends Publisher {
         }
     }
 
-	public String getMetricFilePath() {
-		return metricFilePath;
+	public String getCppcheckReportPattern() {
+		return cppcheckReportPattern;
 	}
 
     public String getThreshold() {

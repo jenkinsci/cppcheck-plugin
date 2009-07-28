@@ -23,15 +23,31 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
+import java.io.PrintStream;
+import java.io.Serializable;
+
 import org.jvnet.localizer.ResourceBundleHolder;
 
-public class Messages {
+public class Messages implements Serializable{
 
-    private final static ResourceBundleHolder holder = ResourceBundleHolder.get(Messages.class);
+	private static final long serialVersionUID = 1L;
+
+	private final static ResourceBundleHolder holder = ResourceBundleHolder.get(Messages.class);
 
     public static String getMessage(String key, Object...args) {
         return holder.format(key, args);
     }  
+    
+
+    /**
+     * Log output to the given logger, using the JDepend identifier
+     * @param logger The logger
+     * @param message The message to be outputted
+     */
+    public static void log(PrintStream logger, final String message) {    	
+    	logger.println("[Cppecheck] " + message);
+    }
+
     
     
 }

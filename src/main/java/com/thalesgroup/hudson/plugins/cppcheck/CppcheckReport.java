@@ -24,6 +24,8 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,19 +35,19 @@ public class CppcheckReport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Map<Integer, CppcheckFile> internalMap;
+	private Map<Integer, CppcheckFile> internalMap= new HashMap<Integer, CppcheckFile>();
 	
-    private List<CppcheckFile> everyErrors;
+    private List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
 
-	private List<CppcheckFile> allErrors;
+	private List<CppcheckFile> allErrors= new ArrayList<CppcheckFile>();
     
-    private List<CppcheckFile> styleErrors;
+    private List<CppcheckFile> styleErrors= new ArrayList<CppcheckFile>();
 
-    private List<CppcheckFile> allStyleErrors;
+    private List<CppcheckFile> allStyleErrors= new ArrayList<CppcheckFile>();
 
-    private List<CppcheckFile> errorErrors;
+    private List<CppcheckFile> errorErrors= new ArrayList<CppcheckFile>();
     
-    private List<CppcheckFile> noCategoryErrors;
+    private List<CppcheckFile> noCategoryErrors= new ArrayList<CppcheckFile>();
 
     public List<CppcheckFile> getEveryErrors() {
         return everyErrors;
