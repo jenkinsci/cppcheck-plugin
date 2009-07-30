@@ -104,28 +104,32 @@ public class CppcheckPublisher extends Publisher {
         	
         	Messages.log(logger,"Starting the cppcheck analysis.");
         	
-        	FilePath moduleRoot = build.getProject().getModuleRoot();
-            
-            CppcheckParserResult parser = new CppcheckParserResult(logger, getCppcheckReportPattern());
-            
-            CppcheckReport report;
+            final FilePath[] moduleRoots= build.getProject().getModuleRoots();
+            final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
+            final FilePath moduleRoot= multipleModuleRoots ? build.getProject().getWorkspace() : build.getProject().getModuleRoot();
+        	
+        	
+            CppcheckParserResult parser = new CppcheckParserResult(logger, getCppcheckReportPattern());            
+            CppcheckReport cppcheckReport= null;
             try{
-                report = moduleRoot.act(parser);
-            
-            }catch(Exception e){
+            	cppcheckReport= moduleRoot.act(parser);            	
+            }
+            catch(Exception e){
             	Messages.log(logger,"Error on cppcheck analysis: " + e);
             	build.setResult(Result.FAILURE);
                 return false;            
             }
             
-            if (report == null){
+            if (cppcheckReport == null){
             	build.setResult(Result.FAILURE);
                 return false;            	
             }
+            
+
 
             CppcheckHealthReportThresholds cppcheckHealthReportThresholds= 
             	new CppcheckHealthReportThresholds(threshold,newThreshold,failureThreshold,newFailureThreshold,healthy,unHealthy, thresholdLimit);
-            CppcheckResult result = new CppcheckResult(report, build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport, build);
             CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckHealthReportThresholds);
             build.addAction(buildAction);
 

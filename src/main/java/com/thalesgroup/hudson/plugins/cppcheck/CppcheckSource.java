@@ -23,6 +23,7 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import hudson.FilePath;
 import hudson.model.AbstractBuild;
 
 import java.io.File;
@@ -83,6 +84,26 @@ public class CppcheckSource implements Serializable {
         initializeContent();
     }
 
+    private File getFilePath() throws InterruptedException, IOException{
+    	
+		File f = null;		
+		
+		f = new File(new File(owner.getProject().getWorkspace().toURI()), "/"+cppcheckFile.getFileName());
+		if (f.exists()){
+			return f;
+		}
+    	
+    	
+    	FilePath[] modules = owner.getProject().getModuleRoots();
+    	for (FilePath moduleRoot: modules){
+    		f = new File(new File(moduleRoot.toURI()), "/"+cppcheckFile.getFileName());
+    		if (f.exists()){
+    			return f;
+    		}
+    	}    	
+    	return null;
+    }
+    
     private void initializeContent() {
         InputStream is = null;
         try {
@@ -94,9 +115,16 @@ public class CppcheckSource implements Serializable {
         	
         	//for relative path name
         	else {
-        		is = new FileInputStream(new File(owner.getProject().getModuleRoot()+ "/"+cppcheckFile.getFileName()));
+        		File file = getFilePath();
+        		if (file==null){
+        			throw new IOException("Can't access the file: "+ f.toURI());
+        		}        		
+        		is = new FileInputStream(file);
         	}
             splitSourceFile(highlightSource(is));
+        }
+        catch (InterruptedException exception) {
+            sourceCode = "Can't read file: " + exception.getLocalizedMessage();
         }
         catch (IOException exception) {
             sourceCode = "Can't read file: " + exception.getLocalizedMessage();

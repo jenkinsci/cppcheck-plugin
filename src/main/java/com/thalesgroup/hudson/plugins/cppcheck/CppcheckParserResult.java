@@ -68,7 +68,12 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 		try {
 			String[] cppcheckFiles = findCppcheckReports(moduleRoot);
 			if (cppcheckFiles.length==0){
-				throw  new IllegalArgumentException("No cppcheck test report file(s) were found with the pattern '" + cppcheckReportPattern + "'.");
+	            String msg = "No cppcheck test report file(s) were found with the pattern '"
+	                + cppcheckReportPattern + "' relative to '"
+	                + moduleRoot + "'."
+	                + "  Did you enter a pattern relative to the correct directory?"
+	                + "  Did you generate the XML report(s) for Cppcheck?";				
+				throw  new IllegalArgumentException(msg);
 			}
 			
 			Messages.log(logger,"Processing "+cppcheckFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
@@ -86,7 +91,8 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
         return cppcheckReportResult;
 	}
 	
-    private void mergeReport(CppcheckReport cppcheckReportResult, CppcheckReport cppcheckReport) {		
+
+    private static void mergeReport(CppcheckReport cppcheckReportResult, CppcheckReport cppcheckReport) {		
     	cppcheckReportResult.getAllErrors().addAll(cppcheckReport.getAllErrors());
     	cppcheckReportResult.getAllStyleErrors().addAll(cppcheckReport.getAllStyleErrors());
     	cppcheckReportResult.getErrorErrors().addAll(cppcheckReport.getErrorErrors());
@@ -94,8 +100,8 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
     	cppcheckReportResult.getInternalMap().putAll(cppcheckReport.getInternalMap());
     	cppcheckReportResult.getNoCategoryErrors().addAll(cppcheckReport.getNoCategoryErrors());
     	cppcheckReportResult.getStyleErrors().addAll(cppcheckReport.getStyleErrors());		
-	}
-
+	}	
+	
 	/**
      * Return all cppechk report files
      * 
