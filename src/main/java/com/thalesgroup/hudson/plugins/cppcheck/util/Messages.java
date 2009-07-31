@@ -40,7 +40,7 @@ public class Messages implements Serializable{
     
 
     /**
-     * Log output to the given logger, using the JDepend identifier
+     * Log output to the given logger, using the Cppcheck identifier
      * @param logger The logger
      * @param message The message to be outputted
      */

@@ -100,9 +100,8 @@ public class CppcheckPublisher extends Publisher {
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener){
     	
         if(this.canContinue(build.getResult())){
-        	PrintStream logger = listener.getLogger();
-        	
-        	Messages.log(logger,"Starting the cppcheck analysis.");
+            PrintStream logger = listener.getLogger();        	
+            Messages.log(logger,"Starting the cppcheck analysis.");
         	
             final FilePath[] moduleRoots= build.getProject().getModuleRoots();
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
