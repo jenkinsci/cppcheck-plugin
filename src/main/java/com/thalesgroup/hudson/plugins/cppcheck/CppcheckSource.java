@@ -91,8 +91,7 @@ public class CppcheckSource implements Serializable {
 		f = new File(new File(owner.getProject().getWorkspace().toURI()), "/"+cppcheckFile.getFileName());
 		if (f.exists()){
 			return f;
-		}
-    	
+		}    	
     	
     	FilePath[] modules = owner.getProject().getModuleRoots();
     	for (FilePath moduleRoot: modules){
@@ -142,7 +141,7 @@ public class CppcheckSource implements Serializable {
      * @param sourceFile
      *            the source code of the whole file as rendered HTML string
      */
-    public final void splitSourceFile(final String sourceFile) {
+    private final void splitSourceFile(final String sourceFile) {
         StringBuilder output = new StringBuilder(sourceFile.length());
 
         LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
@@ -258,8 +257,6 @@ public class CppcheckSource implements Serializable {
 	public CppcheckFile getCppcheckFile() {
 		return cppcheckFile;
 	}
-    
-
-    
+  
 }
 
