@@ -23,25 +23,18 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.FreeStyleProject;
-import hudson.model.Result;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
-
-import java.io.PrintStream;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
+import java.io.PrintStream;
 
 public class CppcheckPublisher extends Publisher {
 	
@@ -106,8 +99,7 @@ public class CppcheckPublisher extends Publisher {
             final FilePath[] moduleRoots= build.getProject().getModuleRoots();
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
             final FilePath moduleRoot= multipleModuleRoots ? build.getProject().getWorkspace() : build.getProject().getModuleRoot();
-        	
-        	
+        	        	
             CppcheckParserResult parser = new CppcheckParserResult(logger, getCppcheckReportPattern());            
             CppcheckReport cppcheckReport= null;
             try{
@@ -159,7 +151,7 @@ public class CppcheckPublisher extends Publisher {
 
         @Override
         public String getDisplayName() {
-            return "Publish Cppcheck test result report";
+            return "Publish Cppcheck results";
         }
 
         @Override

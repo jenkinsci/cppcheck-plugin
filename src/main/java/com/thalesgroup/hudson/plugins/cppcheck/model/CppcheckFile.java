@@ -23,9 +23,15 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
+import hudson.model.ModelObject;
+
 import java.io.Serializable;
 
-public class CppcheckFile implements Serializable{
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
+
+@ExportedBean(defaultVisibility = 999)
+public class CppcheckFile implements ModelObject, Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +47,7 @@ public class CppcheckFile implements Serializable{
 	
 	private String message;
 
+    @Exported
 	public String getFileName() {
 		return fileName;
 	}
@@ -49,6 +56,7 @@ public class CppcheckFile implements Serializable{
 		this.fileName = filename;
 	}
 
+    @Exported
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -56,7 +64,8 @@ public class CppcheckFile implements Serializable{
 	public void setLineNumber(int lineNumber) {
 		this.lineNumber = lineNumber;
 	}
-
+	
+    @Exported
 	public String getCppCheckId() {
 		return cppCheckId;
 	}
@@ -64,7 +73,8 @@ public class CppcheckFile implements Serializable{
 	public void setCppCheckId(String cppCheckId) {
 		this.cppCheckId = cppCheckId;
 	}
-
+	
+    @Exported
 	public String getMessage() {
 		return message;
 	}
@@ -72,7 +82,8 @@ public class CppcheckFile implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
+	
+    @Exported
 	public String getSeverity() {
 		return severity;
 	}
@@ -80,7 +91,8 @@ public class CppcheckFile implements Serializable{
 	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
-
+	
+    @Exported
 	public Integer getKey() {
 		return key;
 	}
@@ -88,7 +100,9 @@ public class CppcheckFile implements Serializable{
 	public void setKey(Integer key) {
 		this.key = key;
 	}
-	
-	
+
+	public String getDisplayName() {
+		return "cppcheckFile";
+	}
 	
 }

@@ -23,16 +23,14 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
-
-import java.io.Serializable;
-
 import org.kohsuke.stapler.StaplerProxy;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
+import java.io.Serializable;
 
 
 public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, HealthReportingAction {
@@ -133,9 +131,5 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         else
             return  nbErrors;
     }
-
-
-    
-
 
 }

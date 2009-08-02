@@ -24,12 +24,9 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
 import hudson.util.ShiftedCategoryAxis;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
-
-import java.awt.Color;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -42,6 +39,8 @@ import org.jfree.chart.renderer.category.DefaultCategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleInsets;
 
+import java.awt.*;
+
 
 public class CppcheckChartBuilder {
 
@@ -53,7 +52,6 @@ public class CppcheckChartBuilder {
         JFreeChart chart = ChartFactory.createStackedAreaChart(null, null, "Number of errors", buildDataset(action), PlotOrientation.VERTICAL, true, false, true);
 
         chart.setBackgroundPaint(Color.white);
-
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.WHITE);

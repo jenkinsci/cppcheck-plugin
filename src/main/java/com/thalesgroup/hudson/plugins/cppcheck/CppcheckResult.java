@@ -23,18 +23,19 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import hudson.model.AbstractBuild;
+import hudson.model.Api;
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
 
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-
-
+@ExportedBean
 public class CppcheckResult implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -47,6 +48,11 @@ public class CppcheckResult implements Serializable {
         this.owner = owner;
     }
 
+    public Api getApi() { 
+    	return new Api(report); 
+    }
+    
+	@Exported
     public CppcheckReport getReport(){
         return report;
     }
