@@ -54,19 +54,19 @@ public class CppcheckSource implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Offset of the source code generator. After this line the actual source file lines start. */
-    protected static final int SOURCE_GENERATOR_OFFSET = 13;
+	protected static final int SOURCE_GENERATOR_OFFSET = 13;
     
-    /** Color for the first (primary) annotation range. */
-    private static final String MESSAGE_COLOR = "#FCAF3E";
+	/** Color for the first (primary) annotation range. */
+	private static final String MESSAGE_COLOR = "#FCAF3E";
     
-    /** The current build as owner of this object. */
-    private final AbstractBuild<?, ?> owner;
+    	/** The current build as owner of this object. */
+	private final AbstractBuild<?, ?> owner;
     
-    /** The annotation to be shown. */
-    private  final CppcheckFile cppcheckFile;
+	/** The annotation to be shown. */
+	private  final CppcheckFile cppcheckFile;
     
-    /** The rendered source file. */
-    private String sourceCode = StringUtils.EMPTY;
+	/** The rendered source file. */
+	private String sourceCode = StringUtils.EMPTY;
 
     /**
      * Creates a new instance of this source code object.

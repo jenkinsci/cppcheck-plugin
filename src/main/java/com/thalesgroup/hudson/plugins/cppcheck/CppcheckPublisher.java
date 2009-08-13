@@ -23,18 +23,25 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.FreeStyleProject;
+import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.PrintStream;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
 public class CppcheckPublisher extends Publisher {
 	
@@ -92,21 +99,20 @@ public class CppcheckPublisher extends Publisher {
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener){
     	
-        if(this.canContinue(build.getResult())){
-            PrintStream logger = listener.getLogger();        	
-            Messages.log(logger,"Starting the cppcheck analysis.");
+        if(this.canContinue(build.getResult())){      	
+            Messages.log(listener,"Starting the cppcheck analysis.");
         	
             final FilePath[] moduleRoots= build.getProject().getModuleRoots();
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
             final FilePath moduleRoot= multipleModuleRoots ? build.getProject().getWorkspace() : build.getProject().getModuleRoot();
         	        	
-            CppcheckParserResult parser = new CppcheckParserResult(logger, getCppcheckReportPattern());            
+            CppcheckParserResult parser = new CppcheckParserResult(listener, getCppcheckReportPattern());            
             CppcheckReport cppcheckReport= null;
             try{
             	cppcheckReport= moduleRoot.act(parser);            	
             }
             catch(Exception e){
-            	Messages.log(logger,"Error on cppcheck analysis: " + e);
+            	Messages.log(listener,"Error on cppcheck analysis: " + e);
             	build.setResult(Result.FAILURE);
                 return false;            
             }
@@ -125,13 +131,13 @@ public class CppcheckPublisher extends Publisher {
             build.addAction(buildAction);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                   logger, buildAction.getNumberErrors(thresholdLimit,false), buildAction.getNumberErrors(thresholdLimit,true),cppcheckHealthReportThresholds);
+                   listener, buildAction.getNumberErrors(thresholdLimit,false), buildAction.getNumberErrors(thresholdLimit,true),cppcheckHealthReportThresholds);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
 
-            Messages.log(logger,"End of the cppcheck analysis.");
+            Messages.log(listener,"End of the cppcheck analysis.");
         }
         return true;
     }

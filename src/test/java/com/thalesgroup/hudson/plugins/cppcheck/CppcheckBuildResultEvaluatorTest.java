@@ -25,8 +25,10 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import hudson.model.BuildListener;
 import hudson.model.Result;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import junit.framework.Assert;
@@ -38,31 +40,33 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator
 
 public class CppcheckBuildResultEvaluatorTest {
 
-	private CppcheckBuildResultEvaluator cppcheckBuildResultEvaluator;
-	CppcheckHealthReportThresholds cppcheckHealthReportThresholds;
-	PrintStream logger=mock(PrintStream.class);
+	private CppcheckBuildResultEvaluator cppcheckBuildResultEvaluator;	
+	private CppcheckHealthReportThresholds cppcheckHealthReportThresholds;	
+	private BuildListener listener;
 	
 	@Before
-	public void initialize(){				
+	public void setUp(){	
+		listener=mock(BuildListener.class);
+        when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream())); 		
 		cppcheckHealthReportThresholds=mock(CppcheckHealthReportThresholds.class);		
 		cppcheckBuildResultEvaluator=new CppcheckBuildResultEvaluator();		
 	}
 	
 	private Result processFailurThreshold(int failureThreshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}	
 	private Result processNewFailurThreshold(int newfailureThreshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}
 	private Result processNewThreshold(int newThreshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}	
 	private Result processThreshold(int threshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getThreshold()).thenReturn(String.valueOf(threshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}
 	
 	
@@ -157,12 +161,12 @@ public class CppcheckBuildResultEvaluatorTest {
 	private Result processTestCaseLimit1(int newFailureThreshold, int newThreshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
 		when(cppcheckHealthReportThresholds.getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}
 	private Result processTestCaseLimit2(int failureThreshold, int threshold, int errorsCount, int newErrors){
 		when(cppcheckHealthReportThresholds.getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
 		when(cppcheckHealthReportThresholds.getThreshold()).thenReturn(String.valueOf(threshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(logger, errorsCount, newErrors, cppcheckHealthReportThresholds);	
+		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckHealthReportThresholds);	
 	}
 
 	

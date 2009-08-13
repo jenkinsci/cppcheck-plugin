@@ -25,11 +25,11 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import hudson.FilePath;
 import hudson.Util;
+import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -41,14 +41,13 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
 	private static final long serialVersionUID = 1L;
 
-    private final PrintStream logger;
+    	private final BuildListener listener;
 	private final String cppcheckReportPattern;
-
 
 	public static final String DELAULT_REPORT_MAVEN  ="**/cppcheck-result.xml";
 	
 
-	public CppcheckParserResult(final PrintStream logger,  String cppcheckReportPattern) {
+	public CppcheckParserResult(final BuildListener listener,  String cppcheckReportPattern) {
 
 		if (cppcheckReportPattern==null){
 			cppcheckReportPattern=DELAULT_REPORT_MAVEN;
@@ -58,7 +57,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 			cppcheckReportPattern=DELAULT_REPORT_MAVEN;
 		}
 		
-		this.logger=logger;
+		this.listener=listener;
 		this.cppcheckReportPattern = cppcheckReportPattern;
 	}
 
@@ -76,7 +75,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 				throw  new IllegalArgumentException(msg);
 			}
 			
-			Messages.log(logger,"Processing "+cppcheckFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
+			Messages.log(listener,"Processing "+cppcheckFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
 			
 			for (String cppcheckFile : cppcheckFiles){
 				CppcheckReport cppcheckReport= new CppcheckParser().parse(new File(moduleRoot,cppcheckFile));
@@ -84,7 +83,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 			}
         }
         catch (Exception e) {
-        	Messages.log(logger,"Parsing has been canceled. " + e.getMessage());
+        	Messages.log(listener,"Parsing has been canceled. " + e.getMessage());
         	return null;
         }
         
