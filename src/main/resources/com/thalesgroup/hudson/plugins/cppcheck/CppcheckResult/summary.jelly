@@ -35,7 +35,7 @@
       <td class="pane-header" style="width:60%">Message</td>
     </tr>
     <tbody>
-        <j:forEach var="elt" items="${it.report.everyErrors}">    
+        <j:forEach var="elt" items="${it.report.everySeverities}">    
 	        <tr>
 	          <td class="pane">
 	          	<a href="source.${elt.key}">${elt.fileName}</a>

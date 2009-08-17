@@ -33,6 +33,12 @@
   xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
   xmlns:f="/lib/form" xmlns:u="/util">
 
+   <j:set var="config" value="${instance.cppcheckConfig}"/>
+   <j:if test="${config == null}">
+      <j:set var="config" value="${descriptor.config}"/>
+   </j:if>    
+
+
   <f:entry title="${%Build status}" description="${%description.status}">
     <table>
       <thead>
@@ -62,22 +68,22 @@
         <tr>
           <td style="vertical-align:middle">${%Thresholds:}</td>
           <td>
-            <f:textbox name="healthy" value="${instance.healthy}" />
+            <f:textbox name="cppcheck.config.healthy" value="${config.healthy}" />
           </td>
           <td>
-            <f:textbox name="unHealthy" value="${instance.unHealthy}" />
+            <f:textbox name="cppcheck.config.unHealthy" value="${config.unHealthy}" />
           </td>
           <td>
-            <f:textbox name="threshold" value="${instance.threshold}" />
+            <f:textbox name="cppcheck.config.threshold" value="${config.threshold}" />
           </td>
           <td>
-            <f:textbox name="newThreshold" value="${instance.newThreshold}" />
+            <f:textbox name="cppcheck.config.newThreshold" value="${config.newThreshold}" />
           </td>
           <td>
-            <f:textbox name="failureThreshold" value="${instance.failureThreshold}" />
+            <f:textbox name="cppcheck.config.failureThreshold" value="${config.failureThreshold}" />
           </td>
           <td>
-            <f:textbox name="newFailureThreshold" value="${instance.newFailureThreshold}" />
+            <f:textbox name="cppcheck.config.newFailureThreshold" value="${config.newFailureThreshold}" />
           </td>
         </tr>
       </tbody>
@@ -88,35 +94,24 @@
 
     <f:entry title="${%serveriry.evaluation}" description="${%description.limit}">
 
-      <f:radio name="${id}.thresholdLimit" value="all" checked="${instance.thresholdLimit == 'all'}" id="thresholdLimit.all"/>
+      <f:checkbox name="${id}.thresholdLimit.severityError" checked="${config.severityError}" id="thresholdLimit.severityError"/>
       <st:nbsp/>
-      <label for="thresholdLimit.all">${%Only serverity all}</label>
+      <label for="thresholdLimit.severityError">${%Serverity 'error'}</label>
       <st:nbsp />
 
-      <f:radio name="${id}.thresholdLimit" value="style" checked="${instance.thresholdLimit == 'style'}" id="thresholdLimit.style"/>
+      <f:checkbox name="${id}.config.severityPossibleError" checked="${config.severityPossibleError}" id="thresholdLimit.severityPossibleError"/>
       <st:nbsp/>
-      <label for="thresholdLimit.style">${%Only serverity style}</label>
+      <label for="thresholdLimit.severityPossibleError">${%Severity 'possible error'}</label>
       <st:nbsp />
 
-      <f:radio name="${id}.thresholdLimit" value="allStyle" checked="${instance.thresholdLimit == 'allStyle'}" id="thresholdLimit.allStyle"/>
+      <f:checkbox name="${id}.config.severityStyle" checked="${config.severityStyle}" id="thresholdLimit.severityStyle"/>
       <st:nbsp/>
-      <label for="thresholdLimit.allStyle">${%Only serverity all style}</label>
+      <label for="thresholdLimit.severityStyle">${%Severity 'style'}</label>
       <st:nbsp />
 
-              <f:radio name="${id}.thresholdLimit" value="error" checked="${instance.thresholdLimit == 'error'}" id="thresholdLimit.error"/>
+      <f:checkbox name="${id}.config.severityPossibleStyle" checked="${config.severityPossibleStyle}" id="thresholdLimit.severityPossibleStyle"/>
       <st:nbsp/>
-      <label for="thresholdLimit.error">${%Only serverity error}</label>
-      <st:nbsp />
-
-
-      <j:if test="${instance != null}">
-        <f:radio name="${id}.thresholdLimit" value="every" title="" checked="${instance.thresholdLimit == 'every'}" id="thresholdLimit.every"/>
-      </j:if>
-      <j:if test="${instance == null}">
-        <f:radio name="${id}.thresholdLimit" value="every" title="" checked="${true}" id="thresholdLimit.every"/>
-      </j:if>
-      <st:nbsp/>
-      <label for="thresholdLimit.low">${%All severities}</label>
+      <label for="thresholdLimit.severityPossibleStyle">${%Severity 'possible style'}</label>
       <st:nbsp />
 
     </f:entry>

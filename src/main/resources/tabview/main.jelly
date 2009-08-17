@@ -28,7 +28,7 @@
      
      <st:header name="Content-Type" value="text/html;charset=UTF-8" />
     
-     <j:if test="${it.report.everyErrors != null and it.report.everyErrors.size() != 0}">
+     <j:if test="${it.report.everySeverities != null and it.report.everySeverities.size() != 0}">
         <h2>Details</h2>
     	<st:include page="summary.jelly" /> 
      </j:if>

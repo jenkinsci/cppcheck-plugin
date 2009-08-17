@@ -9,8 +9,7 @@
 <error file="testcppcheck.cpp" line="28" id="mismatchSize" severity="error" msg="The given size 25 is mismatching"/>
 <error file="testcppcheck.cpp" line="33" id="mismatchAllocDealloc" severity="error" msg="Mismatching allocation and deallocation: str2"/>
 <error file="testcppcheck.cpp" line="51" id="resourceLeak" severity="error" msg="Resource leak: f"/>
-<error file="testcppcheck.cpp" line="6" id="bufferOverrun" severity="all" msg="Buffer overrun"/>
-<error file="testcppcheck.cpp" line="15" id="bufferOverrun" severity="all" msg="Buffer overrun"/>
-<error id="id" severity="" msg="[testcppcheck.cpp]: The function 'foo' is never used"/>
-<error id="id" severity="" msg="[testcppcheck.cpp]: The function 'rien' is never used"/>
+<error file="testcppcheck.cpp" line="6" id="bufferOverrun" severity="possible error" msg="Buffer overrun"/>
+<error file="testcppcheck.cpp" line="15" id="bufferOverrun" severity="possible error" msg="Buffer overrun"/>
+<error file="testcppcheck.cpp" line="1" id="unusedFunction" severity="style" msg="The function 'foo' is never used"/>
 </results>

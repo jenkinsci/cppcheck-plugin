@@ -71,7 +71,7 @@ public class CppcheckParserTest {
     	
     @Test
     public void testcppcheck1() throws Exception {       
-		processCheckstyle("testcppcheck1.xml",13,2,0,1,8,2);	
+		processCheckstyle("testcppcheck1.xml",12,2,0,2,8,0);	
     }
 
     @Test
@@ -86,43 +86,43 @@ public class CppcheckParserTest {
     
     @Test
     public void testcppcheckPart2() throws Exception {  
-		processCheckstyle("testcppcheck-part2.xml",5,2,0,0,1,2);
+		processCheckstyle("testcppcheck-part2.xml",4,2,0,1,1,0);
 		
     }
 		
 	private void processCheckstyle(String filename, 
 								   int nbErrors, 
-								   int nbAllErrors,
-								   int nbAllStyleErrors,
+								   int nbSeveritiesPossibleError,
+								   int nbSeveritiesPossibleStyle,
 								   int nbStyleErrors,
-								   int nbErrorsErrors,
-								   int nbNoCategoryErrors)	throws Exception{
+								   int nbSeveritiesError,
+								   int nbSeveritiesNoCategory)	throws Exception{
 
 		CppcheckReport cppcheckReport = cppcheckParser.parse(new File(this.getClass().getResource(filename).toURI()));       
 
-        List<CppcheckFile> everyErrors = cppcheckReport.getEveryErrors();        
-        List<CppcheckFile> allErrors = cppcheckReport.getAllErrors();
-        List<CppcheckFile> styleErrors = cppcheckReport.getStyleErrors();
-        List<CppcheckFile> allStyleErrors = cppcheckReport.getAllStyleErrors();
-        List<CppcheckFile> errosErrors = cppcheckReport.getErrorErrors();
-        List<CppcheckFile> noCategoryErrors = cppcheckReport.getNoCategoryErrors();
+        List<CppcheckFile> everyErrors = cppcheckReport.getEverySeverities();        
+        List<CppcheckFile> possibileErrorSeverities = cppcheckReport.getPossibleErrorSeverities();
+        List<CppcheckFile> styleErrors = cppcheckReport.getStyleSeverities();
+        List<CppcheckFile> possibleStyleSeverities = cppcheckReport.getPossibleStyleSeverities();
+        List<CppcheckFile> errorSeverities = cppcheckReport.getErrorSeverities();
+        List<CppcheckFile> noCategorySeverities = cppcheckReport.getNoCategorySeverities();
                 
-        assert allErrors!=null;
-        assert allStyleErrors!=null;
-        assert errosErrors!=null;
+        assert possibileErrorSeverities!=null;
+        assert possibleStyleSeverities!=null;
+        assert errorSeverities!=null;
         assert everyErrors!=null;
         assert styleErrors!=null;
-        assert noCategoryErrors!=null;
+        assert noCategorySeverities!=null;
         
         Assert.assertEquals("Wrong computing of list of errors", everyErrors.size(), 
-        		noCategoryErrors.size()+ allStyleErrors.size() +  errosErrors.size()+ allErrors.size() + styleErrors.size());
+        		noCategorySeverities.size()+ possibleStyleSeverities.size() +  errorSeverities.size()+ possibileErrorSeverities.size() + styleErrors.size());
         
         Assert.assertEquals("Wrong total number of errors", nbErrors, everyErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'all'", nbAllErrors, allErrors.size());             
-        Assert.assertEquals("Wrong total number of errors for the severity 'allStyle'", nbAllStyleErrors, allStyleErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'possible error'", nbSeveritiesPossibleError, possibileErrorSeverities.size());             
+        Assert.assertEquals("Wrong total number of errors for the severity 'possible style'", nbSeveritiesPossibleStyle, possibleStyleSeverities.size());
         Assert.assertEquals("Wrong total number of errors for the severity 'style'", nbStyleErrors, styleErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'errors'", nbErrorsErrors, errosErrors.size());
-        Assert.assertEquals("Wrong total number of errors with no category", nbNoCategoryErrors, noCategoryErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'error'", nbSeveritiesError, errorSeverities.size());
+        Assert.assertEquals("Wrong total number of errors with no category", nbSeveritiesNoCategory, noCategorySeverities.size());
     }
 	
 }

@@ -37,18 +37,18 @@ public class CppcheckBuildHealthEvaluatorTest {
 
 	
 	private CppcheckBuildHealthEvaluator cppcheckBuildHealthEvaluator;
-	CppcheckHealthReportThresholds cppcheckHealthReportThresholds;
+	CppcheckConfig cppcheckConfig;
 	
 	@Before
 	public void initialize(){				
-		cppcheckHealthReportThresholds=mock(CppcheckHealthReportThresholds.class);		
+		cppcheckConfig=mock(CppcheckConfig.class);		
 		cppcheckBuildHealthEvaluator=new CppcheckBuildHealthEvaluator();		
 	}	
 	
 	private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity){
-		when(cppcheckHealthReportThresholds.getHealthy()).thenReturn(String.valueOf(healthy));
-		when(cppcheckHealthReportThresholds.getUnHealthy()).thenReturn(String.valueOf(unHealthy));
-		HealthReport healthReport= cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckHealthReportThresholds, errorsForSevrity);
+		when(cppcheckConfig.getHealthy()).thenReturn(String.valueOf(healthy));
+		when(cppcheckConfig.getUnHealthy()).thenReturn(String.valueOf(unHealthy));
+		HealthReport healthReport= cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig, errorsForSevrity);
 		return healthReport.getScore();
 	}
 	

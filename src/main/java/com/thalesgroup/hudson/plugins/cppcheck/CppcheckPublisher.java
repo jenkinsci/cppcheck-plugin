@@ -23,7 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
@@ -35,55 +34,23 @@ import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
+import net.sf.json.JSONObject;
 
-import java.io.PrintStream;
-
-import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.StaplerRequest;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
 public class CppcheckPublisher extends Publisher {
 	
-    private final String cppcheckReportPattern;
+    private CppcheckConfig cppcheckConfig;
 
-    private final String threshold;
-
-    private final String newThreshold;
-
-    private final String failureThreshold;
-
-    private final String newFailureThreshold;
-
-    private final String healthy;
-
-    private final String unHealthy;
-
-    private final String thresholdLimit;
-
+    public CppcheckPublisher(){    	
+    }
+    
     @Override
     public CppcheckDescriptor getDescriptor() {
         return DESCRIPTOR;
-    }
-
-    @DataBoundConstructor
-    public CppcheckPublisher(final String cppcheckReportPattern,
-                               final String threshold,
-                               final String newThreshold,
-                               final String failureThreshold,
-                               final String newFailureThreshold,
-                               final String healthy,
-                               final String unHealthy,
-                               final String thresholdLimit) {
-
-        this.cppcheckReportPattern = cppcheckReportPattern;
-        this.threshold=threshold;
-        this.newFailureThreshold=newFailureThreshold;
-        this.newThreshold=newThreshold;
-        this.failureThreshold=failureThreshold;
-        this.healthy=healthy;
-        this.unHealthy=unHealthy;
-        this.thresholdLimit=thresholdLimit;
     }
 
     @Override
@@ -106,7 +73,7 @@ public class CppcheckPublisher extends Publisher {
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
             final FilePath moduleRoot= multipleModuleRoots ? build.getProject().getWorkspace() : build.getProject().getModuleRoot();
         	        	
-            CppcheckParserResult parser = new CppcheckParserResult(listener, getCppcheckReportPattern());            
+            CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern());            
             CppcheckReport cppcheckReport= null;
             try{
             	cppcheckReport= moduleRoot.act(parser);            	
@@ -122,16 +89,12 @@ public class CppcheckPublisher extends Publisher {
                 return false;            	
             }
             
-
-
-            CppcheckHealthReportThresholds cppcheckHealthReportThresholds= 
-            	new CppcheckHealthReportThresholds(threshold,newThreshold,failureThreshold,newFailureThreshold,healthy,unHealthy, thresholdLimit);
             CppcheckResult result = new CppcheckResult(cppcheckReport, build);
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckHealthReportThresholds);
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
             build.addAction(buildAction);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                   listener, buildAction.getNumberErrors(thresholdLimit,false), buildAction.getNumberErrors(thresholdLimit,true),cppcheckHealthReportThresholds);
+                   listener, buildAction.getNumberErrors(cppcheckConfig,false), buildAction.getNumberErrors(cppcheckConfig,true),cppcheckConfig);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
@@ -142,13 +105,15 @@ public class CppcheckPublisher extends Publisher {
         return true;
     }
 
-    @Extension    
+    //@Extension    
     public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
 
     public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
 
+
         public CppcheckDescriptor() {
             super(CppcheckPublisher.class);
+            load();
         }
                
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
@@ -168,37 +133,29 @@ public class CppcheckPublisher extends Publisher {
         public String getPluginRoot() {
             return "/plugin/cppcheck/";
         }
+        
+        public CppcheckConfig getConfig() {
+            return new CppcheckConfig();
+        }
+        
+		@Override
+		public Publisher newInstance(StaplerRequest req, JSONObject formData)
+				throws hudson.model.Descriptor.FormException {
+			
+			CppcheckPublisher pub = new CppcheckPublisher();
+			CppcheckConfig cppcheckConfig =  req.bindJSON(CppcheckConfig.class,formData);
+			pub.setCppcheckConfig(cppcheckConfig);
+			return pub;
+		}
     }
 
-	public String getCppcheckReportPattern() {
-		return cppcheckReportPattern;
+	public CppcheckConfig getCppcheckConfig() {
+		return cppcheckConfig;
 	}
 
-    public String getThreshold() {
-        return threshold;
-    }
+	public void setCppcheckConfig(CppcheckConfig cppcheckConfig) {
+		this.cppcheckConfig = cppcheckConfig;
+	}
 
-    public String getNewThreshold() {
-        return newThreshold;
-    }
 
-    public String getFailureThreshold() {
-        return failureThreshold;
-    }
-
-    public String getNewFailureThreshold() {
-        return newFailureThreshold;
-    }
-
-    public String getHealthy() {
-        return healthy;
-    }
-
-    public String getUnHealthy() {
-        return unHealthy;
-    }
-
-    public String getThresholdLimit() {
-        return thresholdLimit;
-    }
 }

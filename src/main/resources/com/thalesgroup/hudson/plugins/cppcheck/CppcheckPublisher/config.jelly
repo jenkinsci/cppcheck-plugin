@@ -25,9 +25,14 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
 
+   <j:set var="config" value="${instance.cppcheckConfig}"/>
+   <j:if test="${config == null}">
+      <j:set var="config" value="${descriptor.config}"/>
+   </j:if>    
+
   <f:entry title="${%Cppcheck report XMLs}"
 	description="${%description.pattern}">
-        <f:textbox name="cppcheckReportPattern" value="${instance.cppcheckReportPattern}"/>
+        <f:textbox name="cppcheckReportPattern" value="${config.cppcheckReportPattern}"/>
     </f:entry>
 
     <f:advanced>

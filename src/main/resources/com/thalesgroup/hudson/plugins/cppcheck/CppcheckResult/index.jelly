@@ -49,19 +49,19 @@
 			 <table class="pane sortable">
     				<tr>
       					<td class="pane-header">Total</td>
-      					<td class="pane-header" style="width:2em">Severity 'all'</td>
-      					<td class="pane-header" style="width:2em">Severity 'all style'</td>
-      					<td class="pane-header" style="width:2em">Severity 'style'</td>
       					<td class="pane-header" style="width:2em">Severity 'error'</td>
+      					<td class="pane-header" style="width:2em">Severity 'possible error'</td>
+      					<td class="pane-header" style="width:2em">Severity 'style'</td>
+      					<td class="pane-header" style="width:2em">Severity 'possible style'</td>
       					<td class="pane-header" style="width:2em">no category</td>
 				    </tr>
     			<tbody>
 			        <tr>
 	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.report.numberSeverityAll}</td>
-	          			<td class="pane">${it.report.numberSeverityAllStyle}</td>
+	          			<td class="pane">${it.report.numberSeverityError}</td>
+	          			<td class="pane">${it.report.numberSeverityPossibleError}</td>
 	          			<td class="pane">${it.report.numberSeverityStyle}</td>
-	          			<td class="pane">${it.report.numberSeverityErrors}</td>
+	          			<td class="pane">${it.report.numberSeverityPossibleStyle}</td>
 	          			<td class="pane">${it.report.numberSeverityNoCategory}</td>
 					</tr>
 				</tbody>

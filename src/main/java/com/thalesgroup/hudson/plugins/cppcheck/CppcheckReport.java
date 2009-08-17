@@ -40,57 +40,21 @@ public class CppcheckReport implements Serializable {
 
 	private Map<Integer, CppcheckFile> internalMap = new HashMap<Integer, CppcheckFile>();
 
-	private List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
+	private List<CppcheckFile> everySeverities = new ArrayList<CppcheckFile>();
 
-	private List<CppcheckFile> allErrors = new ArrayList<CppcheckFile>();
+	private List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();
+	
+	private List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
+	
+	private List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
 
-	private List<CppcheckFile> styleErrors = new ArrayList<CppcheckFile>();
+	private List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
 
-	private List<CppcheckFile> allStyleErrors = new ArrayList<CppcheckFile>();
-
-	private List<CppcheckFile> errorErrors = new ArrayList<CppcheckFile>();
-
-	private List<CppcheckFile> noCategoryErrors = new ArrayList<CppcheckFile>();
+	private List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
 	@Exported
-	public List<CppcheckFile> getEveryErrors() {
-		return everyErrors;
-	}
-
-	public List<CppcheckFile> getAllErrors() {
-		return allErrors;
-	}
-
-	public List<CppcheckFile> getStyleErrors() {
-		return styleErrors;
-	}
-
-	public List<CppcheckFile> getAllStyleErrors() {
-		return allStyleErrors;
-	}
-
-	public List<CppcheckFile> getErrorErrors() {
-		return errorErrors;
-	}
-
-	public void setEveryErrors(List<CppcheckFile> everyErrors) {
-		this.everyErrors = everyErrors;
-	}
-
-	public void setAllErrors(List<CppcheckFile> allErrors) {
-		this.allErrors = allErrors;
-	}
-
-	public void setStyleErrors(List<CppcheckFile> styleErrors) {
-		this.styleErrors = styleErrors;
-	}
-
-	public void setAllStyleErrors(List<CppcheckFile> allStyleErrors) {
-		this.allStyleErrors = allStyleErrors;
-	}
-
-	public void setErrorErrors(List<CppcheckFile> errorErrors) {
-		this.errorErrors = errorErrors;
+	public List<CppcheckFile> getEverySeverities() {
+		return everySeverities;
 	}
 
 	public Map<Integer, CppcheckFile> getInternalMap() {
@@ -101,42 +65,78 @@ public class CppcheckReport implements Serializable {
 		this.internalMap = internalMap;
 	}
 
-	public List<CppcheckFile> getNoCategoryErrors() {
-		return noCategoryErrors;
+	public List<CppcheckFile> getPossibleErrorSeverities() {
+		return possibleErrorSeverities;
 	}
 
-	public void setNoCategoryErrors(List<CppcheckFile> noCategoryErrors) {
-		this.noCategoryErrors = noCategoryErrors;
+	public void setPossibleErrorSeverities(List<CppcheckFile> possibleErrorSeverities) {
+		this.possibleErrorSeverities = possibleErrorSeverities;
+	}
+
+	public List<CppcheckFile> getStyleSeverities() {
+		return styleSeverities;
+	}
+
+	public void setStyleSeverities(List<CppcheckFile> styleSeverities) {
+		this.styleSeverities = styleSeverities;
+	}
+
+	public List<CppcheckFile> getPossibleStyleSeverities() {
+		return possibleStyleSeverities;
+	}
+
+	public void setPossibleStyleSeverities(List<CppcheckFile> possibleStyleSeverities) {
+		this.possibleStyleSeverities = possibleStyleSeverities;
+	}
+
+	public List<CppcheckFile> getErrorSeverities() {
+		return errorSeverities;
+	}
+
+	public void setErrorSeverities(List<CppcheckFile> errorSeverities) {
+		this.errorSeverities = errorSeverities;
+	}
+
+	public List<CppcheckFile> getNoCategorySeverities() {
+		return noCategorySeverities;
+	}
+
+	public void setNoCategorySeverities(List<CppcheckFile> noCategorySeverities) {
+		this.noCategorySeverities = noCategorySeverities;
+	}
+	
+	public void setEverySeverities(List<CppcheckFile> everySeverities) {
+		this.everySeverities = everySeverities;
 	}
 
 	@Exported
 	public int getNumberTotal() {
-		return (everyErrors == null) ? 0 : everyErrors.size();
-	}
-
-	@Exported
-	public int getNumberSeverityAllStyle() {
-		return (allStyleErrors == null) ? 0 : allStyleErrors.size();
+		return (everySeverities == null) ? 0 : everySeverities.size();
 	}
 
 	@Exported
 	public int getNumberSeverityStyle() {
-		return (styleErrors == null) ? 0 : styleErrors.size();
+		return (styleSeverities == null) ? 0 : styleSeverities.size();
+	}
+	
+	@Exported
+	public int getNumberSeverityPossibleStyle() {
+		return (possibleStyleSeverities == null) ? 0 : possibleStyleSeverities.size();
 	}
 
 	@Exported
-	public int getNumberSeverityErrors() {
-		return (errorErrors == null) ? 0 : errorErrors.size();
+	public int getNumberSeverityError() {
+		return (errorSeverities == null) ? 0 : errorSeverities.size();
 	}
 
 	@Exported
-	public int getNumberSeverityAll() {
-		return (allErrors == null) ? 0 : allErrors.size();
+	public int getNumberSeverityPossibleError() {
+		return (possibleErrorSeverities == null) ? 0 : possibleErrorSeverities.size();
 	}
 
 	@Exported
 	public int getNumberSeverityNoCategory() {
-		return (noCategoryErrors == null) ? 0 : noCategoryErrors.size();
+		return (noCategorySeverities == null) ? 0 : noCategorySeverities.size();
 	}
   
 }

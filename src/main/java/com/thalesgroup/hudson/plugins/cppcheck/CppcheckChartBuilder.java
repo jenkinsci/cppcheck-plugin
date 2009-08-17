@@ -89,10 +89,10 @@ public class CppcheckChartBuilder {
             if(result != null){
                 CppcheckReport report = result.getReport();
                 NumberOnlyBuildLabel buildLabel = new NumberOnlyBuildLabel(action.getBuild());
-                if (report.getEveryErrors() ==null)
+                if (report.getEverySeverities() ==null)
                 	builder.add(0, "Number of errors", buildLabel);
                 else
-                	builder.add(report.getEveryErrors().size(), "Number of errors", buildLabel);
+                	builder.add(report.getEverySeverities().size(), "Number of errors", buildLabel);
             }
             action = result.getPreviousAction();
         }while(action != null);

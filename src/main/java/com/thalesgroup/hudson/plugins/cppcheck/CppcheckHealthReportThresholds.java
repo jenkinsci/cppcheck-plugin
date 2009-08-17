@@ -24,8 +24,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 
 
@@ -83,31 +81,4 @@ public class CppcheckHealthReportThresholds implements Serializable{
     public String getThresholdLimit() {
         return thresholdLimit;
     }
-
-    public static int convert(String threshold) {
-        if (isValid(threshold)) {
-            if (StringUtils.isNotBlank(threshold)) {
-                try {
-                    return Integer.valueOf(threshold);
-                }
-                catch (NumberFormatException exception) {
-                    // not valid
-                }
-            }
-        }
-        throw new IllegalArgumentException("Not a parsable integer value >= 0: " + threshold);
-    }
-
-    public static  boolean isValid(final String threshold) {
-        if (StringUtils.isNotBlank(threshold)) {
-            try {
-                return Integer.valueOf(threshold) >= 0;
-            }
-            catch (NumberFormatException exception) {
-                // not valid
-            }
-        }
-        return false;
-    }
-
 }

@@ -41,7 +41,8 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
 	private static final long serialVersionUID = 1L;
 
-    	private final BuildListener listener;
+    private final BuildListener listener;
+    
 	private final String cppcheckReportPattern;
 
 	public static final String DELAULT_REPORT_MAVEN  ="**/cppcheck-result.xml";
@@ -92,13 +93,13 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 	
 
     private static void mergeReport(CppcheckReport cppcheckReportResult, CppcheckReport cppcheckReport) {		
-    	cppcheckReportResult.getAllErrors().addAll(cppcheckReport.getAllErrors());
-    	cppcheckReportResult.getAllStyleErrors().addAll(cppcheckReport.getAllStyleErrors());
-    	cppcheckReportResult.getErrorErrors().addAll(cppcheckReport.getErrorErrors());
-    	cppcheckReportResult.getEveryErrors().addAll(cppcheckReport.getEveryErrors());
+    	cppcheckReportResult.getPossibleErrorSeverities().addAll(cppcheckReport.getPossibleErrorSeverities());
+    	cppcheckReportResult.getPossibleStyleSeverities().addAll(cppcheckReport.getPossibleStyleSeverities());
+    	cppcheckReportResult.getErrorSeverities().addAll(cppcheckReport.getErrorSeverities());
+    	cppcheckReportResult.getEverySeverities().addAll(cppcheckReport.getEverySeverities());
     	cppcheckReportResult.getInternalMap().putAll(cppcheckReport.getInternalMap());
-    	cppcheckReportResult.getNoCategoryErrors().addAll(cppcheckReport.getNoCategoryErrors());
-    	cppcheckReportResult.getStyleErrors().addAll(cppcheckReport.getStyleErrors());		
+    	cppcheckReportResult.getNoCategorySeverities().addAll(cppcheckReport.getNoCategorySeverities());
+    	cppcheckReportResult.getStyleSeverities().addAll(cppcheckReport.getStyleSeverities());		
 	}	
 	
 	/**

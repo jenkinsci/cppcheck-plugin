@@ -23,18 +23,17 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
-import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.convert;
-import static com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds.isValid;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 
-import com.thalesgroup.hudson.plugins.cppcheck.CppcheckHealthReportThresholds;
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckMetricUtil;
 
 public class CppcheckBuildResultEvaluator {
 
     private boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
-        if (errorCount > 0 && isValid(errorThreshold)) {
-            return errorCount > convert(errorThreshold);
+        if (errorCount > 0 && CppcheckMetricUtil.isValid(errorThreshold)) {
+            return errorCount > CppcheckMetricUtil.convert(errorThreshold);
         }
         return false;
     }
@@ -43,22 +42,30 @@ public class CppcheckBuildResultEvaluator {
             final BuildListener listener,
             int errorsCount,
             int newErrorsCount,
-            CppcheckHealthReportThresholds cppcheckHealthReportThresholds) {
+            CppcheckConfig cppcheckConfig) {
                    
-        if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getFailureThreshold())) {
-        	Messages.log(listener,"Setting build status to FAILURE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getFailureThreshold());
-            	return Result.FAILURE;
+        if (isErrorCountExceeded(errorsCount, cppcheckConfig.getFailureThreshold())) {
+        	Messages.log(listener,"Setting build status to FAILURE since total number of errors (" 
+        				+ CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)  
+        				+ ") exceeds the threshold value ;" + cppcheckConfig.getFailureThreshold() + "'.");
+            return Result.FAILURE;
         }
-        if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewFailureThreshold())) {
-        	Messages.log(listener,"Setting build status to FAILURE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewFailureThreshold());
-            	return Result.FAILURE;
+        if (isErrorCountExceeded(newErrorsCount, cppcheckConfig.getNewFailureThreshold())) {
+        	Messages.log(listener,"Setting build status to FAILURE since total number of new errors ("
+        			   + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)  
+        			   + ") exceeds the threshold value '" + cppcheckConfig.getNewFailureThreshold()+ "'.");
+            return Result.FAILURE;
         }
-        if (isErrorCountExceeded(errorsCount, cppcheckHealthReportThresholds.getThreshold())) {
-        	Messages.log(listener,"Setting build status to UNSTABLE since total number of errors exceeds the threshold " + cppcheckHealthReportThresholds.getThreshold());
-            	return Result.UNSTABLE;
+        if (isErrorCountExceeded(errorsCount, cppcheckConfig.getThreshold())) {
+        	Messages.log(listener,"Setting build status to UNSTABLE since total number of errors ("
+        			  +  CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+        			  +  ") exceeds the threshold value '" + cppcheckConfig.getThreshold()+ "'.");
+            return Result.UNSTABLE;
         }
-        if (isErrorCountExceeded(newErrorsCount, cppcheckHealthReportThresholds.getNewThreshold())) {
-            	Messages.log(listener,"Setting build status to UNSTABLE since total number of new errors exceeds the threshold " + cppcheckHealthReportThresholds.getNewThreshold());
+        if (isErrorCountExceeded(newErrorsCount, cppcheckConfig.getNewThreshold())) {
+            Messages.log(listener,"Setting build status to UNSTABLE since total number of new errors ("
+            		  + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+            		  +  ") exceeds the threshold value '" + cppcheckConfig.getNewThreshold()+ "'.");
 	        return Result.UNSTABLE;
         }
 

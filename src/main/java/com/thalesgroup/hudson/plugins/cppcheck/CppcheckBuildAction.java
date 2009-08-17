@@ -39,12 +39,12 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
 
     private AbstractBuild<?,?> build;
     private CppcheckResult result;
-    private CppcheckHealthReportThresholds cppcheckHealthReportThresholds;
+    private CppcheckConfig cppcheckConfig;
 
-    public CppcheckBuildAction(AbstractBuild<?,?> build, CppcheckResult result, CppcheckHealthReportThresholds cppcheckHealthReportThresholds){
+    public CppcheckBuildAction(AbstractBuild<?,?> build, CppcheckResult result, CppcheckConfig cppcheckConfig){
         this.build = build;
         this.result = result;
-        this.cppcheckHealthReportThresholds=cppcheckHealthReportThresholds;
+        this.cppcheckConfig=cppcheckConfig;
     }
 
     public String getIconFileName() {
@@ -76,51 +76,46 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
     
 
     public HealthReport getBuildHealth() {
-        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckHealthReportThresholds, getNumberErrors(cppcheckHealthReportThresholds.getThresholdLimit(),false));
+        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, getNumberErrors(cppcheckConfig,false));
     }
 
 
-    public int getNumberErrors(String thresholdLimit, boolean newError){
+    public int getNumberErrors(CppcheckConfig cppecheckConfig, boolean checkNewError){
 
         int nbErrors= 0;
         int nbPreviousError=0;
         CppcheckResult previousResult=result.getPreviousResult();
 
-        if ("all".equals(thresholdLimit)){
-            nbErrors= getResult().getReport().getAllErrors().size();
+        if (cppecheckConfig.isSeverityPossibleError()){
+            nbErrors= getResult().getReport().getPossibleErrorSeverities().size();
             if (previousResult!=null){
-            	nbPreviousError= previousResult.getReport().getAllErrors().size();
+            	nbPreviousError= previousResult.getReport().getPossibleErrorSeverities().size();
             }
         }
-        else if ("style".equals(thresholdLimit)){
-            nbErrors= getResult().getReport().getStyleErrors().size();
+        
+        if (cppecheckConfig.isSeverityStyle()){
+            nbErrors= nbErrors+ getResult().getReport().getStyleSeverities().size();
             if (previousResult!=null){
-            	nbPreviousError=  previousResult.getReport().getStyleErrors().size();
-            }
-
-        }
-        else if ("all style".equals(thresholdLimit)){
-            nbErrors= getResult().getReport().getAllStyleErrors().size();
-            if (previousResult!=null){
-            	nbPreviousError=previousResult.getReport().getAllStyleErrors().size();
+            	nbPreviousError=  nbPreviousError + previousResult.getReport().getStyleSeverities().size();
             }
 
         }
-        else if ("error".equals(thresholdLimit)){
-            nbErrors= getResult().getReport().getErrorErrors().size();
+        
+        if (cppecheckConfig.isSeverityPossibleStyle()){
+            nbErrors= nbErrors+ getResult().getReport().getPossibleStyleSeverities().size();
             if (previousResult!=null){
-            	nbPreviousError=previousResult.getReport().getErrorErrors().size();
-            }
-
-        }
-        else{
-            nbErrors= getResult().getReport().getEveryErrors().size();
-            if (previousResult!=null){
-            	nbPreviousError=previousResult.getReport().getEveryErrors().size();
+            	nbPreviousError= nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
             }
         }
-
-        if (newError)   {
+        
+        if (cppecheckConfig.isSeverityError()){
+            nbErrors= nbErrors + getResult().getReport().getErrorSeverities().size();
+            if (previousResult!=null){
+            	nbPreviousError= nbPreviousError + previousResult.getReport().getErrorSeverities().size();
+            }
+        }
+        
+        if (checkNewError)   {
             if (previousResult!=null){
                 return nbErrors-nbPreviousError;
             }
