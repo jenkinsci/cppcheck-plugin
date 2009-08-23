@@ -25,46 +25,37 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.util.ChartUtil;
+import hudson.model.Result;
+
 import java.io.IOException;
-import java.io.Serializable;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckProjectAction;
 
-public class CppcheckProjectAction implements Action, Serializable {
-    
-    public static final String URL_NAME = "cppcheckResult";
 
-    public static final int CHART_WIDTH = 500;
-    public static final int CHART_HEIGHT = 200;
-
-    public AbstractProject<?,?> project;
+public class CppcheckProjectAction extends AbstractCppcheckProjectAction{
+  
+	public String getSearchUrl() {
+		return getUrlName();
+	}
 
     public CppcheckProjectAction(final AbstractProject<?, ?> project) {
-        this.project = project;
+		super(project);
     }
 
-    public String getIconFileName() {
-        return "/plugin/cppcheck/icons/cppcheck-24.png";
-    }
-
-    public String getDisplayName() {
-        return "Cppcheck Results";
-    }
-
-    public String getUrlName() {
-        return URL_NAME;
-    }
-    
-    public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        AbstractBuild<?, ?> build = getLastFinishedBuild();
-        if (build != null) {
-            response.sendRedirect2(String.format("../%d/%s", build.getNumber(), CppcheckBuildAction.URL_NAME));
-        }
-    }
-
+	public CppcheckBuildAction getLastResult() {
+		for (AbstractBuild<?, ?> b = project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
+	        if (b.getResult() == Result.FAILURE)
+	            continue;
+	        CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
+	        if (r != null)
+	            return r;
+	    }
+	    return null;
+	}
+	
     public AbstractBuild<?, ?> getLastFinishedBuild() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();
         while (lastBuild != null && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
@@ -83,29 +74,24 @@ public class CppcheckProjectAction implements Action, Serializable {
         }
         return false;
     }
+	
+	
+	public Integer getLastResultBuild() {
+		for (AbstractBuild<?, ?> b = project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
+            if (b.getResult() == Result.FAILURE)
+                continue;
+            CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
+            if (r != null)
+                return b.getNumber();
+        }
+        return null;
+	}
 
-
-    public void doTrendMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        AbstractBuild<?,?> lastBuild = this.getLastFinishedBuild();
-        CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
-
-        ChartUtil.generateClickableMap(
-                request,
-                response,
-                CppcheckChartBuilder.buildChart(lastAction),
-                CHART_WIDTH,
-                CHART_HEIGHT);
+	public String getDisplayName() {
+        return "Cppcheck Results";
     }
 
-    public void doTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        AbstractBuild<?,?> lastBuild = this.getLastFinishedBuild();
-        CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
-
-        ChartUtil.generateGraph(
-                request,
-                response,
-                CppcheckChartBuilder.buildChart(lastAction),
-                CHART_WIDTH,
-                CHART_HEIGHT);
+    public String getUrlName() {
+        return CppcheckBuildAction.URL_NAME;
     }
 }

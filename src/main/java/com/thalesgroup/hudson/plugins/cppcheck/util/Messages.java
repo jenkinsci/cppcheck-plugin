@@ -36,8 +36,8 @@ public class Messages implements Serializable{
 	private final static ResourceBundleHolder holder = ResourceBundleHolder.get(Messages.class);
 
 	public static String getMessage(String key, Object...args) {
-        return holder.format(key, args);
-    }
+        	return holder.format(key, args);
+	}
 
     /**
     * Log output to the given logger, using the Cppcheck identifier

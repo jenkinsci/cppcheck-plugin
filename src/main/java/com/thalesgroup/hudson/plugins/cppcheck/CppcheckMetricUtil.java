@@ -2,6 +2,8 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+
 public class CppcheckMetricUtil {
 
 	public static int convert(String threshold) {
@@ -33,29 +35,29 @@ public class CppcheckMetricUtil {
     public static String getMessageSelectedSeverties(CppcheckConfig cppcheckConfig){
     	StringBuffer sb=new StringBuffer();
     	
-    	if (cppcheckConfig.isAllSeverities()){
+    	if (cppcheckConfig.getConfigSeverityEvaluation().isAllSeverities()){
     		sb.append("with all severities");
     		return sb.toString();
     	}
     	
-    	if (cppcheckConfig.isSeverityError()){
+    	if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityError()){
     		sb.append(" and ");
     		sb.append("severity 'error'");
     	}
 
-    	if (cppcheckConfig.isSeverityPossibleError()){
+    	if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()){
     		sb.append(" and ");
     		sb.append("severity 'possible error'");
     	}
 
     	
-    	if (cppcheckConfig.isSeverityPossibleStyle()){
+    	if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()){
     		sb.append(" and ");
     		sb.append("severity 'possible style'");
     	}
 
     	
-    	if (cppcheckConfig.isSeverityStyle()){
+    	if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle()){
     		sb.append(" and ");
     		sb.append("severity 'style'");
     	}

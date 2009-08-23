@@ -25,8 +25,8 @@ package com.thalesgroup.hudson.plugins.cppcheck.util;
 
 import hudson.model.HealthReport;
 
-import com.thalesgroup.hudson.plugins.cppcheck.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckMetricUtil;
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 
 public class CppcheckBuildHealthEvaluator {
 
@@ -41,28 +41,27 @@ public class CppcheckBuildHealthEvaluator {
             int percentage;
             int counter =  nbErrorForSeverity;
             
-            if (counter < CppcheckMetricUtil.convert(cppcheckConfig.getHealthy())) {
+            if (counter < CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) {
                 percentage = 100;
             }
-            else if (counter > CppcheckMetricUtil.convert(cppcheckConfig.getUnHealthy())) {
+            else if (counter > CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy())) {
                 percentage = 0;
             }
             else {
-                percentage = 100 - ((counter - CppcheckMetricUtil.convert(cppcheckConfig.getHealthy())) * 100
-                        / (CppcheckMetricUtil.convert(cppcheckConfig.getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getHealthy())));
+                percentage = 100 - ((counter - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) * 100
+                        / (CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())));
             }
             
-            //TODO MALE THE message error
-            return new HealthReport(percentage, "Build stability for checked severities severity.");
+            return new HealthReport(percentage, "Build stability for errors ("+CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)+").");
         }
         return null;
     }
     
     
      private boolean isHealthyReportEnabled(CppcheckConfig cppcheckconfig) {
-        if (CppcheckMetricUtil.isValid(cppcheckconfig.getHealthy()) && CppcheckMetricUtil.isValid(cppcheckconfig.getUnHealthy())) {
-            int healthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getHealthy());
-            int unHealthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getUnHealthy());
+        if (CppcheckMetricUtil.isValid(cppcheckconfig.getConfigSeverityEvaluation().getHealthy()) && CppcheckMetricUtil.isValid(cppcheckconfig.getConfigSeverityEvaluation().getUnHealthy())) {
+            int healthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getConfigSeverityEvaluation().getHealthy());
+            int unHealthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getConfigSeverityEvaluation().getUnHealthy());
             return unHealthyNumber > healthyNumber;
         }
         return false;

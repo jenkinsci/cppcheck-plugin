@@ -33,11 +33,14 @@ import hudson.model.BuildListener;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import net.sf.json.JSONObject;
 
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
@@ -45,6 +48,7 @@ public class CppcheckPublisher extends Publisher {
 	
     private CppcheckConfig cppcheckConfig;
 
+    @DataBoundConstructor
     public CppcheckPublisher(){    	
     }
     
@@ -61,9 +65,12 @@ public class CppcheckPublisher extends Publisher {
     protected boolean canContinue(final Result result) {
         return result != Result.ABORTED && result != Result.FAILURE;
     }
+   
+    public BuildStepMonitor getRequiredMonitorService() {
+		return BuildStepMonitor.BUILD;
+	}
 
-    
-    @Override
+	@Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener){
     	
         if(this.canContinue(build.getResult())){      	
@@ -143,8 +150,11 @@ public class CppcheckPublisher extends Publisher {
 				throws hudson.model.Descriptor.FormException {
 			
 			CppcheckPublisher pub = new CppcheckPublisher();
+			
 			CppcheckConfig cppcheckConfig =  req.bindJSON(CppcheckConfig.class,formData);
 			pub.setCppcheckConfig(cppcheckConfig);
+			
+			
 			return pub;
 		}
     }

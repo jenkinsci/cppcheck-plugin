@@ -1,10 +1,10 @@
-package com.thalesgroup.hudson.plugins.cppcheck;
+package com.thalesgroup.hudson.plugins.cppcheck.config;
 
-import org.kohsuke.stapler.DataBoundConstructor;
+import java.io.Serializable;
 
-public class CppcheckConfig {
-
-    private String cppcheckReportPattern;
+public class CppcheckConfigSeverityEvaluation implements Serializable{
+	
+    private static final long serialVersionUID = 1L;
 
     private String threshold;
 
@@ -25,38 +25,27 @@ public class CppcheckConfig {
     private boolean severityStyle = true;
     
     private boolean severityPossibleStyle = true;
-	           
-    public CppcheckConfig(){    	
-    }
     
-    @DataBoundConstructor
-    public CppcheckConfig(String cppcheckReportPattern, String threshold,
+    public CppcheckConfigSeverityEvaluation(){}
+    
+    public CppcheckConfigSeverityEvaluation( String threshold,
 			String newThreshold, String failureThreshold,
 			String newFailureThreshold, String healthy, String unHealthy,
 			boolean severityError, boolean severityPossibleError,
 			boolean severityStyle, boolean severityPossibleStyle) {
-
-		this.cppcheckReportPattern = cppcheckReportPattern;
-		this.threshold = threshold;
-		this.newThreshold = newThreshold;
-		this.failureThreshold = failureThreshold;
-		this.newFailureThreshold = newFailureThreshold;
-		this.healthy = healthy;
-		this.unHealthy = unHealthy;
-		this.severityError = severityError;
-		this.severityPossibleError = severityPossibleError;
-		this.severityStyle = severityStyle;
-		this.severityPossibleStyle = severityPossibleStyle;
-	}
-
-	public String getCppcheckReportPattern() {
-		return cppcheckReportPattern;
-	}
-
-	public void setCppcheckReportPattern(String cppcheckReportPattern) {
-		this.cppcheckReportPattern = cppcheckReportPattern;
-	}
-
+    	
+    	this.threshold = threshold;
+    	this.newThreshold = newThreshold;
+    	this.failureThreshold = failureThreshold;
+    	this.newFailureThreshold = newFailureThreshold;
+    	this.healthy = healthy;
+    	this.unHealthy = unHealthy;
+    	this.severityError = severityError;
+    	this.severityPossibleError = severityPossibleError;
+    	this.severityStyle = severityStyle;
+    	this.severityPossibleStyle = severityPossibleStyle;
+    }
+    
 	public String getThreshold() {
 		return threshold;
 	}
@@ -135,8 +124,8 @@ public class CppcheckConfig {
 
 	public void setseverityPossibleStyle(boolean severityPossibleStyle) {
 		this.severityPossibleStyle = severityPossibleStyle;
-	}
-
+	}    
+	
 	public boolean isAllSeverities(){
 		return isSeverityError() && isSeverityPossibleError() && isSeverityPossibleStyle() && isSeverityStyle();
 	}

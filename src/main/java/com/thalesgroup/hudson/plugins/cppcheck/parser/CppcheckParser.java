@@ -71,16 +71,13 @@ public class CppcheckParser implements Serializable{
 		Element results = document.getRootElement();
 		List list = results.getChildren();	
 		
-        List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
+        	List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();	    	List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
+	        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
+        	List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();      
+	        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
+        	List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
         
-	    
-	    List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
-        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
-        List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();      
-        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
-        List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
-        
-        Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
+        	Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
 
 		CppcheckFile cppcheckFile;
 		for (int i = 0; i < list.size(); i++) {
@@ -100,33 +97,33 @@ public class CppcheckParser implements Serializable{
 			cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
 			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
 
-            if ("possible error".equals(cppcheckFile.getSeverity())){
-            	possibleErrorSeverities.add(cppcheckFile);
-            }
-            else if ("style".equals(cppcheckFile.getSeverity())){
-            	styleSeverities.add(cppcheckFile);
-            }
-            else if ("possible style".equals(cppcheckFile.getSeverity())){
-            	possibleStyleSeverities.add(cppcheckFile);
-            }
-            else if ("error".equals(cppcheckFile.getSeverity())){
-            	errorSeverities.add(cppcheckFile);
-            }
-            else{
-            	noCategorySeverities.add(cppcheckFile);
-            }
+            		if ("possible error".equals(cppcheckFile.getSeverity())){
+		            	possibleErrorSeverities.add(cppcheckFile);
+			}
+			else if ("style".equals(cppcheckFile.getSeverity())){
+				styleSeverities.add(cppcheckFile);
+			}
+			else if ("possible style".equals(cppcheckFile.getSeverity())){
+				possibleStyleSeverities.add(cppcheckFile);
+			}
+			else if ("error".equals(cppcheckFile.getSeverity())){
+				errorSeverities.add(cppcheckFile);
+			}
+			else{
+				noCategorySeverities.add(cppcheckFile);
+			}
 			everyErrors.add(cppcheckFile);
 			
 			agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
 		}
 
 		cppCheckReport.setEverySeverities(everyErrors);
-        cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
-        cppCheckReport.setStyleSeverities(styleSeverities);
-        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
-        cppCheckReport.setErrorSeverities(errorSeverities);
-        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
-        cppCheckReport.setInternalMap(agregateMap);
+	        cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
+        	cppCheckReport.setStyleSeverities(styleSeverities);
+	        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
+        	cppCheckReport.setErrorSeverities(errorSeverities);
+	        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
+        	cppCheckReport.setInternalMap(agregateMap);
               
 		return cppCheckReport;
 	}

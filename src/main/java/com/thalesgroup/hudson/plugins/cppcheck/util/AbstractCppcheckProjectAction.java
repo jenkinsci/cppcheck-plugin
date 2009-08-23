@@ -21,88 +21,54 @@
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
 
-package com.thalesgroup.hudson.plugins.cppcheck.model;
+package com.thalesgroup.hudson.plugins.cppcheck.util;
 
-import hudson.model.ModelObject;
+import hudson.model.AbstractProject;
+import hudson.model.Actionable;
+import hudson.model.ProminentProjectAction;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-@ExportedBean(defaultVisibility = 999)
-public class CppcheckFile implements ModelObject, Serializable{
+public abstract class AbstractCppcheckProjectAction extends Actionable implements ProminentProjectAction {
 
-	private static final long serialVersionUID = 1L;
-
-	private Integer key;
+	protected final AbstractProject<?, ?> project;
 	
-	private String fileName;
-	
-	private int lineNumber;
-	
-	private String severity;
-	
-	private String cppCheckId;
-	
-	private String message;
-
-	@Exported
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String filename) {
-		this.fileName = filename;
-	}
-
-	@Exported
-	public int getLineNumber() {
-		return lineNumber;
-	}
-
-	public void setLineNumber(int lineNumber) {
-		this.lineNumber = lineNumber;
+	public AbstractCppcheckProjectAction(AbstractProject<?, ?> project) {
+		this.project = project;
 	}
 	
-	@Exported
-	public String getCppCheckId() {
-		return cppCheckId;
-	}
-
-	public void setCppCheckId(String cppCheckId) {
-		this.cppCheckId = cppCheckId;
+	public AbstractProject<?, ?> getProject() {
+        return project;
+    }
+	
+    
+	public String getIconFileName() {
+        return "/plugin/cppcheck/icons/cppcheck-24.png";
 	}
 	
-	@Exported
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
+	public String getSearchUrl() {
+		return getUrlName();
 	}
 	
-   	@Exported
-	public String getSeverity() {
-		return severity;
-	}
-
-	public void setSeverity(String severity) {
-		this.severity = severity;
-	}
+	protected abstract AbstractCppcheckBuildAction getLastResult();
+	protected abstract Integer getLastResultBuild();
 	
-	@Exported
-	public Integer getKey() {
-		return key;
-	}
+	public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
+        if (getLastResult() != null) {
+            getLastResult().doGraph(req, rsp);
+        }
+    }
 
-	public void setKey(Integer key) {
-		this.key = key;
-	}
+    public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException {
+        Integer buildNumber = getLastResultBuild();
+        if (buildNumber == null) {
+            rsp.sendRedirect2("nodata");
+        } else {
+            rsp.sendRedirect2("../" + buildNumber + "/" + getUrlName());
+        }
+    }
 
-	public String getDisplayName() {
-		return "cppcheckFile";
-	}
-	
 }

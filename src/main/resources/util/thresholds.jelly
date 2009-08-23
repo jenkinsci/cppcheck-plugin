@@ -68,22 +68,22 @@
         <tr>
           <td style="vertical-align:middle">${%Thresholds:}</td>
           <td>
-            <f:textbox name="cppcheck.config.healthy" value="${config.healthy}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.healthy" value="${config.configSeverityEvaluation.healthy}" />
           </td>
           <td>
-            <f:textbox name="cppcheck.config.unHealthy" value="${config.unHealthy}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.unHealthy" value="${config.configSeverityEvaluation.unHealthy}" />
           </td>
           <td>
-            <f:textbox name="cppcheck.config.threshold" value="${config.threshold}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.threshold" value="${config.configSeverityEvaluation.threshold}" />
           </td>
           <td>
-            <f:textbox name="cppcheck.config.newThreshold" value="${config.newThreshold}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.newThreshold" value="${config.configSeverityEvaluation.newThreshold}" />
           </td>
           <td>
-            <f:textbox name="cppcheck.config.failureThreshold" value="${config.failureThreshold}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.failureThreshold" value="${config.configSeverityEvaluation.failureThreshold}" />
           </td>
           <td>
-            <f:textbox name="cppcheck.config.newFailureThreshold" value="${config.newFailureThreshold}" />
+            <f:textbox name="cppcheck.config.configSeverityEvaluation.newFailureThreshold" value="${config.configSeverityEvaluation.newFailureThreshold}" />
           </td>
         </tr>
       </tbody>
@@ -94,28 +94,89 @@
 
     <f:entry title="${%serveriry.evaluation}" description="${%description.limit}">
 
-      <f:checkbox name="${id}.thresholdLimit.severityError" checked="${config.severityError}" id="thresholdLimit.severityError"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityError" checked="${config.configSeverityEvaluation.severityError}" id="thresholdLimit.severityError"/>
       <st:nbsp/>
       <label for="thresholdLimit.severityError">${%Serverity 'error'}</label>
       <st:nbsp />
 
-      <f:checkbox name="${id}.config.severityPossibleError" checked="${config.severityPossibleError}" id="thresholdLimit.severityPossibleError"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityPossibleError" checked="${config.configSeverityEvaluation.severityPossibleError}" id="thresholdLimit.severityPossibleError"/>
       <st:nbsp/>
       <label for="thresholdLimit.severityPossibleError">${%Severity 'possible error'}</label>
       <st:nbsp />
 
-      <f:checkbox name="${id}.config.severityStyle" checked="${config.severityStyle}" id="thresholdLimit.severityStyle"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityStyle" checked="${config.configSeverityEvaluation.severityStyle}" id="thresholdLimit.severityStyle"/>
       <st:nbsp/>
       <label for="thresholdLimit.severityStyle">${%Severity 'style'}</label>
       <st:nbsp />
 
-      <f:checkbox name="${id}.config.severityPossibleStyle" checked="${config.severityPossibleStyle}" id="thresholdLimit.severityPossibleStyle"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityPossibleStyle" checked="${config.configSeverityEvaluation.severityPossibleStyle}" id="thresholdLimit.severityPossibleStyle"/>
       <st:nbsp/>
       <label for="thresholdLimit.severityPossibleStyle">${%Severity 'possible style'}</label>
       <st:nbsp />
 
     </f:entry>
     
+
+   <f:advanced>
+   
+       <f:entry title="${%graph.configuration}" description="${%graph.description}">
+
+    	<table>
+        	<tr>
+        		<td>
+		      		<label for="configGraph.xSize">${%Chart Width}</label>
+		      		<f:textbox name="${id}.config.configGraph.xSize" value="${config.configGraph.xSize}" id="configGraph.xSize"/>
+			    </td>
+			    <td>
+		      		<label for="configGraph.xSize">${%Chart Height}</label>
+		      		<f:textbox name="${id}.config.configGraph.ySize" value="${config.configGraph.ySize}" id="configGraph.ySize"/>
+	      		</td>
+	      		<td  colspan="3">
+	      		    <st:nbsp />
+	      		</td>
+	      	</tr>
+	      	<tr>		      		
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.diplayAllError" checked="${config.configGraph.diplayAllError}" id="configGraph.diplayAllError"/>
+      				<st:nbsp/>
+      				<label for="configGraph.diplayAllError">${%Display all errors}</label>
+      				<st:nbsp />
+	      		</td>
+
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityError" checked="${config.configGraph.displaySeverityError}" id="configGraph.displaySeverityError"/>
+      				<st:nbsp/>
+      				<label for="configGraph.displaySeverityError">${%Display Severity 'error'}</label>
+      				<st:nbsp />
+	      		</td>
+
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityPossibleError" checked="${config.configGraph.displaySeverityPossibleError}" id="configGraph.displaySeverityPossibleError"/>
+      				<st:nbsp/>
+      				<label for="configGraph.displaySeverityPossibleError">${%Display Severity 'possible error'}</label>
+      				<st:nbsp />
+	      		</td>
+
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityStyle" checked="${config.configGraph.displaySeverityStyle}" id="configGraph.displaySeverityStyle"/>
+      				<st:nbsp/>
+      				<label for="configGraph.displaySeverityStyle">${%Display Severity 'style'}</label>
+      				<st:nbsp />
+	      		</td>
+
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityPossibleStyle" checked="${config.configGraph.displaySeverityPossibleStyle}" id="configGraph.displaySeverityPossibleStyle"/>
+      				<st:nbsp/>
+      				<label for="configGraph.displaySeverityPossibleStyle">${%Display Severity 'possible style'}</label>
+      				<st:nbsp />
+	      		</td>
+		    </tr>
+		 </table>   		
+
+
+    </f:entry>
+   
+   </f:advanced>
 
 
 </j:jelly>

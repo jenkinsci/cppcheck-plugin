@@ -20,89 +20,47 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
+package com.thalesgroup.hudson.plugins.cppcheck.util;
 
-package com.thalesgroup.hudson.plugins.cppcheck.model;
+import java.io.IOException;
 
-import hudson.model.ModelObject;
+import hudson.model.AbstractBuild;
+import hudson.model.Action;
+import hudson.model.Actionable;
+import hudson.model.HealthReportingAction;
+import hudson.model.Result;
 
-import java.io.Serializable;
+import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
+public abstract class AbstractCppcheckBuildAction  extends Actionable implements Action, HealthReportingAction, StaplerProxy {
 
-@ExportedBean(defaultVisibility = 999)
-public class CppcheckFile implements ModelObject, Serializable{
 
-	private static final long serialVersionUID = 1L;
-
-	private Integer key;
+	protected final AbstractBuild<?, ?> owner;
 	
-	private String fileName;
-	
-	private int lineNumber;
-	
-	private String severity;
-	
-	private String cppCheckId;
-	
-	private String message;
-
-	@Exported
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String filename) {
-		this.fileName = filename;
-	}
-
-	@Exported
-	public int getLineNumber() {
-		return lineNumber;
-	}
-
-	public void setLineNumber(int lineNumber) {
-		this.lineNumber = lineNumber;
+	protected AbstractCppcheckBuildAction(AbstractBuild<?, ?> owner) {
+		this.owner = owner;
 	}
 	
-	@Exported
-	public String getCppCheckId() {
-		return cppCheckId;
-	}
+	public <T extends AbstractCppcheckBuildAction>T getPreviousResult() {        
+		AbstractBuild<?, ?> b = owner;
+	        while (true) {
+        	    b = b.getPreviousBuild();
+	            if (b == null)
+        	        return null;
+	            if (b.getResult() == Result.FAILURE)
+        	        continue;
+	            AbstractCppcheckBuildAction r = b.getAction(this.getClass());
+        	    if (r != null)
+                	return (T) r;		
+	        }
+    	}
 
-	public void setCppCheckId(String cppCheckId) {
-		this.cppCheckId = cppCheckId;
+	public AbstractBuild<?, ?> getOwner() {
+		return owner;
 	}
 	
-	@Exported
-	public String getMessage() {
-		return message;
-	}
+	public abstract void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
-   	@Exported
-	public String getSeverity() {
-		return severity;
-	}
-
-	public void setSeverity(String severity) {
-		this.severity = severity;
-	}
-	
-	@Exported
-	public Integer getKey() {
-		return key;
-	}
-
-	public void setKey(Integer key) {
-		this.key = key;
-	}
-
-	public String getDisplayName() {
-		return "cppcheckFile";
-	}
-	
 }

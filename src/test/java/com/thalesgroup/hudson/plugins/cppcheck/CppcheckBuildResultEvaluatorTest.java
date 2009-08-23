@@ -36,6 +36,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 
 public class CppcheckBuildResultEvaluatorTest {
@@ -53,19 +55,27 @@ public class CppcheckBuildResultEvaluatorTest {
 	}
 	
 	private Result processFailurThreshold(int failureThreshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}	
 	private Result processNewFailurThreshold(int newfailureThreshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}
 	private Result processNewThreshold(int newThreshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getNewThreshold()).thenReturn(String.valueOf(newThreshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}	
 	private Result processThreshold(int threshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getThreshold()).thenReturn(String.valueOf(threshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}
 	
@@ -159,13 +169,17 @@ public class CppcheckBuildResultEvaluatorTest {
 	}
 	
 	private Result processTestCaseLimit1(int newFailureThreshold, int newThreshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
-		when(cppcheckConfig.getNewThreshold()).thenReturn(String.valueOf(newThreshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
+		when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}
 	private Result processTestCaseLimit2(int failureThreshold, int threshold, int errorsCount, int newErrors){
-		when(cppcheckConfig.getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
-		when(cppcheckConfig.getThreshold()).thenReturn(String.valueOf(threshold));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
+		when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
 		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
 	}
 

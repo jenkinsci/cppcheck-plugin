@@ -31,6 +31,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
 public class CppcheckBuildHealthEvaluatorTest {
@@ -46,8 +48,10 @@ public class CppcheckBuildHealthEvaluatorTest {
 	}	
 	
 	private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity){
-		when(cppcheckConfig.getHealthy()).thenReturn(String.valueOf(healthy));
-		when(cppcheckConfig.getUnHealthy()).thenReturn(String.valueOf(unHealthy));
+		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+		when(cppcheckConfig.getConfigSeverityEvaluation().getHealthy()).thenReturn(String.valueOf(healthy));
+		when(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()).thenReturn(String.valueOf(unHealthy));
 		HealthReport healthReport= cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig, errorsForSevrity);
 		return healthReport.getScore();
 	}

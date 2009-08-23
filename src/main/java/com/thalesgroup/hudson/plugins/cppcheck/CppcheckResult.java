@@ -23,17 +23,21 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import java.io.Serializable;
-import java.util.Map;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 
 @ExportedBean
 public class CppcheckResult implements Serializable {
@@ -132,6 +136,5 @@ public class CppcheckResult implements Serializable {
     		 int diff = report.getNumberTotal()-previousCppcheckResult.getReport().getNumberTotal();
     		 return (diff>0)?diff:0;
     	 }
-     }     
-     
+     }        
 }

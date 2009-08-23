@@ -33,5 +33,5 @@
 		<ul>
 		${it.result.details}
 		</ul>
-	</t:summary>
+    </t:summary>
 </j:jelly>

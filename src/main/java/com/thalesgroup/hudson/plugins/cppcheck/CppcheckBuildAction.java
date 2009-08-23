@@ -23,26 +23,34 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 import hudson.model.AbstractBuild;
-import hudson.model.Action;
 import hudson.model.HealthReport;
-import hudson.model.HealthReportingAction;
-import org.kohsuke.stapler.StaplerProxy;
+import hudson.util.ChartUtil;
+import hudson.util.DataSetBuilder;
+import hudson.util.Graph;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
-import java.io.Serializable;
+import java.io.IOException;
+
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigGraph;
+import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
+import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
 
-public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, HealthReportingAction {
-
+public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
+	
     public static final String URL_NAME = "cppcheckResult";
 
-    private AbstractBuild<?,?> build;
     private CppcheckResult result;
     private CppcheckConfig cppcheckConfig;
 
-    public CppcheckBuildAction(AbstractBuild<?,?> build, CppcheckResult result, CppcheckConfig cppcheckConfig){
-        this.build = build;
+    public CppcheckBuildAction(AbstractBuild<?,?> owner, CppcheckResult result, CppcheckConfig cppcheckConfig){
+        super(owner);
         this.result = result;
         this.cppcheckConfig=cppcheckConfig;
     }
@@ -59,26 +67,60 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         return URL_NAME;
     }
 
+    public String getSearchUrl() {
+		return getUrlName();
+	}
 
-
-    public CppcheckResult getResult(){
+	public CppcheckResult getResult(){
         return this.result;
     }
 
-
     AbstractBuild<?,?> getBuild(){
-        return this.build;
+        return this.owner;
     }
 
     public Object getTarget() {
         return this.result;
     }
     
-
     public HealthReport getBuildHealth() {
         return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, getNumberErrors(cppcheckConfig,false));
     }
+	
+	private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
+		DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
+		for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
+			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+			CppcheckReport report = a.getResult().getReport();
+
+			CppcheckConfigGraph configGraph = cppcheckConfig.getConfigGraph();
+			
+			if (configGraph.isDisplaySeverityStyle())
+				dsb.add(report.getNumberSeverityStyle(), "Severity 'style'", label);
+			if (configGraph.isDisplaySeverityPossibleStyle())
+				dsb.add(report.getNumberSeverityPossibleStyle(), "Severity 'possibe style'", label);
+			if (configGraph.isDisplaySeverityPossibleError())
+				dsb.add(report.getNumberSeverityPossibleError(), "Severity 'possible error'", label);
+			if (configGraph.isDisplaySeverityError())
+				dsb.add(report.getNumberSeverityError(), "Severity 'error'", label);			
+			if (configGraph.isDiplayAllError())
+				dsb.add(report.getNumberTotal(), "All errors", label);
+			
+		}
+		return dsb;
+	}
+   
+    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
+        if (ChartUtil.awtProblemCause!=null) {            
+            rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+            return;
+        }
+
+        Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(), 
+        			"Number of errorrs", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
+        g.doPng(req, rsp);
+    }
 
     public int getNumberErrors(CppcheckConfig cppecheckConfig, boolean checkNewError){
 
@@ -86,14 +128,14 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
         int nbPreviousError=0;
         CppcheckResult previousResult=result.getPreviousResult();
 
-        if (cppecheckConfig.isSeverityPossibleError()){
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()){
             nbErrors= getResult().getReport().getPossibleErrorSeverities().size();
             if (previousResult!=null){
             	nbPreviousError= previousResult.getReport().getPossibleErrorSeverities().size();
             }
         }
         
-        if (cppecheckConfig.isSeverityStyle()){
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()){
             nbErrors= nbErrors+ getResult().getReport().getStyleSeverities().size();
             if (previousResult!=null){
             	nbPreviousError=  nbPreviousError + previousResult.getReport().getStyleSeverities().size();
@@ -101,14 +143,14 @@ public class CppcheckBuildAction implements Action, Serializable, StaplerProxy, 
 
         }
         
-        if (cppecheckConfig.isSeverityPossibleStyle()){
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()){
             nbErrors= nbErrors+ getResult().getReport().getPossibleStyleSeverities().size();
             if (previousResult!=null){
             	nbPreviousError= nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
             }
         }
         
-        if (cppecheckConfig.isSeverityError()){
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()){
             nbErrors= nbErrors + getResult().getReport().getErrorSeverities().size();
             if (previousResult!=null){
             	nbPreviousError= nbPreviousError + previousResult.getReport().getErrorSeverities().size();
