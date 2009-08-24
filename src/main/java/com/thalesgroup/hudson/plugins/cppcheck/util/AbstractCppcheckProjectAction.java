@@ -23,6 +23,7 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Actionable;
 import hudson.model.ProminentProjectAction;
@@ -31,6 +32,8 @@ import java.io.IOException;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckBuildAction;
 
 public abstract class AbstractCppcheckProjectAction extends Actionable implements ProminentProjectAction {
 
@@ -53,12 +56,14 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
 		return getUrlName();
 	}
 	
-	protected abstract AbstractCppcheckBuildAction getLastResult();
+	protected abstract AbstractBuild<?, ?> getLastFinishedBuild();
 	protected abstract Integer getLastResultBuild();
 	
 	public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        if (getLastResult() != null) {
-            getLastResult().doGraph(req, rsp);
+		AbstractBuild<?,? > lastBuild = getLastFinishedBuild();		
+		CppcheckBuildAction cppcheckBuildAction = lastBuild.getAction(CppcheckBuildAction.class);
+		if (cppcheckBuildAction != null) {
+			cppcheckBuildAction.doGraph(req, rsp);
         }
     }
 

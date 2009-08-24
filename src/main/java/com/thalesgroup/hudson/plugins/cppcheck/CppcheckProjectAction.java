@@ -27,11 +27,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Result;
 
-import java.io.IOException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckProjectAction;
 
 
@@ -44,17 +39,6 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction{
     public CppcheckProjectAction(final AbstractProject<?, ?> project) {
 		super(project);
     }
-
-	public CppcheckBuildAction getLastResult() {
-		for (AbstractBuild<?, ?> b = project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
-	        if (b.getResult() == Result.FAILURE)
-	            continue;
-	        CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
-	        if (r != null)
-	            return r;
-	    }
-	    return null;
-	}
 	
     public AbstractBuild<?, ?> getLastFinishedBuild() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();

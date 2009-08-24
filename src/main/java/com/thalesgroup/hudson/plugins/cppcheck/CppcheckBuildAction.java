@@ -40,6 +40,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckUtil;
 
 
 public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
@@ -84,7 +85,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
     }
     
     public HealthReport getBuildHealth() {
-        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, getNumberErrors(cppcheckConfig,false));
+        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, CppcheckUtil.getNumberErrors(cppcheckConfig, result,false));
     }
 	
 	private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
@@ -122,51 +123,6 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
         g.doPng(req, rsp);
     }
 
-    public int getNumberErrors(CppcheckConfig cppecheckConfig, boolean checkNewError){
 
-        int nbErrors= 0;
-        int nbPreviousError=0;
-        CppcheckResult previousResult=result.getPreviousResult();
-
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()){
-            nbErrors= getResult().getReport().getPossibleErrorSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= previousResult.getReport().getPossibleErrorSeverities().size();
-            }
-        }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()){
-            nbErrors= nbErrors+ getResult().getReport().getStyleSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError=  nbPreviousError + previousResult.getReport().getStyleSeverities().size();
-            }
-
-        }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()){
-            nbErrors= nbErrors+ getResult().getReport().getPossibleStyleSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
-            }
-        }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()){
-            nbErrors= nbErrors + getResult().getReport().getErrorSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= nbPreviousError + previousResult.getReport().getErrorSeverities().size();
-            }
-        }
-        
-        if (checkNewError)   {
-            if (previousResult!=null){
-                return nbErrors-nbPreviousError;
-            }
-            else {
-                return 0;
-            }
-        }
-        else
-            return  nbErrors;
-    }
 
 }

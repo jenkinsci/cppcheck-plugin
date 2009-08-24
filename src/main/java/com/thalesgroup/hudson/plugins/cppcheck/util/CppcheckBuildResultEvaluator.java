@@ -27,6 +27,7 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckMetricUtil;
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckResult;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 
 public class CppcheckBuildResultEvaluator {
@@ -37,7 +38,7 @@ public class CppcheckBuildResultEvaluator {
         }
         return false;
     }
-	
+	    
     public Result evaluateBuildResult(
             final BuildListener listener,
             int errorsCount,

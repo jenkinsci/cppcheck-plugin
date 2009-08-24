@@ -42,6 +42,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckUtil;
 import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 
 public class CppcheckPublisher extends Publisher {
@@ -97,16 +98,17 @@ public class CppcheckPublisher extends Publisher {
             }
             
             CppcheckResult result = new CppcheckResult(cppcheckReport, build);
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
-            build.addAction(buildAction);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                   listener, buildAction.getNumberErrors(cppcheckConfig,false), buildAction.getNumberErrors(cppcheckConfig,true),cppcheckConfig);
+                   listener, CppcheckUtil.getNumberErrors(cppcheckConfig, result, false), CppcheckUtil.getNumberErrors(cppcheckConfig, result,true),cppcheckConfig);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
 
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
+            build.addAction(buildAction);
+            
             Messages.log(listener,"End of the cppcheck analysis.");
         }
         return true;

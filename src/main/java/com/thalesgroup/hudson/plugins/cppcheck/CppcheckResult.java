@@ -26,7 +26,6 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 
 @ExportedBean
 public class CppcheckResult implements Serializable {
@@ -109,7 +107,7 @@ public class CppcheckResult implements Serializable {
          }
      }
 
-     CppcheckResult getPreviousResult(){
+     public CppcheckResult getPreviousResult(){
          CppcheckBuildAction previousAction = getPreviousAction();
          CppcheckResult previousResult = null;
          if(previousAction != null){
