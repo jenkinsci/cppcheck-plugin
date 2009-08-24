@@ -28,7 +28,9 @@
           <p/>
 		  <div class="test-trend-caption">Cppcheck Trend</div>
 		  <div>
-		    <img src="${from.urlName}/graph"/>
+		        <a href="${from.urlName}/">		  
+		    		<img src="${from.urlName}/graph"/>
+		    	</a>	
 		  </div>
 	   	</div>
 	</j:if>

@@ -92,11 +92,11 @@
 
 
 
-    <f:entry title="${%serveriry.evaluation}" description="${%description.limit}">
+    <f:entry title="${%severiry.evaluation}" description="${%description.limit}">
 
       <f:checkbox name="${id}.config.configSeverityEvaluation.severityError" checked="${config.configSeverityEvaluation.severityError}" id="thresholdLimit.severityError"/>
       <st:nbsp/>
-      <label for="thresholdLimit.severityError">${%Serverity 'error'}</label>
+      <label for="thresholdLimit.severityError">${%Severity 'error'}</label>
       <st:nbsp />
 
       <f:checkbox name="${id}.config.configSeverityEvaluation.severityPossibleError" checked="${config.configSeverityEvaluation.severityPossibleError}" id="thresholdLimit.severityPossibleError"/>
