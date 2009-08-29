@@ -71,7 +71,8 @@ public class CppcheckParser implements Serializable{
 		Element results = document.getRootElement();
 		List list = results.getChildren();	
 		
-        	List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();	    	List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
+        	List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();	    	
+        	List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
 	        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
         	List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();      
 	        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
@@ -97,8 +98,8 @@ public class CppcheckParser implements Serializable{
 			cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
 			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
 
-            		if ("possible error".equals(cppcheckFile.getSeverity())){
-		            	possibleErrorSeverities.add(cppcheckFile);
+            if ("possible error".equals(cppcheckFile.getSeverity())){
+		        possibleErrorSeverities.add(cppcheckFile);
 			}
 			else if ("style".equals(cppcheckFile.getSeverity())){
 				styleSeverities.add(cppcheckFile);
@@ -123,7 +124,6 @@ public class CppcheckParser implements Serializable{
 	        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
         	cppCheckReport.setErrorSeverities(errorSeverities);
 	        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
-        	cppCheckReport.setInternalMap(agregateMap);
               
 		return cppCheckReport;
 	}

@@ -35,7 +35,8 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 @ExportedBean
 public class CppcheckResult implements Serializable {
@@ -43,10 +44,12 @@ public class CppcheckResult implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private CppcheckReport report;
+	private CppcheckSourceContainer cppcheckSourceContainer;
 	private AbstractBuild<?,?> owner;
 
-    public CppcheckResult(CppcheckReport report,  AbstractBuild<?,?> owner){
+    public CppcheckResult(CppcheckReport report,  CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?,?> owner){
         this.report = report;
+        this.cppcheckSourceContainer=cppcheckSourceContainer;
         this.owner = owner;
     }
 
@@ -62,9 +65,8 @@ public class CppcheckResult implements Serializable {
     public AbstractBuild<?,?> getOwner(){
         return owner;
     }
-    
-    
-    /**
+
+	/**
      * Returns the dynamic result of the selection element.
      *
      * @param link
@@ -78,13 +80,13 @@ public class CppcheckResult implements Serializable {
      public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
     	 
     	 if (link.startsWith("source.")) { 
-    		 Map<Integer, CppcheckFile> agregateMap = report.getInternalMap();
+    		 Map<Integer, CppcheckWorkspaceFile> agregateMap = cppcheckSourceContainer.getInternalMap();
     		 if (agregateMap!=null){
-    			 CppcheckFile vCppcheckFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link,"source.")));  
-    			 if (vCppcheckFile==null){
+    			 CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link,"source.")));  
+    			 if (vCppcheckWorkspaceFile==null){
     				 throw new IllegalArgumentException("Error for retrieving the source file with link:"+link);
     			 }
-    			 return new CppcheckSource(owner, vCppcheckFile);
+    			 return new CppcheckSource(owner, vCppcheckWorkspaceFile);
     		 }
     	 }
     	 return null;    

@@ -23,7 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.FilePath;
 import hudson.model.AbstractBuild;
 
 import java.io.File;
@@ -41,6 +40,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import de.java2html.converter.JavaSource2HTMLConverter;
 import de.java2html.javasource.JavaSource;
@@ -63,7 +63,7 @@ public class CppcheckSource implements Serializable {
 	private final AbstractBuild<?, ?> owner;
     
 	/** The annotation to be shown. */
-	private  final CppcheckFile cppcheckFile;
+	private  final CppcheckWorkspaceFile cppcheckWorkspaceFile;
     
 	/** The rendered source file. */
 	private String sourceCode = StringUtils.EMPTY;
@@ -78,52 +78,30 @@ public class CppcheckSource implements Serializable {
      * @param defaultEncoding
      *            the default encoding to be used when reading and parsing files
      */
-    public CppcheckSource(final AbstractBuild<?, ?> owner,  CppcheckFile cppcheckFile) {
+    public CppcheckSource(final AbstractBuild<?, ?> owner,  CppcheckWorkspaceFile cppcheckWorkspaceFile) {
         this.owner = owner;
-        this.cppcheckFile = cppcheckFile;
+        this.cppcheckWorkspaceFile = cppcheckWorkspaceFile;
         initializeContent();
     }
 
-    private File getFilePath() throws InterruptedException, IOException{
-    	
-		File f = null;		
-		
-		f = new File(new File(owner.getProject().getWorkspace().toURI()), "/"+cppcheckFile.getFileName());
-		if (f.exists()){
-			return f;
-		}    	
-    	
-    	FilePath[] modules = owner.getProject().getModuleRoots();
-    	for (FilePath moduleRoot: modules){
-    		f = new File(new File(moduleRoot.toURI()), "/"+cppcheckFile.getFileName());
-    		if (f.exists()){
-    			return f;
-    		}
-    	}    	
-    	return null;
-    }
     
     private void initializeContent() {
         InputStream is = null;
         try {
-        	//For absolute pathname
-        	File f= new File(cppcheckFile.getFileName());
-        	if (f.exists()){
-        		is= new FileInputStream(f);
-        	}
+        	        	
+            File tempFile = new File(cppcheckWorkspaceFile.getTempName(owner));
+            if (tempFile.exists()) {
+                is = new FileInputStream(tempFile);
+            }
+            else {
+            	File file = new File(cppcheckWorkspaceFile.getFileName());
+        		if (!file.exists()){
+        			throw new IOException("Can't access the file: "+ file.toURI());
+        		}     
+            	is = new FileInputStream(file);
+            }
         	
-        	//for relative path name
-        	else {
-        		File file = getFilePath();
-        		if (file==null){
-        			throw new IOException("Can't access the file: "+ f.toURI());
-        		}        		
-        		is = new FileInputStream(file);
-        	}
             splitSourceFile(highlightSource(is));
-        }
-        catch (InterruptedException exception) {
-            sourceCode = "Can't read file: " + exception.getLocalizedMessage();
         }
         catch (IOException exception) {
             sourceCode = "Can't read file: " + exception.getLocalizedMessage();
@@ -144,6 +122,7 @@ public class CppcheckSource implements Serializable {
     private final void splitSourceFile(final String sourceFile) {
         StringBuilder output = new StringBuilder(sourceFile.length());
 
+    	CppcheckFile cppcheckFile = cppcheckWorkspaceFile.getCppcheckFile();
         LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
         int lineNumber = 1;
 
@@ -243,20 +222,18 @@ public class CppcheckSource implements Serializable {
         converter.convert(source, options, writer);
         return writer.toString();
         
-    }    
-    
-    /**
-     * Returns the line that should be highlighted.
-     *
-     * @return the line to highlight
-     */
-    public String getSourceCode() {
-        return sourceCode;
     }
 
-	public CppcheckFile getCppcheckFile() {
-		return cppcheckFile;
+
+	public String getSourceCode() {
+		return sourceCode;
 	}
+
+
+	public CppcheckWorkspaceFile getCppcheckWorkspaceFile() {
+		return cppcheckWorkspaceFile;
+	}    
+    
   
 }
 

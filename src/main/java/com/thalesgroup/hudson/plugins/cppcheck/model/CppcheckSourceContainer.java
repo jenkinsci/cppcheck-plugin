@@ -1,4 +1,3 @@
-<!--
 /*******************************************************************************
 * Copyright (c) 2009 Thales Corporate Services SAS                             *
 * Author : Gregory Boissinot                                                   *
@@ -21,19 +20,42 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
--->
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-  xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <st:header name="Content-Type" value="text/html;charset=UTF-8" />
-  <l:layout norefresh="true">
+package com.thalesgroup.hudson.plugins.cppcheck.model;
 
-    <l:main-panel>
-      <h1>${%sourcedetail.header(it.cppcheckWorkspaceFile.fileName)}</h1>
+import hudson.FilePath;
 
-	  ${it.sourceCode}
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    </l:main-panel>
-  </l:layout>
-</j:jelly>
+public class CppcheckSourceContainer {
+	
+
+	private Map<Integer, CppcheckWorkspaceFile> internalMap = new HashMap<Integer, CppcheckWorkspaceFile>();
+
+	public CppcheckSourceContainer(FilePath basedir, List<CppcheckFile> files){
+		for (CppcheckFile cppcheckFile:files){
+			CppcheckWorkspaceFile cppcheckWorkspaceFile = new CppcheckWorkspaceFile();
+			
+			//TODO A verifier et a ameliorer
+			FilePath sourceFilePath = new FilePath(basedir, cppcheckFile.getFileName());
+			try{
+				cppcheckWorkspaceFile.setFileName(new File(sourceFilePath.toURI()).getAbsolutePath());
+			}
+			catch (Exception ioe){}
+			cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
+			internalMap.put(cppcheckFile.getKey(), cppcheckWorkspaceFile);
+		}
+	}
+	
+	
+	public Map<Integer, CppcheckWorkspaceFile> getInternalMap() {
+		return internalMap;
+	}
+
+	public void setInternalMap(Map<Integer, CppcheckWorkspaceFile> internalMap) {
+		this.internalMap = internalMap;
+	}
+}

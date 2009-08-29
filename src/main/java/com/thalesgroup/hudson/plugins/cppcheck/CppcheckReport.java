@@ -23,22 +23,19 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
 @ExportedBean
 public class CppcheckReport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	private Map<Integer, CppcheckFile> internalMap = new HashMap<Integer, CppcheckFile>();
 
 	private List<CppcheckFile> everySeverities = new ArrayList<CppcheckFile>();
 
@@ -55,14 +52,6 @@ public class CppcheckReport implements Serializable {
 	@Exported
 	public List<CppcheckFile> getEverySeverities() {
 		return everySeverities;
-	}
-
-	public Map<Integer, CppcheckFile> getInternalMap() {
-		return internalMap;
-	}
-
-	public void setInternalMap(Map<Integer, CppcheckFile> internalMap) {
-		this.internalMap = internalMap;
 	}
 
 	public List<CppcheckFile> getPossibleErrorSeverities() {

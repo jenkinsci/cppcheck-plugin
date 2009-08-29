@@ -46,7 +46,6 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 	private final String cppcheckReportPattern;
 
 	public static final String DELAULT_REPORT_MAVEN  ="**/cppcheck-result.xml";
-	
 
 	public CppcheckParserResult(final BuildListener listener,  String cppcheckReportPattern) {
 
@@ -62,24 +61,24 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 		this.cppcheckReportPattern = cppcheckReportPattern;
 	}
 
-	public CppcheckReport invoke(java.io.File moduleRoot, VirtualChannel channel) throws IOException {
+	public CppcheckReport invoke(java.io.File basedir, VirtualChannel channel) throws IOException {
      	
 		CppcheckReport cppcheckReportResult = new CppcheckReport();
 		try {
-			String[] cppcheckFiles = findCppcheckReports(moduleRoot);
-			if (cppcheckFiles.length==0){
+			String[] cppcheckReportFiles = findCppcheckReports(basedir);
+			if (cppcheckReportFiles.length==0){
 	            String msg = "No cppcheck test report file(s) were found with the pattern '"
 	                + cppcheckReportPattern + "' relative to '"
-	                + moduleRoot + "'."
+	                + basedir + "'."
 	                + "  Did you enter a pattern relative to the correct directory?"
 	                + "  Did you generate the XML report(s) for Cppcheck?";				
 				throw  new IllegalArgumentException(msg);
 			}
 			
-			Messages.log(listener,"Processing "+cppcheckFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
+			Messages.log(listener,"Processing "+cppcheckReportFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
 			
-			for (String cppcheckFile : cppcheckFiles){
-				CppcheckReport cppcheckReport= new CppcheckParser().parse(new File(moduleRoot,cppcheckFile));
+			for (String cppchecReportkFileName : cppcheckReportFiles){
+				CppcheckReport cppcheckReport= new CppcheckParser().parse(new File(basedir,cppchecReportkFileName));
 				mergeReport(cppcheckReportResult,cppcheckReport);
 			}
         }
@@ -97,7 +96,6 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
     	cppcheckReportResult.getPossibleStyleSeverities().addAll(cppcheckReport.getPossibleStyleSeverities());
     	cppcheckReportResult.getErrorSeverities().addAll(cppcheckReport.getErrorSeverities());
     	cppcheckReportResult.getEverySeverities().addAll(cppcheckReport.getEverySeverities());
-    	cppcheckReportResult.getInternalMap().putAll(cppcheckReport.getInternalMap());
     	cppcheckReportResult.getNoCategorySeverities().addAll(cppcheckReport.getNoCategorySeverities());
     	cppcheckReportResult.getStyleSeverities().addAll(cppcheckReport.getStyleSeverities());		
 	}	

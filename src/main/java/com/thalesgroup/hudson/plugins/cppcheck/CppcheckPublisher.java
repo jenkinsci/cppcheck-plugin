@@ -32,15 +32,24 @@ import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
+import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Collection;
+
 import net.sf.json.JSONObject;
 
-import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckUtil;
 import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
@@ -48,10 +57,6 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
 public class CppcheckPublisher extends Publisher {
 	
     private CppcheckConfig cppcheckConfig;
-
-    @DataBoundConstructor
-    public CppcheckPublisher(){    	
-    }
     
     @Override
     public CppcheckDescriptor getDescriptor() {
@@ -72,14 +77,14 @@ public class CppcheckPublisher extends Publisher {
 	}
 
 	@Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener){
+    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException{
     	
         if(this.canContinue(build.getResult())){      	
             Messages.log(listener,"Starting the cppcheck analysis.");
         	
-            final FilePath[] moduleRoots= build.getProject().getModuleRoots();
+            final FilePath[] moduleRoots= build.getModuleRoots();
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
-            final FilePath moduleRoot= multipleModuleRoots ? build.getProject().getWorkspace() : build.getProject().getModuleRoot();
+            final FilePath moduleRoot= multipleModuleRoots ? build.getWorkspace() : build.getModuleRoot();
         	        	
             CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern());            
             CppcheckReport cppcheckReport= null;
@@ -97,7 +102,9 @@ public class CppcheckPublisher extends Publisher {
                 return false;            	
             }
             
-            CppcheckResult result = new CppcheckResult(cppcheckReport, build);
+            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(moduleRoot, cppcheckReport.getEverySeverities());
+            
+            CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
                    listener, CppcheckUtil.getNumberErrors(cppcheckConfig, result, false), CppcheckUtil.getNumberErrors(cppcheckConfig, result,true),cppcheckConfig);
@@ -109,10 +116,64 @@ public class CppcheckPublisher extends Publisher {
             CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
             build.addAction(buildAction);
             
+            
+            
+            if (build.getWorkspace().isRemote()) {
+                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
+            }
+                                   
             Messages.log(listener,"End of the cppcheck analysis.");
         }
         return true;
     }
+	
+	
+    /**
+     * Copies all the source files
+     *
+     * @param rootDir
+     *            directory to store the copied files in
+     * @param channel
+     *            channel to get the files from
+     * @param annotations
+     *            annotations determining the actual files to copy
+     * @throws IOException
+     *             if the files could not be written
+     * @throws FileNotFoundException
+     *             if the files could not be written
+     * @throws InterruptedException
+     *             if the user cancels the processing
+     */
+    private void copyFilesFromSlaveToMaster(final File rootDir,
+            final VirtualChannel channel, final Collection<CppcheckWorkspaceFile> sourcesFiles) throws IOException,
+            FileNotFoundException, InterruptedException {
+
+        File directory = new File(rootDir, CppcheckWorkspaceFile.WORKSPACE_FILES);
+        if (!directory.exists()) {
+                    	
+        	if (!directory.delete()) {
+                //do nothing
+            }        	
+        	
+        	if (!directory.mkdir()) {
+                throw new IOException("Can't create directory for for remote source files " + directory.getAbsolutePath());
+            }
+        }
+
+        for (CppcheckWorkspaceFile file : sourcesFiles) {
+            File masterFile = new File(directory, file.getTempName());
+            if (!masterFile.exists()) {
+                try {
+                    FileOutputStream outputStream = new FileOutputStream(masterFile);
+                    new FilePath(channel, file.getFileName()).copyTo(outputStream);
+                }
+                catch (IOException exception) {
+                    //logExceptionToFile(exception, masterFile, file.getName());
+                }
+            }
+        }
+    }
+	
 
     //@Extension    
     public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
@@ -155,8 +216,7 @@ public class CppcheckPublisher extends Publisher {
 			
 			CppcheckConfig cppcheckConfig =  req.bindJSON(CppcheckConfig.class,formData);
 			pub.setCppcheckConfig(cppcheckConfig);
-			
-			
+						
 			return pub;
 		}
     }

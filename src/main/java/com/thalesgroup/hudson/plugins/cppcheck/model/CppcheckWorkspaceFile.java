@@ -1,4 +1,3 @@
-<!--
 /*******************************************************************************
 * Copyright (c) 2009 Thales Corporate Services SAS                             *
 * Author : Gregory Boissinot                                                   *
@@ -21,19 +20,76 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
--->
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-  xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <st:header name="Content-Type" value="text/html;charset=UTF-8" />
-  <l:layout norefresh="true">
+package com.thalesgroup.hudson.plugins.cppcheck.model;
 
-    <l:main-panel>
-      <h1>${%sourcedetail.header(it.cppcheckWorkspaceFile.fileName)}</h1>
+import hudson.model.AbstractBuild;
 
-	  ${it.sourceCode}
+import java.io.File;
 
-    </l:main-panel>
-  </l:layout>
-</j:jelly>
+import org.apache.commons.lang.StringUtils;
+
+public class CppcheckWorkspaceFile {
+
+    /** Temporary directory holding the workspace files. */
+    public static final String WORKSPACE_FILES = "workspace-files";
+	
+	private String fileName;
+	
+	private CppcheckFile cppcheckFile;
+	
+	public CppcheckWorkspaceFile(File file){
+		if (file!=null)
+			this.fileName=file.getAbsolutePath().replace('\\', '/');
+	}
+	
+	public CppcheckWorkspaceFile(){
+
+	}
+	
+	
+    public CppcheckFile getCppcheckFile() {
+		return cppcheckFile;
+	}
+
+
+
+	public void setCppcheckFile(CppcheckFile cppcheckFile) {
+		this.cppcheckFile = cppcheckFile;
+	}
+
+
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;;
+	}
+
+
+
+	/**
+     * Returns a file name for a temporary file that will hold the contents of the source.
+     *
+     * @return the temporary name
+     */
+    public String getTempName() {
+        return Integer.toHexString(getFileName().hashCode()) + ".tmp";
+    }
+    
+    /**
+     * Returns the name of this file.
+     *
+     * @return the name of this file
+     */
+    public final String getFileName() {
+        return fileName;
+    }
+    
+    public String getTempName(final AbstractBuild<?, ?> owner) {
+        if (fileName != null) {
+            return owner.getRootDir().getAbsolutePath() + "/" + WORKSPACE_FILES + "/" + Integer.toHexString(fileName.hashCode()) + ".tmp";
+        }
+        return StringUtils.EMPTY;
+    }
+
+
+}
