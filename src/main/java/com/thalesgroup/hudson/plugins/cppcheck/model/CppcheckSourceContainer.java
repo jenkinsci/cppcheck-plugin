@@ -26,7 +26,6 @@ package com.thalesgroup.hudson.plugins.cppcheck.model;
 import hudson.FilePath;
 import hudson.model.BuildListener;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +49,7 @@ public class CppcheckSourceContainer {
                  cppcheckWorkspaceFile.setFileName(null);
             }
             else {
-                cppcheckWorkspaceFile.setFileName(new File(sourceFilePath.toURI()).getAbsolutePath());
+                cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
                 cppcheckWorkspaceFile.setSourceIgnored(false);                
             }
 			cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
