@@ -39,7 +39,7 @@
     			<tbody>
 			        <tr>
 	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.newNumberErrors}</td>
+	          			<td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
 					</tr>
 				</tbody>
 			 </table>	

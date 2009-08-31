@@ -104,7 +104,7 @@ public class CppcheckSummaryTest {
 
 		CppcheckResult result = mock(CppcheckResult.class);
 		
-		when(result.getNewNumberErrors()).thenReturn(numberOfErrors);
+		when(result.getNumberNewErrorsFromPreviousBuild()).thenReturn(numberOfErrors);
 
 		Assert.assertEquals("Wrong summary detail message created.",expectedMessage, CppcheckSummary.createReportSummaryDetails(result));
 

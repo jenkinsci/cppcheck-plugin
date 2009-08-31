@@ -35,17 +35,29 @@
       <td class="pane-header" style="width:60%">Message</td>
     </tr>
     <tbody>
-        <j:forEach var="elt" items="${it.report.everySeverities}">    
-	        <tr>
-	          <td class="pane">
-	          	<a href="source.${elt.key}">${elt.fileName}</a>
-	          </td>	         
-	          <g:format value="${elt.lineNumber}" severity="${elt.severity}"/>
-	          <g:format value="${elt.cppCheckId}" severity="${elt.severity}"/>
-	          <g:format value="${elt.severity}" severity="${elt.severity}"/>
-	          <g:format value="${elt.message}" severity="${elt.severity}"/>
-	        </tr>
-		</j:forEach>
+
+        <j:forEach var="elt" items="${it.cppcheckSourceContainer.internalMap.values()}">    
+            <j:set var="cppcheckfile" value="${elt.cppcheckFile}"/>
+            <tr>
+              <td class="pane">
+                <j:if test="${elt.isSourceIgnored()}">
+                     ${cppcheckfile.fileName}
+                </j:if>
+                <j:if test="${not elt.isSourceIgnored()}">
+                      <a href="source.${cppcheckfile.key}">${cppcheckfile.fileName}</a>
+                </j:if>
+
+
+              </td>
+              <g:format value="${cppcheckfile.lineNumber}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.cppCheckId}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.severity}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.message}" severity="${cppcheckfile.severity}"/>
+            </tr>
+        </j:forEach>
+
+
+
     </tbody>    
   </table>
 </j:jelly>

@@ -23,30 +23,36 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
+import com.thalesgroup.hudson.plugins.cppcheck.Messages;
 
 public class CppcheckSummary {
 
     private CppcheckSummary(){}
 
+
+    /**
+     * Creates an HTML Cppcheck summary.
+     * @param result the cppcheck result object
+     * @return the HTML fragment representing the cppcheck report summary
+     */
     public static String createReportSummary(CppcheckResult result){
         
         StringBuilder summary = new StringBuilder();
         int nbErrors = result.getReport().getNumberTotal();
 
-        summary.append(Messages.getMessage("cppcheck.Errors_ProjectAction_Name"));
+        summary.append(Messages.cppcheck_Errors_ProjectAction_Name());
         summary.append(": ");
         if (nbErrors == 0){
-        	summary.append(Messages.getMessage("cppcheck.ResultAction.NoError"));
+        	summary.append(Messages.cppcheck_ResultAction_NoError());
         }
         else {
             summary.append("<a href=\""+CppcheckBuildAction.URL_NAME+"\">");
         
             if (nbErrors == 1) {
-            	summary.append(Messages.getMessage("cppcheck.ResultAction.OneError"));
+            	summary.append(Messages.cppcheck_ResultAction_OneError());
             }
             else {
-            	summary.append(Messages.getMessage("cppcheck.ResultAction.MultipleErrors", nbErrors));
+            	summary.append(Messages.cppcheck_ResultAction_MultipleErrors(nbErrors));
             }
             summary.append("</a>");
         }
@@ -55,23 +61,28 @@ public class CppcheckSummary {
         return summary.toString();
     }
 
-    
- 
+
+
+    /**
+     * Creates an HTML Cppcheck detailed summary.
+     * @param result the cppcheck result object
+     * @return the HTML fragment representing the cppcheck report details summary
+     */
     public static String createReportSummaryDetails(CppcheckResult result){
 
     	StringBuilder builder = new StringBuilder();
-    	int nbNewErrors = result.getNewNumberErrors();
+    	int nbNewErrors = result.getNumberNewErrorsFromPreviousBuild();
     	
     	builder.append("<li>");
     	
     	if (nbNewErrors==0){
-    		builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NoNewError"));
+            builder.append(Messages.cppcheck_ResultAction_Detail_NoNewError());
     	}
     	else if (nbNewErrors==1){
-    		builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NewOneError"));
+    		builder.append(Messages.cppcheck_ResultAction_Detail_NewOneError());
     	}
     	else{
-			builder.append(Messages.getMessage("cppcheck.ResultAction_Detail_NewMultipleErrors"));
+			builder.append(Messages.cppcheck_ResultAction_Detail_NewMultipleErrors());
 	        builder.append(": ");
 	        builder.append(nbNewErrors);
     	}

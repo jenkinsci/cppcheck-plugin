@@ -59,10 +59,10 @@ public class CppcheckSource implements Serializable {
 	/** Color for the first (primary) annotation range. */
 	private static final String MESSAGE_COLOR = "#FCAF3E";
     
-    	/** The current build as owner of this object. */
+    /** The current build as owner of this object. */
 	private final AbstractBuild<?, ?> owner;
     
-	/** The annotation to be shown. */
+	/** The cppcheck source file in the workspace to be shown. */
 	private  final CppcheckWorkspaceFile cppcheckWorkspaceFile;
     
 	/** The rendered source file. */
@@ -73,19 +73,20 @@ public class CppcheckSource implements Serializable {
      *
      * @param owner
      *            the current build as owner of this object
-     * @param annotation
-     *            the warning to display in the source file
-     * @param defaultEncoding
-     *            the default encoding to be used when reading and parsing files
+     * @param cppcheckWorkspaceFile
+     *            the abstract workspace file
      */
     public CppcheckSource(final AbstractBuild<?, ?> owner,  CppcheckWorkspaceFile cppcheckWorkspaceFile) {
         this.owner = owner;
         this.cppcheckWorkspaceFile = cppcheckWorkspaceFile;
-        initializeContent();
+        buildFileContent();
     }
 
-    
-    private void initializeContent() {
+
+    /**
+     * Builds the file content.
+     */
+    private void buildFileContent() {
         InputStream is = null;
         try {
         	        	
@@ -94,8 +95,13 @@ public class CppcheckSource implements Serializable {
                 is = new FileInputStream(tempFile);
             }
             else {
-            	File file = new File(cppcheckWorkspaceFile.getFileName());
-        		if (!file.exists()){
+
+        		if (cppcheckWorkspaceFile.getFileName()==null){
+                    throw new IOException("The file doesn't exist.");                    
+                }
+
+                File file = new File(cppcheckWorkspaceFile.getFileName());
+                if (!file.exists()){
         			throw new IOException("Can't access the file: "+ file.toURI());
         		}     
             	is = new FileInputStream(file);
@@ -221,19 +227,25 @@ public class CppcheckSource implements Serializable {
         options.setAddLineAnchors(true);
         converter.convert(source, options, writer);
         return writer.toString();
-        
     }
 
 
+    /**
+     * Retrieve the source code for the cppcheck source file.
+     * @return the source code content as a String object
+     */
+    @SuppressWarnings("unused")
 	public String getSourceCode() {
 		return sourceCode;
 	}
 
-
+    /**
+     * Returns the abstract Cppcheck workspace file.
+     * @return the workspace file
+     */
+    @SuppressWarnings("unused")
 	public CppcheckWorkspaceFile getCppcheckWorkspaceFile() {
 		return cppcheckWorkspaceFile;
-	}    
-    
-  
+	}
 }
 

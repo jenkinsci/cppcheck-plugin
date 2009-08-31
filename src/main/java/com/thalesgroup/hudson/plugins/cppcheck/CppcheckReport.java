@@ -127,5 +127,5 @@ public class CppcheckReport implements Serializable {
 	public int getNumberSeverityNoCategory() {
 		return (noCategorySeverities == null) ? 0 : noCategorySeverities.size();
 	}
-  
+
 }

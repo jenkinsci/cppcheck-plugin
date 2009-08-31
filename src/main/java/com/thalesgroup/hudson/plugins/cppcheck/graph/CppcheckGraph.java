@@ -58,6 +58,10 @@ public class CppcheckGraph extends Graph {
         this.categoryDataset=categoryDataset;
     }
 
+    /**
+     * Creates a Cppcheck trend graph 
+     * @return the JFreeChart graph object
+     */
     protected JFreeChart createGraph()  {
 
             final JFreeChart chart = ChartFactory.createLineChart(

@@ -31,6 +31,7 @@ import hudson.util.Graph;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -40,7 +41,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckUtil;
+
 
 
 public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
@@ -85,7 +86,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
     }
     
     public HealthReport getBuildHealth() {
-        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, CppcheckUtil.getNumberErrors(cppcheckConfig, result,false));
+        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig,false));
     }
 	
 	private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
@@ -93,11 +94,14 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
 
 		for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
 			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+
+            //a.getResult().getOwner().getResult()
+
 			CppcheckReport report = a.getResult().getReport();
 
 			CppcheckConfigGraph configGraph = cppcheckConfig.getConfigGraph();
 			
-			if (configGraph.isDisplaySeverityStyle())
+    		if (configGraph.isDisplaySeverityStyle())
 				dsb.add(report.getNumberSeverityStyle(), "Severity 'style'", label);
 			if (configGraph.isDisplaySeverityPossibleStyle())
 				dsb.add(report.getNumberSeverityPossibleStyle(), "Severity 'possibe style'", label);
@@ -118,8 +122,12 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
             return;
         }
 
+        Calendar timestamp = getBuild().getTimestamp();
+
+        if (req.checkIfModified(timestamp, rsp)) return;
+
         Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(), 
-        			"Number of errorrs", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
+        			"Number of error", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
         g.doPng(req, rsp);
     }
 

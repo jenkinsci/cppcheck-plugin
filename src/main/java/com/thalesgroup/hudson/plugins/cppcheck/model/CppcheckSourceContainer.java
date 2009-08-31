@@ -24,28 +24,37 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.FilePath;
+import hudson.model.BuildListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 
 public class CppcheckSourceContainer {
 	
 
 	private Map<Integer, CppcheckWorkspaceFile> internalMap = new HashMap<Integer, CppcheckWorkspaceFile>();
 
-	public CppcheckSourceContainer(FilePath basedir, List<CppcheckFile> files){
+	public CppcheckSourceContainer(BuildListener listener, FilePath basedir, List<CppcheckFile> files) throws IOException, InterruptedException{
 		for (CppcheckFile cppcheckFile:files){
 			CppcheckWorkspaceFile cppcheckWorkspaceFile = new CppcheckWorkspaceFile();
-			
-			//TODO A verifier et a ameliorer
 			FilePath sourceFilePath = new FilePath(basedir, cppcheckFile.getFileName());
-			try{
-				cppcheckWorkspaceFile.setFileName(new File(sourceFilePath.toURI()).getAbsolutePath());
-			}
-			catch (Exception ioe){}
+
+            if (!sourceFilePath.exists()){
+                 CppcheckLogger.log(listener, "[WARNING] - The source file '"+ sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+                 cppcheckWorkspaceFile.setSourceIgnored(true);
+                 cppcheckWorkspaceFile.setFileName(null);
+            }
+            else {
+                cppcheckWorkspaceFile.setFileName(new File(sourceFilePath.toURI()).getAbsolutePath());
+                cppcheckWorkspaceFile.setSourceIgnored(false);                
+            }
 			cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
+
 			internalMap.put(cppcheckFile.getKey(), cppcheckWorkspaceFile);
 		}
 	}
@@ -53,9 +62,5 @@ public class CppcheckSourceContainer {
 	
 	public Map<Integer, CppcheckWorkspaceFile> getInternalMap() {
 		return internalMap;
-	}
-
-	public void setInternalMap(Map<Integer, CppcheckWorkspaceFile> internalMap) {
-		this.internalMap = internalMap;
 	}
 }

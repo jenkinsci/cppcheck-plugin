@@ -41,27 +41,42 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction{
     }
 	
     public AbstractBuild<?, ?> getLastFinishedBuild() {
-        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
+        AbstractBuild<?, ?> lastBuild = ( AbstractBuild<?, ?>)project.getLastBuild();
         while (lastBuild != null && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
             lastBuild = lastBuild.getPreviousBuild();
         }
         return lastBuild;
     }
 
-    public final boolean hasValidResults() {
-        AbstractBuild<?, ?> build = getLastFinishedBuild();
-        if (build != null) {
-            CppcheckBuildAction resultAction = build.getAction(CppcheckBuildAction.class);
-            if (resultAction != null) {
-                return resultAction.getResult().getPreviousResult() != null;
+    @SuppressWarnings("unused")
+    public final boolean isDisplayGraph() {
+        //Latest
+        AbstractBuild<?, ?> b = getLastFinishedBuild();
+
+        //Affect previous
+        b = b.getPreviousBuild();
+        if (b!=null){
+
+          for (; b != null; b = b.getPreviousBuild()) {
+            if (b.getResult().isWorseOrEqualTo(Result.FAILURE)) {
+                continue;
+            }
+            CppcheckBuildAction action= b.getAction(CppcheckBuildAction.class);
+            if (action == null || action.getResult() == null) {
+                continue;
+            }
+            CppcheckResult result = action.getResult();
+            if (result==null)
+                continue;
+
+            return true;
             }
         }
         return false;
     }
-	
-	
+
 	public Integer getLastResultBuild() {
-		for (AbstractBuild<?, ?> b = project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
+		for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>)project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
             if (b.getResult() == Result.FAILURE)
                 continue;
             CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
@@ -70,6 +85,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction{
         }
         return null;
 	}
+
 
 	public String getDisplayName() {
         return "Cppcheck Results";

@@ -29,7 +29,10 @@ import java.io.Serializable;
 
 public class CppcheckHealthReportThresholds implements Serializable{
 
-    private final String threshold;
+
+	private static final long serialVersionUID = 1L;
+
+	private final String threshold;
 
     private final String newThreshold;
 

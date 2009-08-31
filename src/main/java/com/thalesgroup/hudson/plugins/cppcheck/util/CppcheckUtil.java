@@ -28,6 +28,13 @@ import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 
 public class CppcheckUtil {
 
+    /**
+     * Gets the number of errors
+     * @param cppecheckConfig
+     * @param result
+     * @param checkNewError
+     * @return
+     */
     public static int getNumberErrors(CppcheckConfig cppecheckConfig, CppcheckResult result, boolean checkNewError){
 
         int nbErrors= 0;

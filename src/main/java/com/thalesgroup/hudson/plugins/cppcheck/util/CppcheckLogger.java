@@ -29,15 +29,9 @@ import java.io.Serializable;
 
 import org.jvnet.localizer.ResourceBundleHolder;
 
-public class Messages implements Serializable{
+public class CppcheckLogger implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-
-	private final static ResourceBundleHolder holder = ResourceBundleHolder.get(Messages.class);
-
-	public static String getMessage(String key, Object...args) {
-        	return holder.format(key, args);
-	}
 
     /**
     * Log output to the given logger, using the Cppcheck identifier
@@ -45,7 +39,7 @@ public class Messages implements Serializable{
     * @param message The message to be outputted
     */
 	public static void log(BuildListener listener, final String message) {    	
-        listener.getLogger().println("[Cppecheck] " + message);
+        listener.getLogger().println("[Cppcheck] " + message);
     }
     
 }

@@ -35,7 +35,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
 import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 
 public class CppcheckParserResult implements FilePath.FileCallable<CppcheckReport> {
 
@@ -75,7 +75,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 				throw  new IllegalArgumentException(msg);
 			}
 			
-			Messages.log(listener,"Processing "+cppcheckReportFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
+			CppcheckLogger.log(listener,"Processing "+cppcheckReportFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");
 			
 			for (String cppchecReportkFileName : cppcheckReportFiles){
 				CppcheckReport cppcheckReport= new CppcheckParser().parse(new File(basedir,cppchecReportkFileName));
@@ -83,7 +83,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 			}
         }
         catch (Exception e) {
-        	Messages.log(listener,"Parsing has been canceled. " + e.getMessage());
+        	CppcheckLogger.log(listener,"Parsing has been canceled. " + e.getMessage());
         	return null;
         }
         

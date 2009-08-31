@@ -37,7 +37,12 @@ public class CppcheckWorkspaceFile {
 	private String fileName;
 	
 	private CppcheckFile cppcheckFile;
-	
+
+    /**
+     * Useful for files that are not found on the buid filestystem
+     */
+    private boolean sourceIgnored;
+
 	public CppcheckWorkspaceFile(File file){
 		if (file!=null)
 			this.fileName=file.getAbsolutePath().replace('\\', '/');
@@ -91,5 +96,11 @@ public class CppcheckWorkspaceFile {
         return StringUtils.EMPTY;
     }
 
+    public boolean isSourceIgnored() {
+        return sourceIgnored;
+    }
 
+    public void setSourceIgnored(boolean sourceIgnored) {
+        this.sourceIgnored = sourceIgnored;
+    }
 }

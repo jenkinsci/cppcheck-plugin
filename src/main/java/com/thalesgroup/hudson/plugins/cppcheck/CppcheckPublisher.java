@@ -36,6 +36,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,10 +52,9 @@ import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckUtil;
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 
-public class CppcheckPublisher extends Publisher {
+public class CppcheckPublisher extends Recorder {
 	
     private CppcheckConfig cppcheckConfig;
     
@@ -80,19 +80,19 @@ public class CppcheckPublisher extends Publisher {
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException{
     	
         if(this.canContinue(build.getResult())){      	
-            Messages.log(listener,"Starting the cppcheck analysis.");
+            CppcheckLogger.log(listener,"Starting the cppcheck analysis.");
         	
             final FilePath[] moduleRoots= build.getModuleRoots();
             final boolean multipleModuleRoots= moduleRoots != null && moduleRoots.length > 1;
             final FilePath moduleRoot= multipleModuleRoots ? build.getWorkspace() : build.getModuleRoot();
         	        	
             CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern());            
-            CppcheckReport cppcheckReport= null;
+            CppcheckReport cppcheckReport;
             try{
             	cppcheckReport= moduleRoot.act(parser);            	
             }
             catch(Exception e){
-            	Messages.log(listener,"Error on cppcheck analysis: " + e);
+            	CppcheckLogger.log(listener,"Error on cppcheck analysis: " + e);
             	build.setResult(Result.FAILURE);
                 return false;            
             }
@@ -101,13 +101,15 @@ public class CppcheckPublisher extends Publisher {
             	build.setResult(Result.FAILURE);
                 return false;            	
             }
-            
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(moduleRoot, cppcheckReport.getEverySeverities());
-            
+
+            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, moduleRoot, cppcheckReport.getEverySeverities());
+
             CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                   listener, CppcheckUtil.getNumberErrors(cppcheckConfig, result, false), CppcheckUtil.getNumberErrors(cppcheckConfig, result,true),cppcheckConfig);
+                   listener, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false),
+                    result.getNumberErrorsAccordingConfiguration(cppcheckConfig,true),
+                    cppcheckConfig);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
@@ -122,21 +124,21 @@ public class CppcheckPublisher extends Publisher {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
             }
                                    
-            Messages.log(listener,"End of the cppcheck analysis.");
+            CppcheckLogger.log(listener,"End of the cppcheck analysis.");
         }
         return true;
     }
 	
 	
     /**
-     * Copies all the source files
+     * Copies all the source files from stave to master for a remote build.
      *
      * @param rootDir
      *            directory to store the copied files in
      * @param channel
      *            channel to get the files from
-     * @param annotations
-     *            annotations determining the actual files to copy
+     * @param sourcesFiles
+     *            the sources files to be copied
      * @throws IOException
      *             if the files could not be written
      * @throws FileNotFoundException
@@ -145,8 +147,8 @@ public class CppcheckPublisher extends Publisher {
      *             if the user cancels the processing
      */
     private void copyFilesFromSlaveToMaster(final File rootDir,
-            final VirtualChannel channel, final Collection<CppcheckWorkspaceFile> sourcesFiles) throws IOException,
-            FileNotFoundException, InterruptedException {
+            final VirtualChannel channel, final Collection<CppcheckWorkspaceFile> sourcesFiles)
+        throws IOException, InterruptedException {
 
         File directory = new File(rootDir, CppcheckWorkspaceFile.WORKSPACE_FILES);
         if (!directory.exists()) {
@@ -156,28 +158,27 @@ public class CppcheckPublisher extends Publisher {
             }        	
         	
         	if (!directory.mkdir()) {
-                throw new IOException("Can't create directory for for remote source files " + directory.getAbsolutePath());
+                throw new IOException("Can't create directory for remote source files: " + directory.getAbsolutePath());
             }
         }
 
         for (CppcheckWorkspaceFile file : sourcesFiles) {
-            File masterFile = new File(directory, file.getTempName());
-            if (!masterFile.exists()) {
-                try {
+            if (!file.isSourceIgnored()){
+                File masterFile = new File(directory, file.getTempName());
+                if (!masterFile.exists()) {
                     FileOutputStream outputStream = new FileOutputStream(masterFile);
                     new FilePath(channel, file.getFileName()).copyTo(outputStream);
-                }
-                catch (IOException exception) {
-                    //logExceptionToFile(exception, masterFile, file.getName());
                 }
             }
         }
     }
 	
 
-    //@Extension    
     public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
 
+    /**
+     * The Cppcheck Descriptor
+     */
     public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
 
 
@@ -203,7 +204,8 @@ public class CppcheckPublisher extends Publisher {
         public String getPluginRoot() {
             return "/plugin/cppcheck/";
         }
-        
+
+        @SuppressWarnings("unused")
         public CppcheckConfig getConfig() {
             return new CppcheckConfig();
         }
@@ -221,6 +223,8 @@ public class CppcheckPublisher extends Publisher {
 		}
     }
 
+    
+    @SuppressWarnings("unused")
 	public CppcheckConfig getCppcheckConfig() {
 		return cppcheckConfig;
 	}
