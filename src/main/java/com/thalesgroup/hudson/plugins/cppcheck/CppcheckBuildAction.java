@@ -86,7 +86,12 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
     }
     
     public HealthReport getBuildHealth() {
-        return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig,false));
+        try  {
+            return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig,false));
+        }
+        catch (IOException ioe){
+            return new HealthReport();
+        }
     }
 	
 	private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {

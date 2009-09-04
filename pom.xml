@@ -79,5 +79,13 @@
       </dependency>
 
    </dependencies>
+
+   <developers>
+      <developer>
+         <id>gbois</id>
+         <name>Gregory Boissinot</name>
+      </developer>
+   </developers>
+
 </project>
 

@@ -64,51 +64,51 @@ public class CppcheckGraph extends Graph {
      */
     protected JFreeChart createGraph()  {
 
-            final JFreeChart chart = ChartFactory.createLineChart(
-                    null,                     // chart title
-                    null,                     // unused
-                    yLabel,                   // range axis label
-                    categoryDataset,          // data
-                    PlotOrientation.VERTICAL, // orientation
-                    true,                     // include legend
-                    true,                     // tooltips
-                    false                     // urls
-            );
+        final JFreeChart chart = ChartFactory.createLineChart(
+                null,                     // chart title
+                null,                     // unused
+                yLabel,                   // range axis label
+                categoryDataset,          // data
+                PlotOrientation.VERTICAL, // orientation
+                true,                     // include legend
+                true,                     // tooltips
+                false                     // urls
+        );
 
-            // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
+        // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
 
-            final LegendTitle legend = chart.getLegend();
-            legend.setPosition(RectangleEdge.RIGHT);
+        final LegendTitle legend = chart.getLegend();
+        legend.setPosition(RectangleEdge.RIGHT);
 
-            chart.setBackgroundPaint(Color.white);
+        chart.setBackgroundPaint(Color.white);
 
-            final CategoryPlot plot = chart.getCategoryPlot();
+        final CategoryPlot plot = chart.getCategoryPlot();
 
-            // plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
-            plot.setBackgroundPaint(Color.WHITE);
-            plot.setOutlinePaint(null);
-            plot.setRangeGridlinesVisible(true);
-            plot.setRangeGridlinePaint(Color.black);
+        // plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlinePaint(null);
+        plot.setRangeGridlinesVisible(true);
+        plot.setRangeGridlinePaint(Color.black);
 
-            CategoryAxis domainAxis = new ShiftedCategoryAxis(null);
-            plot.setDomainAxis(domainAxis);
-            domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-            domainAxis.setLowerMargin(0.0);
-            domainAxis.setUpperMargin(0.0);
-            domainAxis.setCategoryMargin(0.0);
+        CategoryAxis domainAxis = new ShiftedCategoryAxis(null);
+        plot.setDomainAxis(domainAxis);
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+        domainAxis.setLowerMargin(0.0);
+        domainAxis.setUpperMargin(0.0);
+        domainAxis.setCategoryMargin(0.0);
 
-            final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-            rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-            rangeAxis.setLowerBound(0);
-            rangeAxis.setAutoRange(true);
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        rangeAxis.setLowerBound(0);
+        rangeAxis.setAutoRange(true);
 
-            final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
-            renderer.setBaseStroke(new BasicStroke(2.0f));
-            ColorPalette.apply(renderer);
+        final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+        renderer.setBaseStroke(new BasicStroke(2.0f));
+        ColorPalette.apply(renderer);
 
-            // crop extra space around the graph
-            plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
+        // crop extra space around the graph
+        plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
 
-            return chart;
-        }    
+        return chart;
+     }    
 }

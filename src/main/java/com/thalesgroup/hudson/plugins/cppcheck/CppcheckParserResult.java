@@ -67,12 +67,12 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 		try {
 			String[] cppcheckReportFiles = findCppcheckReports(basedir);
 			if (cppcheckReportFiles.length==0){
-	            String msg = "No cppcheck test report file(s) were found with the pattern '"
-	                + cppcheckReportPattern + "' relative to '"
-	                + basedir + "'."
-	                + "  Did you enter a pattern relative to the correct directory?"
-	                + "  Did you generate the XML report(s) for Cppcheck?";				
-				throw  new IllegalArgumentException(msg);
+	            	String msg = "No cppcheck test report file(s) were found with the pattern '"
+	                	+ cppcheckReportPattern + "' relative to '"
+	                	+ basedir + "'."
+		                + "  Did you enter a pattern relative to the correct directory?"
+		                + "  Did you generate the XML report(s) for Cppcheck?";				
+					throw  new IllegalArgumentException(msg);
 			}
 			
 			CppcheckLogger.log(listener,"Processing "+cppcheckReportFiles.length+ " files with the pattern '" + cppcheckReportPattern + "'.");

@@ -49,8 +49,7 @@ import de.java2html.options.JavaSourceConversionOptions;
 
 
 public class CppcheckSource implements Serializable {
-    
-	
+    	
 	private static final long serialVersionUID = 1L;
 
 	/** Offset of the source code generator. After this line the actual source file lines start. */
@@ -111,6 +110,9 @@ public class CppcheckSource implements Serializable {
         }
         catch (IOException exception) {
             sourceCode = "Can't read file: " + exception.getLocalizedMessage();
+        }
+        catch (RuntimeException re){
+            sourceCode = "Problem for display the source code content: " + re.getLocalizedMessage();            
         }
         finally {
             IOUtils.closeQuietly(is);

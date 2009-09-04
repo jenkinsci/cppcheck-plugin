@@ -27,6 +27,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.Api;
 
 import java.io.Serializable;
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -193,7 +194,11 @@ public class CppcheckResult implements Serializable {
      * @param checkNewError true, if the request is for the number of new errors
      * @return the number of errors or new errors (if checkNewEroor is set to true) for the current configuration object
      */
-    public int getNumberErrorsAccordingConfiguration(CppcheckConfig cppecheckConfig, boolean checkNewError){
+    public int getNumberErrorsAccordingConfiguration(CppcheckConfig cppecheckConfig, boolean checkNewError) throws IOException {
+
+        if (cppecheckConfig==null){
+            throw new IOException("[ERROR] - The cppcheck configuration file is missing. Could you save again your job configuration.");
+        }
 
         int nbErrors= 0;
         int nbPreviousError=0;

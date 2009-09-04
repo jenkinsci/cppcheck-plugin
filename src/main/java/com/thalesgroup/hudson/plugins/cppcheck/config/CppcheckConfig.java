@@ -28,7 +28,7 @@ import java.io.Serializable;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class CppcheckConfig implements Serializable{
-
+     
     private static final long serialVersionUID = 1L;
 
     private String cppcheckReportPattern;

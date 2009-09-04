@@ -47,13 +47,13 @@ public class CppcheckParser implements Serializable{
 
 	public CppcheckReport parse(final File file) throws IOException,JDOMException {
 		
-		if (file==null){
-			throw new IllegalArgumentException("File input is mandatory.");
-		}
+        if (file==null){
+            throw new IllegalArgumentException("File input is mandatory.");
+        }
 
-		if (! file.exists()){
-			throw new IllegalArgumentException("File input " + file.getName() + " must exist.");
-		}
+        if (! file.exists()){
+            throw new IllegalArgumentException("File input " + file.getName() + " must exist.");
+        }
 
 		
 		CppcheckReport cppCheckReport = new CppcheckReport();
@@ -62,30 +62,24 @@ public class CppcheckParser implements Serializable{
 		SAXBuilder sxb = new SAXBuilder();
 		FileInputStream fis = new FileInputStream(file);
 		InputStreamReader isr = new InputStreamReader(fis);
-		
 		document = sxb.build(isr);
-		
 		fis.close();
 		isr.close();
 		
 		Element results = document.getRootElement();
-		List list = results.getChildren();	
-		
-        	List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();	    	
-        	List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
-	        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
-        	List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();      
-	        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
-        	List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
-        
-        	Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
+		List list = results.getChildren();
+        List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
+        Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
 		CppcheckFile cppcheckFile;
 		for (int i = 0; i < list.size(); i++) {
 			Element elt = (Element) list.get(i);
-			
 			cppcheckFile = new CppcheckFile();
-
 			cppcheckFile.setKey(i+1);
 			cppcheckFile.setFileName(elt.getAttributeValue("file"));
 			//line can be optional
@@ -99,7 +93,7 @@ public class CppcheckParser implements Serializable{
 			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
 
             if ("possible error".equals(cppcheckFile.getSeverity())){
-		        possibleErrorSeverities.add(cppcheckFile);
+                possibleErrorSeverities.add(cppcheckFile);
 			}
 			else if ("style".equals(cppcheckFile.getSeverity())){
 				styleSeverities.add(cppcheckFile);
@@ -119,11 +113,11 @@ public class CppcheckParser implements Serializable{
 		}
 
 		cppCheckReport.setEverySeverities(everyErrors);
-	        cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
-        	cppCheckReport.setStyleSeverities(styleSeverities);
-	        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
-        	cppCheckReport.setErrorSeverities(errorSeverities);
-	        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
+        cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
+        cppCheckReport.setStyleSeverities(styleSeverities);
+        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
+        cppCheckReport.setErrorSeverities(errorSeverities);
+        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
               
 		return cppCheckReport;
 	}
