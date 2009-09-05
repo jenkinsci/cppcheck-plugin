@@ -37,39 +37,39 @@ public class CppcheckBuildResultEvaluator {
         }
         return false;
     }
-	    
+
     public Result evaluateBuildResult(
             final BuildListener listener,
             int errorsCount,
             int newErrorsCount,
             CppcheckConfig cppcheckConfig) {
-                   
+
         if (isErrorCountExceeded(errorsCount, cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold())) {
-        	CppcheckLogger.log(listener,"Setting build status to FAILURE since total number of errors ("
-        				+ CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)  
-        				+ ") exceeds the threshold value ;" + cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold() + "'.");
+            CppcheckLogger.log(listener, "Setting build status to FAILURE since total number of errors ("
+                    + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+                    + ") exceeds the threshold value ;" + cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold() + "'.");
             return Result.FAILURE;
         }
         if (isErrorCountExceeded(newErrorsCount, cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold())) {
-        	CppcheckLogger.log(listener,"Setting build status to FAILURE since total number of new errors ("
-        			   + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)  
-        			   + ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()+ "'.");
+            CppcheckLogger.log(listener, "Setting build status to FAILURE since total number of new errors ("
+                    + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+                    + ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold() + "'.");
             return Result.FAILURE;
         }
         if (isErrorCountExceeded(errorsCount, cppcheckConfig.getConfigSeverityEvaluation().getThreshold())) {
-        	CppcheckLogger.log(listener,"Setting build status to UNSTABLE since total number of errors ("
-        			  +  CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
-        			  +  ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getThreshold()+ "'.");
+            CppcheckLogger.log(listener, "Setting build status to UNSTABLE since total number of errors ("
+                    + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+                    + ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getThreshold() + "'.");
             return Result.UNSTABLE;
         }
         if (isErrorCountExceeded(newErrorsCount, cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold())) {
-            CppcheckLogger.log(listener,"Setting build status to UNSTABLE since total number of new errors ("
-            		  + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
-            		  +  ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()+ "'.");
-	        return Result.UNSTABLE;
+            CppcheckLogger.log(listener, "Setting build status to UNSTABLE since total number of new errors ("
+                    + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
+                    + ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold() + "'.");
+            return Result.UNSTABLE;
         }
 
-        CppcheckLogger.log(listener,"Not changing build status, since no threshold has been exceeded");
+        CppcheckLogger.log(listener, "Not changing build status, since no threshold has been exceeded");
         return Result.SUCCESS;
     }
 

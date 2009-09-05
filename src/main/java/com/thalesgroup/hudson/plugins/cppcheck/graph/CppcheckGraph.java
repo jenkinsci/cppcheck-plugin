@@ -1,25 +1,25 @@
 /*******************************************************************************
-* Copyright (c) 2009 Thales Corporate Services SAS                             *
-* Author : Gregory Boissinot                                                   *
-*                                                                              *
-* Permission is hereby granted, free of charge, to any person obtaining a copy *
-* of this software and associated documentation files (the "Software"), to deal*
-* in the Software without restriction, including without limitation the rights *
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
-* copies of the Software, and to permit persons to whom the Software is        *
-* furnished to do so, subject to the following conditions:                     *
-*                                                                              *
-* The above copyright notice and this permission notice shall be included in   *
-* all copies or substantial portions of the Software.                          *
-*                                                                              *
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
-* THE SOFTWARE.                                                                *
-*******************************************************************************/
+ * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Author : Gregory Boissinot                                                   *
+ *                                                                              *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+ * copies of the Software, and to permit persons to whom the Software is        *
+ * furnished to do so, subject to the following conditions:                     *
+ *                                                                              *
+ * The above copyright notice and this permission notice shall be included in   *
+ * all copies or substantial portions of the Software.                          *
+ *                                                                              *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+ * THE SOFTWARE.                                                                *
+ *******************************************************************************/
 package com.thalesgroup.hudson.plugins.cppcheck.graph;
 
 import hudson.model.AbstractBuild;
@@ -46,23 +46,24 @@ import org.jfree.ui.RectangleInsets;
 public class CppcheckGraph extends Graph {
 
     private final String yLabel;
-   
+
     private final CategoryDataset categoryDataset;
-    
+
     public static final int DEFAULT_CHART_WIDTH = 500;
     public static final int DEFAULT_CHART_HEIGHT = 200;
 
-    public CppcheckGraph(AbstractBuild<?,?> owner, CategoryDataset categoryDataset, String yLabel, int chartWidth, int chartHeight) {
-    	super(owner.getTimestamp(),chartWidth,chartHeight);    	
-    	this.yLabel =  yLabel;
-        this.categoryDataset=categoryDataset;
+    public CppcheckGraph(AbstractBuild<?, ?> owner, CategoryDataset categoryDataset, String yLabel, int chartWidth, int chartHeight) {
+        super(owner.getTimestamp(), chartWidth, chartHeight);
+        this.yLabel = yLabel;
+        this.categoryDataset = categoryDataset;
     }
 
     /**
-     * Creates a Cppcheck trend graph 
+     * Creates a Cppcheck trend graph
+     *
      * @return the JFreeChart graph object
      */
-    protected JFreeChart createGraph()  {
+    protected JFreeChart createGraph() {
 
         final JFreeChart chart = ChartFactory.createLineChart(
                 null,                     // chart title
@@ -110,5 +111,5 @@ public class CppcheckGraph extends Graph {
         plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
 
         return chart;
-     }    
+    }
 }

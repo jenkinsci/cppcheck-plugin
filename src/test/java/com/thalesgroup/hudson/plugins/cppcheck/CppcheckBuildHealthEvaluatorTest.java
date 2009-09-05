@@ -37,38 +37,38 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator
 
 public class CppcheckBuildHealthEvaluatorTest {
 
-	
-	private CppcheckBuildHealthEvaluator cppcheckBuildHealthEvaluator;
-	CppcheckConfig cppcheckConfig;
-	
-	@Before
-	public void initialize(){				
-		cppcheckConfig=mock(CppcheckConfig.class);		
-		cppcheckBuildHealthEvaluator=new CppcheckBuildHealthEvaluator();		
-	}	
-	
-	private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getHealthy()).thenReturn(String.valueOf(healthy));
-		when(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()).thenReturn(String.valueOf(unHealthy));
-		HealthReport healthReport= cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig, errorsForSevrity);
-		return healthReport.getScore();
-	}
-	
-	@Test
-	public void testScore(){
-		Assert.assertEquals(0,processSetThreshold(0,10,11));
-		Assert.assertEquals(0,processSetThreshold(0,10,10));
-		Assert.assertEquals(10,processSetThreshold(0,10,9));
-		Assert.assertEquals(20,processSetThreshold(0,10,8));
-		Assert.assertEquals(30,processSetThreshold(0,10,7));
-		Assert.assertEquals(40,processSetThreshold(0,10,6));
-		Assert.assertEquals(50,processSetThreshold(0,10,5));
-		Assert.assertEquals(60,processSetThreshold(0,10,4));
-		Assert.assertEquals(70,processSetThreshold(0,10,3));
-		Assert.assertEquals(80,processSetThreshold(0,10,2));
-		Assert.assertEquals(90,processSetThreshold(0,10,1));
-		Assert.assertEquals(100,processSetThreshold(0,10,0));
-	}
+
+    private CppcheckBuildHealthEvaluator cppcheckBuildHealthEvaluator;
+    CppcheckConfig cppcheckConfig;
+
+    @Before
+    public void initialize() {
+        cppcheckConfig = mock(CppcheckConfig.class);
+        cppcheckBuildHealthEvaluator = new CppcheckBuildHealthEvaluator();
+    }
+
+    private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getHealthy()).thenReturn(String.valueOf(healthy));
+        when(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()).thenReturn(String.valueOf(unHealthy));
+        HealthReport healthReport = cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig, errorsForSevrity);
+        return healthReport.getScore();
+    }
+
+    @Test
+    public void testScore() {
+        Assert.assertEquals(0, processSetThreshold(0, 10, 11));
+        Assert.assertEquals(0, processSetThreshold(0, 10, 10));
+        Assert.assertEquals(10, processSetThreshold(0, 10, 9));
+        Assert.assertEquals(20, processSetThreshold(0, 10, 8));
+        Assert.assertEquals(30, processSetThreshold(0, 10, 7));
+        Assert.assertEquals(40, processSetThreshold(0, 10, 6));
+        Assert.assertEquals(50, processSetThreshold(0, 10, 5));
+        Assert.assertEquals(60, processSetThreshold(0, 10, 4));
+        Assert.assertEquals(70, processSetThreshold(0, 10, 3));
+        Assert.assertEquals(80, processSetThreshold(0, 10, 2));
+        Assert.assertEquals(90, processSetThreshold(0, 10, 1));
+        Assert.assertEquals(100, processSetThreshold(0, 10, 0));
+    }
 }

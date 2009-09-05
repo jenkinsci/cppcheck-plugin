@@ -41,33 +41,33 @@ import org.jdom.input.SAXBuilder;
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
-public class CppcheckParser implements Serializable{
+public class CppcheckParser implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public CppcheckReport parse(final File file) throws IOException,JDOMException {
-		
-        if (file==null){
+    public CppcheckReport parse(final File file) throws IOException, JDOMException {
+
+        if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");
         }
 
-        if (! file.exists()){
+        if (!file.exists()) {
             throw new IllegalArgumentException("File input " + file.getName() + " must exist.");
         }
 
-		
-		CppcheckReport cppCheckReport = new CppcheckReport();
-		
-		Document document = null;
-		SAXBuilder sxb = new SAXBuilder();
-		FileInputStream fis = new FileInputStream(file);
-		InputStreamReader isr = new InputStreamReader(fis);
-		document = sxb.build(isr);
-		fis.close();
-		isr.close();
-		
-		Element results = document.getRootElement();
-		List list = results.getChildren();
+
+        CppcheckReport cppCheckReport = new CppcheckReport();
+
+        Document document = null;
+        SAXBuilder sxb = new SAXBuilder();
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis);
+        document = sxb.build(isr);
+        fis.close();
+        isr.close();
+
+        Element results = document.getRootElement();
+        List list = results.getChildren();
         List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
         List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
         List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
@@ -76,49 +76,45 @@ public class CppcheckParser implements Serializable{
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
         Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
-		CppcheckFile cppcheckFile;
-		for (int i = 0; i < list.size(); i++) {
-			Element elt = (Element) list.get(i);
-			cppcheckFile = new CppcheckFile();
-			cppcheckFile.setKey(i+1);
-			cppcheckFile.setFileName(elt.getAttributeValue("file"));
-			//line can be optional
-			String lineAtr=null;
-			if ((lineAtr=elt.getAttributeValue("line"))!=null){
-				cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
-			}
-			
-			cppcheckFile.setCppCheckId(elt.getAttributeValue("id"));
-			cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
-			cppcheckFile.setMessage(elt.getAttributeValue("msg"));
+        CppcheckFile cppcheckFile;
+        for (int i = 0; i < list.size(); i++) {
+            Element elt = (Element) list.get(i);
+            cppcheckFile = new CppcheckFile();
+            cppcheckFile.setKey(i + 1);
+            cppcheckFile.setFileName(elt.getAttributeValue("file"));
+            //line can be optional
+            String lineAtr = null;
+            if ((lineAtr = elt.getAttributeValue("line")) != null) {
+                cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+            }
 
-            if ("possible error".equals(cppcheckFile.getSeverity())){
+            cppcheckFile.setCppCheckId(elt.getAttributeValue("id"));
+            cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
+            cppcheckFile.setMessage(elt.getAttributeValue("msg"));
+
+            if ("possible error".equals(cppcheckFile.getSeverity())) {
                 possibleErrorSeverities.add(cppcheckFile);
-			}
-			else if ("style".equals(cppcheckFile.getSeverity())){
-				styleSeverities.add(cppcheckFile);
-			}
-			else if ("possible style".equals(cppcheckFile.getSeverity())){
-				possibleStyleSeverities.add(cppcheckFile);
-			}
-			else if ("error".equals(cppcheckFile.getSeverity())){
-				errorSeverities.add(cppcheckFile);
-			}
-			else{
-				noCategorySeverities.add(cppcheckFile);
-			}
-			everyErrors.add(cppcheckFile);
-			
-			agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
-		}
+            } else if ("style".equals(cppcheckFile.getSeverity())) {
+                styleSeverities.add(cppcheckFile);
+            } else if ("possible style".equals(cppcheckFile.getSeverity())) {
+                possibleStyleSeverities.add(cppcheckFile);
+            } else if ("error".equals(cppcheckFile.getSeverity())) {
+                errorSeverities.add(cppcheckFile);
+            } else {
+                noCategorySeverities.add(cppcheckFile);
+            }
+            everyErrors.add(cppcheckFile);
 
-		cppCheckReport.setEverySeverities(everyErrors);
+            agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
+        }
+
+        cppCheckReport.setEverySeverities(everyErrors);
         cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
         cppCheckReport.setStyleSeverities(styleSeverities);
         cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
         cppCheckReport.setErrorSeverities(errorSeverities);
         cppCheckReport.setNoCategorySeverities(noCategorySeverities);
-              
-		return cppCheckReport;
-	}
+
+        return cppCheckReport;
+    }
 }

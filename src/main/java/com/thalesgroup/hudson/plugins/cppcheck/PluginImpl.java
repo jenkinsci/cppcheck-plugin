@@ -31,10 +31,10 @@ import hudson.tasks.Publisher;
  */
 public class PluginImpl extends Plugin {
 
-	@Override
-	public void start() throws Exception {
-	    Publisher.PUBLISHERS.add(CppcheckPublisher.DESCRIPTOR);
-	    super.start();
-	}
+    @Override
+    public void start() throws Exception {
+        Publisher.PUBLISHERS.add(CppcheckPublisher.DESCRIPTOR);
+        super.start();
+    }
 
 }

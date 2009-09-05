@@ -1,32 +1,32 @@
 /*******************************************************************************
-* Copyright (c) 2009 Thales Corporate Services SAS                             *
-* Author : Gregory Boissinot                                                   *
-*                                                                              *
-* Permission is hereby granted, free of charge, to any person obtaining a copy *
-* of this software and associated documentation files (the "Software"), to deal*
-* in the Software without restriction, including without limitation the rights *
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
-* copies of the Software, and to permit persons to whom the Software is        *
-* furnished to do so, subject to the following conditions:                     *
-*                                                                              *
-* The above copyright notice and this permission notice shall be included in   *
-* all copies or substantial portions of the Software.                          *
-*                                                                              *
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
-* THE SOFTWARE.                                                                *
-*******************************************************************************/
+ * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Author : Gregory Boissinot                                                   *
+ *                                                                              *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+ * copies of the Software, and to permit persons to whom the Software is        *
+ * furnished to do so, subject to the following conditions:                     *
+ *                                                                              *
+ * The above copyright notice and this permission notice shall be included in   *
+ * all copies or substantial portions of the Software.                          *
+ *                                                                              *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+ * THE SOFTWARE.                                                                *
+ *******************************************************************************/
 
 package com.thalesgroup.hudson.plugins.cppcheck.config;
 
 import java.io.Serializable;
 
-public class CppcheckConfigSeverityEvaluation implements Serializable{
-	
+public class CppcheckConfigSeverityEvaluation implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String threshold;
@@ -42,74 +42,75 @@ public class CppcheckConfigSeverityEvaluation implements Serializable{
     private String unHealthy;
 
     private boolean severityError = true;
-    
+
     private boolean severityPossibleError = true;
-    
+
     private boolean severityStyle = true;
-    
+
     private boolean severityPossibleStyle = true;
-    
-    public CppcheckConfigSeverityEvaluation(){}
-    
-    public CppcheckConfigSeverityEvaluation( String threshold,
-			String newThreshold, String failureThreshold,
-			String newFailureThreshold, String healthy, String unHealthy,
-			boolean severityError, boolean severityPossibleError,
-			boolean severityStyle, boolean severityPossibleStyle) {
-    	
-    	this.threshold = threshold;
-    	this.newThreshold = newThreshold;
-    	this.failureThreshold = failureThreshold;
-    	this.newFailureThreshold = newFailureThreshold;
-    	this.healthy = healthy;
-    	this.unHealthy = unHealthy;
-    	this.severityError = severityError;
-    	this.severityPossibleError = severityPossibleError;
-    	this.severityStyle = severityStyle;
-    	this.severityPossibleStyle = severityPossibleStyle;
+
+    public CppcheckConfigSeverityEvaluation() {
     }
-    
-	public String getThreshold() {
-		return threshold;
-	}
 
-	public String getNewThreshold() {
-		return newThreshold;
-	}
+    public CppcheckConfigSeverityEvaluation(String threshold,
+                                            String newThreshold, String failureThreshold,
+                                            String newFailureThreshold, String healthy, String unHealthy,
+                                            boolean severityError, boolean severityPossibleError,
+                                            boolean severityStyle, boolean severityPossibleStyle) {
 
-	public String getFailureThreshold() {
-		return failureThreshold;
-	}
+        this.threshold = threshold;
+        this.newThreshold = newThreshold;
+        this.failureThreshold = failureThreshold;
+        this.newFailureThreshold = newFailureThreshold;
+        this.healthy = healthy;
+        this.unHealthy = unHealthy;
+        this.severityError = severityError;
+        this.severityPossibleError = severityPossibleError;
+        this.severityStyle = severityStyle;
+        this.severityPossibleStyle = severityPossibleStyle;
+    }
 
-	public String getNewFailureThreshold() {
-		return newFailureThreshold;
-	}
+    public String getThreshold() {
+        return threshold;
+    }
 
-	public String getHealthy() {
-		return healthy;
-	}
+    public String getNewThreshold() {
+        return newThreshold;
+    }
 
-	public String getUnHealthy() {
-		return unHealthy;
-	}
+    public String getFailureThreshold() {
+        return failureThreshold;
+    }
 
-	public boolean isSeverityError() {
-		return severityError;
-	}
+    public String getNewFailureThreshold() {
+        return newFailureThreshold;
+    }
 
-	public boolean isSeverityPossibleError() {
-		return severityPossibleError;
-	}
+    public String getHealthy() {
+        return healthy;
+    }
 
-	public boolean isSeverityStyle() {
-		return severityStyle;
-	}
+    public String getUnHealthy() {
+        return unHealthy;
+    }
 
-	public boolean isSeverityPossibleStyle() {
-		return severityPossibleStyle;
-	}
+    public boolean isSeverityError() {
+        return severityError;
+    }
 
-	public boolean isAllSeverities(){
-		return isSeverityError() && isSeverityPossibleError() && isSeverityPossibleStyle() && isSeverityStyle();
-	}
+    public boolean isSeverityPossibleError() {
+        return severityPossibleError;
+    }
+
+    public boolean isSeverityStyle() {
+        return severityStyle;
+    }
+
+    public boolean isSeverityPossibleStyle() {
+        return severityPossibleStyle;
+    }
+
+    public boolean isAllSeverities() {
+        return isSeverityError() && isSeverityPossibleError() && isSeverityPossibleStyle() && isSeverityStyle();
+    }
 }

@@ -42,195 +42,198 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator
 
 public class CppcheckBuildResultEvaluatorTest {
 
-	private CppcheckBuildResultEvaluator cppcheckBuildResultEvaluator;	
-	private CppcheckConfig cppcheckConfig;	
-	private BuildListener listener;
-	
-	@Before
-	public void setUp(){	
-		listener=mock(BuildListener.class);
-        when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream())); 		
-        cppcheckConfig=mock(CppcheckConfig.class);		
-		cppcheckBuildResultEvaluator=new CppcheckBuildResultEvaluator();		
-	}
-	
-	private Result processFailurThreshold(int failureThreshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}	
-	private Result processNewFailurThreshold(int newfailureThreshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}
-	private Result processNewThreshold(int newThreshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}	
-	private Result processThreshold(int threshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}
-	
-	
-	@Test
-	public void testFailurExceedThreshold(){	
-		
-		//Serie 1 with fixed number to new error of 5
-		Assert.assertEquals("Wrong result for failure threshold",Result.FAILURE,processFailurThreshold(5,6,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,5,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,3,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,1,5));
-		
-		//Serie 2 with fixed number to new error of 3
-		Assert.assertEquals("Wrong result for failure threshold",Result.FAILURE,processFailurThreshold(5,6,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,5,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,3,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,1,3));
-		
-		//Serie 3 with fixed number to new error of 0
-		Assert.assertEquals("Wrong result for failure threshold",Result.FAILURE,processFailurThreshold(5,6,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,5,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,3,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processFailurThreshold(5,1,0));
-	}
+    private CppcheckBuildResultEvaluator cppcheckBuildResultEvaluator;
+    private CppcheckConfig cppcheckConfig;
+    private BuildListener listener;
 
-	@Test
-	public void testFailurNewThreshold(){	
-		
-		//Serie 1 with fixed number to total error of 5
-		Assert.assertEquals("Wrong result for new failure threshold",Result.FAILURE,processNewFailurThreshold(5,5,6));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,5,4));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,5,3));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,5,1));
-		
-		//Serie 2 with fixed number to total error of 3
-		Assert.assertEquals("Wrong result for new failure threshold",Result.FAILURE,processNewFailurThreshold(5,3,6));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,3,4));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,3,3));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,3,1));		
+    @Before
+    public void setUp() {
+        listener = mock(BuildListener.class);
+        when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream()));
+        cppcheckConfig = mock(CppcheckConfig.class);
+        cppcheckBuildResultEvaluator = new CppcheckBuildResultEvaluator();
+    }
 
-		//Serie 3 with fixed number to total error of 0
-		Assert.assertEquals("Wrong result for new failure threshold",Result.FAILURE,processNewFailurThreshold(5,0,6));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,0,4));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,0,3));
-		Assert.assertEquals("Wrong result for new failure threshold",Result.SUCCESS,processNewFailurThreshold(5,0,1));	
-	}
+    private Result processFailurThreshold(int failureThreshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
 
-	@Test
-	public void testUnstableThreshold(){	
-		
-		//Serie 1 with fixed number to new error of 5
-		Assert.assertEquals("Wrong result for failure threshold",Result.UNSTABLE,processThreshold(5,6,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,5,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,3,5));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,1,5));
-		
-		//Serie 2 with fixed number to new error of 3
-		Assert.assertEquals("Wrong result for failure threshold",Result.UNSTABLE,processThreshold(5,6,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,5,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,3,3));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,1,3));
-		
-		//Serie 3 with fixed number to new error of 0
-		Assert.assertEquals("Wrong result for failure threshold",Result.UNSTABLE,processThreshold(5,6,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,5,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,3,0));
-		Assert.assertEquals("Wrong result for failure threshold",Result.SUCCESS,processThreshold(5,1,0));
-	}	
-	
-	@Test
-	public void testUnstableNewThreshold(){	
-		
-		//Serie 1 with fixed number to total error of 5
-		Assert.assertEquals("Wrong result for new threshold",Result.UNSTABLE,processNewThreshold(5,5,6));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,5,4));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,5,3));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,5,1));
-		
-		//Serie 2 with fixed number to total error of 3
-		Assert.assertEquals("Wrong result for new threshold",Result.UNSTABLE,processNewThreshold(5,3,6));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,3,4));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,3,3));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,3,1));		
+    private Result processNewFailurThreshold(int newfailureThreshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
 
-		//Serie 3 with fixed number to total error of 0
-		Assert.assertEquals("Wrong result for new threshold",Result.UNSTABLE,processNewThreshold(5,0,6));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,0,4));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,0,3));
-		Assert.assertEquals("Wrong result for new threshold",Result.SUCCESS,processNewThreshold(5,0,1));
-	}
-	
-	private Result processTestCaseLimit1(int newFailureThreshold, int newThreshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
-		when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}
-	private Result processTestCaseLimit2(int failureThreshold, int threshold, int errorsCount, int newErrors){
-		CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
-		when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
-		when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
-		when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
-		return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);	
-	}
+    private Result processNewThreshold(int newThreshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
 
-	
-	
-	@Test
-	public void testCaseLimit1(){
+    private Result processThreshold(int threshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
 
-		//new new failure error wins over new threshold - Serie 1 for 0 errors
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,0,4));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,0,5));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.FAILURE,processTestCaseLimit1(5,5,0,6));
 
-		//new new failure error wins over new threshold - Serie 2 for 3 errors
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,3,4));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,3,5));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.FAILURE,processTestCaseLimit1(5,5,3,6));
-		
-		//new new failure error wins over new threshold - Serie 3 for 5 errors
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,5,4));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,5,5));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.FAILURE,processTestCaseLimit1(5,5,5,6));
-		
-		//new new failure error wins over new threshold - Serie 4 for 6 errors
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,6,4));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.SUCCESS,processTestCaseLimit1(5,5,6,5));
-		Assert.assertEquals("Wrong result for new failure error over new threshold",Result.FAILURE,processTestCaseLimit1(5,5,6,6));		
-	}
-	
-	@Test
-	public void testCaseLimit2(){
+    @Test
+    public void testFailurExceedThreshold() {
 
-		//new failure error wins over threshold - Serie 1 for 0 new errors
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,4,0));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,5,0));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.FAILURE,processTestCaseLimit2(5,5,6,0));
+        //Serie 1 with fixed number to new error of 5
+        Assert.assertEquals("Wrong result for failure threshold", Result.FAILURE, processFailurThreshold(5, 6, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 5, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 3, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 1, 5));
 
-		//new failure error wins over threshold - Serie 2 for 3 new errors
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,4,3));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,5,3));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.FAILURE,processTestCaseLimit2(5,5,6,3));
-		
-		//new failure error wins over threshold - Serie 3 for 5 new errors
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,4,5));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,5,5));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.FAILURE,processTestCaseLimit2(5,5,6,5));
-		
-		//new failure error wins over threshold - Serie 4 for 6 new errors
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,4,6));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.SUCCESS,processTestCaseLimit2(5,5,5,6));
-		Assert.assertEquals("Wrong result for failure error over threshold",Result.FAILURE,processTestCaseLimit2(5,5,6,6));		
-	}	
-	
+        //Serie 2 with fixed number to new error of 3
+        Assert.assertEquals("Wrong result for failure threshold", Result.FAILURE, processFailurThreshold(5, 6, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 5, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 3, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 1, 3));
+
+        //Serie 3 with fixed number to new error of 0
+        Assert.assertEquals("Wrong result for failure threshold", Result.FAILURE, processFailurThreshold(5, 6, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 5, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 3, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processFailurThreshold(5, 1, 0));
+    }
+
+    @Test
+    public void testFailurNewThreshold() {
+
+        //Serie 1 with fixed number to total error of 5
+        Assert.assertEquals("Wrong result for new failure threshold", Result.FAILURE, processNewFailurThreshold(5, 5, 6));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 5, 4));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 5, 3));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 5, 1));
+
+        //Serie 2 with fixed number to total error of 3
+        Assert.assertEquals("Wrong result for new failure threshold", Result.FAILURE, processNewFailurThreshold(5, 3, 6));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 3, 4));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 3, 3));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 3, 1));
+
+        //Serie 3 with fixed number to total error of 0
+        Assert.assertEquals("Wrong result for new failure threshold", Result.FAILURE, processNewFailurThreshold(5, 0, 6));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 0, 4));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 0, 3));
+        Assert.assertEquals("Wrong result for new failure threshold", Result.SUCCESS, processNewFailurThreshold(5, 0, 1));
+    }
+
+    @Test
+    public void testUnstableThreshold() {
+
+        //Serie 1 with fixed number to new error of 5
+        Assert.assertEquals("Wrong result for failure threshold", Result.UNSTABLE, processThreshold(5, 6, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 5, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 3, 5));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 1, 5));
+
+        //Serie 2 with fixed number to new error of 3
+        Assert.assertEquals("Wrong result for failure threshold", Result.UNSTABLE, processThreshold(5, 6, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 5, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 3, 3));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 1, 3));
+
+        //Serie 3 with fixed number to new error of 0
+        Assert.assertEquals("Wrong result for failure threshold", Result.UNSTABLE, processThreshold(5, 6, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 5, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 3, 0));
+        Assert.assertEquals("Wrong result for failure threshold", Result.SUCCESS, processThreshold(5, 1, 0));
+    }
+
+    @Test
+    public void testUnstableNewThreshold() {
+
+        //Serie 1 with fixed number to total error of 5
+        Assert.assertEquals("Wrong result for new threshold", Result.UNSTABLE, processNewThreshold(5, 5, 6));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 5, 4));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 5, 3));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 5, 1));
+
+        //Serie 2 with fixed number to total error of 3
+        Assert.assertEquals("Wrong result for new threshold", Result.UNSTABLE, processNewThreshold(5, 3, 6));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 3, 4));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 3, 3));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 3, 1));
+
+        //Serie 3 with fixed number to total error of 0
+        Assert.assertEquals("Wrong result for new threshold", Result.UNSTABLE, processNewThreshold(5, 0, 6));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 0, 4));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 0, 3));
+        Assert.assertEquals("Wrong result for new threshold", Result.SUCCESS, processNewThreshold(5, 0, 1));
+    }
+
+    private Result processTestCaseLimit1(int newFailureThreshold, int newThreshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
+        when(cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
+
+    private Result processTestCaseLimit2(int failureThreshold, int threshold, int errorsCount, int newErrors) {
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = mock(CppcheckConfigSeverityEvaluation.class);
+        when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
+        when(cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
+        when(cppcheckConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
+        return cppcheckBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, cppcheckConfig);
+    }
+
+
+    @Test
+    public void testCaseLimit1() {
+
+        //new new failure error wins over new threshold - Serie 1 for 0 errors
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 0, 4));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 0, 5));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.FAILURE, processTestCaseLimit1(5, 5, 0, 6));
+
+        //new new failure error wins over new threshold - Serie 2 for 3 errors
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 3, 4));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 3, 5));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.FAILURE, processTestCaseLimit1(5, 5, 3, 6));
+
+        //new new failure error wins over new threshold - Serie 3 for 5 errors
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 5, 4));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 5, 5));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.FAILURE, processTestCaseLimit1(5, 5, 5, 6));
+
+        //new new failure error wins over new threshold - Serie 4 for 6 errors
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 6, 4));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.SUCCESS, processTestCaseLimit1(5, 5, 6, 5));
+        Assert.assertEquals("Wrong result for new failure error over new threshold", Result.FAILURE, processTestCaseLimit1(5, 5, 6, 6));
+    }
+
+    @Test
+    public void testCaseLimit2() {
+
+        //new failure error wins over threshold - Serie 1 for 0 new errors
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 4, 0));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 5, 0));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.FAILURE, processTestCaseLimit2(5, 5, 6, 0));
+
+        //new failure error wins over threshold - Serie 2 for 3 new errors
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 4, 3));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 5, 3));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.FAILURE, processTestCaseLimit2(5, 5, 6, 3));
+
+        //new failure error wins over threshold - Serie 3 for 5 new errors
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 4, 5));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 5, 5));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.FAILURE, processTestCaseLimit2(5, 5, 6, 5));
+
+        //new failure error wins over threshold - Serie 4 for 6 new errors
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 4, 6));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.SUCCESS, processTestCaseLimit2(5, 5, 5, 6));
+        Assert.assertEquals("Wrong result for failure error over threshold", Result.FAILURE, processTestCaseLimit2(5, 5, 6, 6));
+    }
+
 }

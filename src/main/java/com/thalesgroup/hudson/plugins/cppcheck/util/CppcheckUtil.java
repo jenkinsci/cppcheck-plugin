@@ -30,55 +30,54 @@ public class CppcheckUtil {
 
     /**
      * Gets the number of errors
+     *
      * @param cppecheckConfig
      * @param result
      * @param checkNewError
      * @return
      */
-    public static int getNumberErrors(CppcheckConfig cppecheckConfig, CppcheckResult result, boolean checkNewError){
+    public static int getNumberErrors(CppcheckConfig cppecheckConfig, CppcheckResult result, boolean checkNewError) {
 
-        int nbErrors= 0;
-        int nbPreviousError=0;
-        CppcheckResult previousResult=result.getPreviousResult();
+        int nbErrors = 0;
+        int nbPreviousError = 0;
+        CppcheckResult previousResult = result.getPreviousResult();
 
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()){
-            nbErrors= result.getReport().getPossibleErrorSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= previousResult.getReport().getPossibleErrorSeverities().size();
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()) {
+            nbErrors = result.getReport().getPossibleErrorSeverities().size();
+            if (previousResult != null) {
+                nbPreviousError = previousResult.getReport().getPossibleErrorSeverities().size();
             }
         }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()){
-            nbErrors= nbErrors+ result.getReport().getStyleSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError=  nbPreviousError + previousResult.getReport().getStyleSeverities().size();
+
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
+            nbErrors = nbErrors + result.getReport().getStyleSeverities().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getStyleSeverities().size();
             }
 
         }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()){
-            nbErrors= nbErrors+ result.getReport().getPossibleStyleSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
+
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()) {
+            nbErrors = nbErrors + result.getReport().getPossibleStyleSeverities().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
             }
         }
-        
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()){
-            nbErrors= nbErrors + result.getReport().getErrorSeverities().size();
-            if (previousResult!=null){
-            	nbPreviousError= nbPreviousError + previousResult.getReport().getErrorSeverities().size();
+
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()) {
+            nbErrors = nbErrors + result.getReport().getErrorSeverities().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getErrorSeverities().size();
             }
         }
-        
-        if (checkNewError)   {
-            if (previousResult!=null){
-                return nbErrors-nbPreviousError;
-            }
-            else {
+
+        if (checkNewError) {
+            if (previousResult != null) {
+                return nbErrors - nbPreviousError;
+            } else {
                 return 0;
             }
-        }
-        else
-            return  nbErrors;
+        } else
+            return nbErrors;
     }
 }

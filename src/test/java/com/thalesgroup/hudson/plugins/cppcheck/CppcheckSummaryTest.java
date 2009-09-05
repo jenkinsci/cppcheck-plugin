@@ -34,104 +34,99 @@ import org.junit.Test;
 
 public class CppcheckSummaryTest {
 
-	/**
-	 * Initializes the locale to English.
-	 */
-	@Before
-	public void initializeLocale() {
-		Locale.setDefault(Locale.ENGLISH);
-	}
+    /**
+     * Initializes the locale to English.
+     */
+    @Before
+    public void initializeLocale() {
+        Locale.setDefault(Locale.ENGLISH);
+    }
 
 
-	/**
-	 * Parameterized test case to check the message text for the specified
-	 * number of erors
-	 * 
-	 * @param numberOfErrors
-	 *            the number of errors
-	 * @param expectedMessage
-	 *            the expected message
-	 */
-	private void checkSummaryText(final int numberOfErrors,
-			final String expectedMessage) {
-		
-		CppcheckReport report = mock(CppcheckReport.class);
-		CppcheckResult result = mock(CppcheckResult.class);
-		
-		when(result.getReport()).thenReturn(report);		
-		when(result.getReport().getNumberTotal()).thenReturn(numberOfErrors);
-		
-		Assert.assertEquals("Wrong summary detail message created.",expectedMessage, CppcheckSummary.createReportSummary(result));		
-	}
+    /**
+     * Parameterized test case to check the message text for the specified
+     * number of erors
+     *
+     * @param numberOfErrors  the number of errors
+     * @param expectedMessage the expected message
+     */
+    private void checkSummaryText(final int numberOfErrors,
+                                  final String expectedMessage) {
 
-	/**
-	 * Checks the text for 0 error.
-	 */
-	@Test
-	public void test0Errors() {
-		checkSummaryText(0, "Cppcheck: no error.");
-	}
+        CppcheckReport report = mock(CppcheckReport.class);
+        CppcheckResult result = mock(CppcheckResult.class);
 
-	/**
-	 * Checks the text for one error.
-	 */
-	@Test
-	public void test1Errors() {
-		checkSummaryText(1, "Cppcheck: <a href=\"cppcheckResult\">1 error</a>.");
-	}
+        when(result.getReport()).thenReturn(report);
+        when(result.getReport().getNumberTotal()).thenReturn(numberOfErrors);
 
-	/**
-	 * Checks the text for 5 errors.
-	 */
-	@Test
-	public void test5Errors() {
-		checkSummaryText(5,"Cppcheck: <a href=\"cppcheckResult\">5 errors</a>.");
-	}
-			
-	
+        Assert.assertEquals("Wrong summary detail message created.", expectedMessage, CppcheckSummary.createReportSummary(result));
+    }
 
-	/**
-	 * Parameterized test case to check the detail message text for the
-	 * specified number of erors
-	 * 
-	 * @param numberOfErrors
-	 *            the number of errors
-	 * @param expectedMessage
-	 *            the expected message
-	 */
-	private void checkSummaryDetailsText(final int numberOfErrors,
-			final String expectedMessage) {
+    /**
+     * Checks the text for 0 error.
+     */
+    @Test
+    public void test0Errors() {
+        checkSummaryText(0, "Cppcheck: no error.");
+    }
 
-		CppcheckResult result = mock(CppcheckResult.class);
-		
-		when(result.getNumberNewErrorsFromPreviousBuild()).thenReturn(numberOfErrors);
+    /**
+     * Checks the text for one error.
+     */
+    @Test
+    public void test1Errors() {
+        checkSummaryText(1, "Cppcheck: <a href=\"cppcheckResult\">1 error</a>.");
+    }
 
-		Assert.assertEquals("Wrong summary detail message created.",expectedMessage, CppcheckSummary.createReportSummaryDetails(result));
+    /**
+     * Checks the text for 5 errors.
+     */
+    @Test
+    public void test5Errors() {
+        checkSummaryText(5, "Cppcheck: <a href=\"cppcheckResult\">5 errors</a>.");
+    }
 
-	}
 
-	/**
-	 * Checks the text for no new errors.
-	 */
-	@Test
-	public void test0NewErrors() {
-		checkSummaryDetailsText(0, "<li>No new error</li>");
-	}
+    /**
+     * Parameterized test case to check the detail message text for the
+     * specified number of erors
+     *
+     * @param numberOfErrors  the number of errors
+     * @param expectedMessage the expected message
+     */
+    private void checkSummaryDetailsText(final int numberOfErrors,
+                                         final String expectedMessage) {
 
-	/**
-	 * Checks the text for one new error.
-	 */
-	@Test
-	public void test1NewErrors() {
-		checkSummaryDetailsText(1, "<li>One new error</li>");
-	}
+        CppcheckResult result = mock(CppcheckResult.class);
 
-	/**
-	 * Checks the text for one fives errors.
-	 */
-	@Test
-	public void test5NewErrors() {
-		checkSummaryDetailsText(5, "<li>New Errors: 5</li>");
+        when(result.getNumberNewErrorsFromPreviousBuild()).thenReturn(numberOfErrors);
+
+        Assert.assertEquals("Wrong summary detail message created.", expectedMessage, CppcheckSummary.createReportSummaryDetails(result));
+
+    }
+
+    /**
+     * Checks the text for no new errors.
+     */
+    @Test
+    public void test0NewErrors() {
+        checkSummaryDetailsText(0, "<li>No new error</li>");
+    }
+
+    /**
+     * Checks the text for one new error.
+     */
+    @Test
+    public void test1NewErrors() {
+        checkSummaryDetailsText(1, "<li>One new error</li>");
+    }
+
+    /**
+     * Checks the text for one fives errors.
+     */
+    @Test
+    public void test5NewErrors() {
+        checkSummaryDetailsText(5, "<li>New Errors: 5</li>");
 	}
 
 }

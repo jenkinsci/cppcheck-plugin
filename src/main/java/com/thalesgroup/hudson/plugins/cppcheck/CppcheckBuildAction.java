@@ -1,25 +1,25 @@
 /*******************************************************************************
-* Copyright (c) 2009 Thales Corporate Services SAS                             *
-* Author : Gregory Boissinot                                                   *
-*                                                                              *
-* Permission is hereby granted, free of charge, to any person obtaining a copy *
-* of this software and associated documentation files (the "Software"), to deal*
-* in the Software without restriction, including without limitation the rights *
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
-* copies of the Software, and to permit persons to whom the Software is        *
-* furnished to do so, subject to the following conditions:                     *
-*                                                                              *
-* The above copyright notice and this permission notice shall be included in   *
-* all copies or substantial portions of the Software.                          *
-*                                                                              *
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
-* THE SOFTWARE.                                                                *
-*******************************************************************************/
+ * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Author : Gregory Boissinot                                                   *
+ *                                                                              *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+ * copies of the Software, and to permit persons to whom the Software is        *
+ * furnished to do so, subject to the following conditions:                     *
+ *                                                                              *
+ * The above copyright notice and this permission notice shall be included in   *
+ * all copies or substantial portions of the Software.                          *
+ *                                                                              *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+ * THE SOFTWARE.                                                                *
+ *******************************************************************************/
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
@@ -43,18 +43,17 @@ import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
 
+public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
-public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
-	
     public static final String URL_NAME = "cppcheckResult";
 
     private CppcheckResult result;
     private CppcheckConfig cppcheckConfig;
 
-    public CppcheckBuildAction(AbstractBuild<?,?> owner, CppcheckResult result, CppcheckConfig cppcheckConfig){
+    public CppcheckBuildAction(AbstractBuild<?, ?> owner, CppcheckResult result, CppcheckConfig cppcheckConfig) {
         super(owner);
         this.result = result;
-        this.cppcheckConfig=cppcheckConfig;
+        this.cppcheckConfig = cppcheckConfig;
     }
 
     public String getIconFileName() {
@@ -70,59 +69,59 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
     }
 
     public String getSearchUrl() {
-		return getUrlName();
-	}
+        return getUrlName();
+    }
 
-	public CppcheckResult getResult(){
+    public CppcheckResult getResult() {
         return this.result;
     }
 
-    AbstractBuild<?,?> getBuild(){
+    AbstractBuild<?, ?> getBuild() {
         return this.owner;
     }
 
     public Object getTarget() {
         return this.result;
     }
-    
+
     public HealthReport getBuildHealth() {
-        try  {
-            return  new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig,false));
+        try {
+            return new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false));
         }
-        catch (IOException ioe){
+        catch (IOException ioe) {
             return new HealthReport();
         }
     }
-	
-	private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
-		DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
-		for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
-			ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+    private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
+        DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
+
+        for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
+            ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
 
             //a.getResult().getOwner().getResult()
 
-			CppcheckReport report = a.getResult().getReport();
+            CppcheckReport report = a.getResult().getReport();
 
-			CppcheckConfigGraph configGraph = cppcheckConfig.getConfigGraph();
-			
-    		if (configGraph.isDisplaySeverityStyle())
-				dsb.add(report.getNumberSeverityStyle(), "Severity 'style'", label);
-			if (configGraph.isDisplaySeverityPossibleStyle())
-				dsb.add(report.getNumberSeverityPossibleStyle(), "Severity 'possibe style'", label);
-			if (configGraph.isDisplaySeverityPossibleError())
-				dsb.add(report.getNumberSeverityPossibleError(), "Severity 'possible error'", label);
-			if (configGraph.isDisplaySeverityError())
-				dsb.add(report.getNumberSeverityError(), "Severity 'error'", label);			
-			if (configGraph.isDiplayAllError())
-				dsb.add(report.getNumberTotal(), "All errors", label);
-			
-		}
-		return dsb;
-	}
-   
+            CppcheckConfigGraph configGraph = cppcheckConfig.getConfigGraph();
+
+            if (configGraph.isDisplaySeverityStyle())
+                dsb.add(report.getNumberSeverityStyle(), "Severity 'style'", label);
+            if (configGraph.isDisplaySeverityPossibleStyle())
+                dsb.add(report.getNumberSeverityPossibleStyle(), "Severity 'possibe style'", label);
+            if (configGraph.isDisplaySeverityPossibleError())
+                dsb.add(report.getNumberSeverityPossibleError(), "Severity 'possible error'", label);
+            if (configGraph.isDisplaySeverityError())
+                dsb.add(report.getNumberSeverityError(), "Severity 'error'", label);
+            if (configGraph.isDiplayAllError())
+                dsb.add(report.getNumberTotal(), "All errors", label);
+
+        }
+        return dsb;
+    }
+
     public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        if (ChartUtil.awtProblemCause!=null) {            
+        if (ChartUtil.awtProblemCause != null) {
             rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
             return;
         }
@@ -131,11 +130,10 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction{
 
         if (req.checkIfModified(timestamp, rsp)) return;
 
-        Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(), 
-        			"Number of error", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
+        Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(),
+                "Number of error", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
         g.doPng(req, rsp);
     }
-
 
 
 }
