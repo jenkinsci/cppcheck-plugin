@@ -135,5 +135,22 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         g.doPng(req, rsp);
     }
 
+    // Backward compatibility. Do not remove.
+    // CPPCHECK:OFF
+    @Deprecated
+    private transient AbstractBuild<?, ?> build;
+
+    /**
+     * Initializes members that were not present in previous versions of this plug-in.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+        if (build != null) {
+            this.owner = build;
+        }
+        return this;
+    }
+
 
 }

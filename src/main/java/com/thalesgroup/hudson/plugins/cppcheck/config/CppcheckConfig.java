@@ -60,6 +60,43 @@ public class CppcheckConfig implements Serializable {
                 displaySeverityStyle, displaySeverityPossibleStyle);
     }
 
+
+    /**
+     * Initializes members that were not present in previous versions of this plug-in.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+
+        configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
+
+        if (threshold != null) {
+            configSeverityEvaluation.setThreshold(threshold);
+        }
+        if (newThreshold != null) {
+            configSeverityEvaluation.setNewThreshold(newThreshold);
+        }
+        if (failureThreshold != null) {
+            configSeverityEvaluation.setFailureThreshold(failureThreshold);
+        }
+        if (newFailureThreshold != null) {
+            configSeverityEvaluation.setNewFailureThreshold(newFailureThreshold);
+        }
+        if (healthy != null) {
+            configSeverityEvaluation.setHealthy(healthy);
+        }
+        if (unHealthy != null) {
+            configSeverityEvaluation.setUnHealthy(unHealthy);
+        }
+        configSeverityEvaluation.setSeverityError(severityError);
+        configSeverityEvaluation.setSeverityPossibleError(severityPossibleError);
+        configSeverityEvaluation.setSeverityStyle(severityStyle);
+        configSeverityEvaluation.setSeverityPossibleStyle(severityPossibleStyle);
+
+        return this;
+    }
+
+
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
     }
@@ -84,5 +121,37 @@ public class CppcheckConfig implements Serializable {
     public void setConfigGraph(CppcheckConfigGraph configGraph) {
         this.configGraph = configGraph;
     }
+
+    // Backward compatibility. Do not remove.
+    // CPPCHECK:OFF
+    @Deprecated
+    private transient String threshold;
+
+    @Deprecated
+    private transient String newThreshold;
+
+    @Deprecated
+    private transient String failureThreshold;
+
+    @Deprecated
+    private transient String newFailureThreshold;
+
+    @Deprecated
+    private transient String healthy;
+
+    @Deprecated
+    private transient String unHealthy;
+
+    @Deprecated
+    private transient boolean severityError = true;
+
+    @Deprecated
+    private transient boolean severityPossibleError = true;
+
+    @Deprecated
+    private transient boolean severityStyle = true;
+
+    @Deprecated
+    private transient boolean severityPossibleStyle = true;
 
 }

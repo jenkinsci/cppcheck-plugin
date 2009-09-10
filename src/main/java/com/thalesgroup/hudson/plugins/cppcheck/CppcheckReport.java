@@ -26,6 +26,7 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -127,5 +128,41 @@ public class CppcheckReport implements Serializable {
     public int getNumberSeverityNoCategory() {
         return (noCategorySeverities == null) ? 0 : noCategorySeverities.size();
     }
+
+
+    // Backward compatibility. Do not remove.
+    // CPPCHECK:OFF
+    @Deprecated
+    private transient Map<Integer, CppcheckFile> internalMap;
+
+    /**
+     * Initializes members that were not present in previous versions of this plug-in.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+
+        if (internalMap != null) {
+            for (Map.Entry<Integer, CppcheckFile> entry : internalMap.entrySet()) {
+
+                CppcheckFile cppcheckFile = entry.getValue();
+                if ("possible error".equals(cppcheckFile.getSeverity())) {
+                    possibleErrorSeverities.add(cppcheckFile);
+                } else if ("style".equals(cppcheckFile.getSeverity())) {
+                    styleSeverities.add(cppcheckFile);
+                } else if ("possible style".equals(cppcheckFile.getSeverity())) {
+                    possibleStyleSeverities.add(cppcheckFile);
+                } else if ("error".equals(cppcheckFile.getSeverity())) {
+                    errorSeverities.add(cppcheckFile);
+                } else {
+                    noCategorySeverities.add(cppcheckFile);
+                }
+                everySeverities.add(cppcheckFile);
+            }
+        }
+
+        return this;
+    }
+
 
 }

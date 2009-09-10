@@ -42,6 +42,6 @@ public class CppcheckLogger implements Serializable {
     public static void log(BuildListener listener, final String message) {
         listener.getLogger().println("[Cppcheck] " + message);
     }
-    
+
 }
 

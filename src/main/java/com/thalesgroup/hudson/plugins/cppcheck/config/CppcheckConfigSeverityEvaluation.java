@@ -113,4 +113,44 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
     public boolean isAllSeverities() {
         return isSeverityError() && isSeverityPossibleError() && isSeverityPossibleStyle() && isSeverityStyle();
     }
+
+    public void setThreshold(String threshold) {
+        this.threshold = threshold;
+    }
+
+    public void setNewThreshold(String newThreshold) {
+        this.newThreshold = newThreshold;
+    }
+
+    public void setFailureThreshold(String failureThreshold) {
+        this.failureThreshold = failureThreshold;
+    }
+
+    public void setNewFailureThreshold(String newFailureThreshold) {
+        this.newFailureThreshold = newFailureThreshold;
+    }
+
+    public void setHealthy(String healthy) {
+        this.healthy = healthy;
+    }
+
+    public void setUnHealthy(String unHealthy) {
+        this.unHealthy = unHealthy;
+    }
+
+    public void setSeverityError(boolean severityError) {
+        this.severityError = severityError;
+    }
+
+    public void setSeverityPossibleError(boolean severityPossibleError) {
+        this.severityPossibleError = severityPossibleError;
+    }
+
+    public void setSeverityStyle(boolean severityStyle) {
+        this.severityStyle = severityStyle;
+    }
+
+    public void setSeverityPossibleStyle(boolean severityPossibleStyle) {
+        this.severityPossibleStyle = severityPossibleStyle;
+    }
 }

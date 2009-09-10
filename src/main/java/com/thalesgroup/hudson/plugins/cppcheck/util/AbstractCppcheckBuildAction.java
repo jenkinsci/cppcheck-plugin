@@ -37,7 +37,7 @@ import org.kohsuke.stapler.StaplerResponse;
 public abstract class AbstractCppcheckBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
 
 
-    protected final AbstractBuild<?, ?> owner;
+    protected AbstractBuild<?, ?> owner;
 
     protected AbstractCppcheckBuildAction(AbstractBuild<?, ?> owner) {
         this.owner = owner;

@@ -75,7 +75,6 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
-        Map<Integer, CppcheckFile> agregateMap = new HashMap<Integer, CppcheckFile>();
         CppcheckFile cppcheckFile;
         for (int i = 0; i < list.size(); i++) {
             Element elt = (Element) list.get(i);
@@ -105,7 +104,7 @@ public class CppcheckParser implements Serializable {
             }
             everyErrors.add(cppcheckFile);
 
-            agregateMap.put(cppcheckFile.getKey(), cppcheckFile);
+
         }
 
         cppCheckReport.setEverySeverities(everyErrors);

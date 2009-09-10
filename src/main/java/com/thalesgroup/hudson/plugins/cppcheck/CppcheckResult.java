@@ -246,4 +246,6 @@ public class CppcheckResult implements Serializable {
         } else
             return nbErrors;
     }
+
+
 }
