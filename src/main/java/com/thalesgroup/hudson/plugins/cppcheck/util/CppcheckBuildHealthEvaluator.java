@@ -50,7 +50,7 @@ public class CppcheckBuildHealthEvaluator {
                         / (CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())));
             }
 
-            return new HealthReport(percentage, "Build stability for errors (" + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig) + ").");
+            return new HealthReport(percentage, Messages._CppcheckBuildHealthEvaluator_Description(CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)));
         }
         return null;
     }

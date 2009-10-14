@@ -23,8 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.Messages;
-
 public class CppcheckSummary {
 
     private CppcheckSummary() {

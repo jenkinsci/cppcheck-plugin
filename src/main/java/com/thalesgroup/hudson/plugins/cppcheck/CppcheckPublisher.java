@@ -23,6 +23,7 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
@@ -166,7 +167,7 @@ public class CppcheckPublisher extends Recorder {
         }
     }
 
-
+    @Extension
     public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
 
     /**
