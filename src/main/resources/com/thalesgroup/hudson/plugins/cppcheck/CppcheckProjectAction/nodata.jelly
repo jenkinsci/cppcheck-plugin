@@ -29,7 +29,7 @@
         <l:main-panel>
             <h1>No valid cppcheck data available</h1>
             <p>
-                This plugin will not report cppcheck result until there is at least one success build.
+                This plugin will not report cppcheck result until there is at least one success or unstable build.
             </p>
         </l:main-panel>
     </l:layout>
