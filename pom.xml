@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.jvnet.hudson.plugins</groupId>
       <artifactId>plugin</artifactId>
-      <version>1.323</version>
+      <version>1.346</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
@@ -90,6 +90,7 @@
       <developer>
          <id>gbois</id>
          <name>Gregory Boissinot</name>
+         <email>gbois@dev.java.net</email> 
       </developer>
    </developers>
 
