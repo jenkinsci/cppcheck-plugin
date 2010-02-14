@@ -23,22 +23,21 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
-
-import java.io.Serializable;
-import java.io.IOException;
-import java.util.Map;
-
+import hudson.model.Item;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
-import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Map;
 
 @ExportedBean
 public class CppcheckResult implements Serializable {
@@ -98,9 +97,16 @@ public class CppcheckResult implements Serializable {
      * @return the dynamic result of the analysis (detail page).
      */
     @SuppressWarnings("unused")
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
 
         if (link.startsWith("source.")) {
+
+            if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
+                response.sendRedirect2("nosourcepermission");
+                return null;
+            }
+
+
             Map<Integer, CppcheckWorkspaceFile> agregateMap = cppcheckSourceContainer.getInternalMap();
             if (agregateMap != null) {
                 CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link, "source.")));
