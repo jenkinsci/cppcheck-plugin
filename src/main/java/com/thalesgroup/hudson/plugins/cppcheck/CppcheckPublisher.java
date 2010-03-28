@@ -83,14 +83,14 @@ public class CppcheckPublisher extends Recorder {
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
 
-            final FilePath[] moduleRoots = build.getModuleRoots();
-            final boolean multipleModuleRoots = moduleRoots != null && moduleRoots.length > 1;
-            final FilePath moduleRoot = multipleModuleRoots ? build.getWorkspace() : build.getModuleRoot();
+//            final FilePath[] moduleRoots = build.getModuleRoots();
+//            final boolean multipleModuleRoots = moduleRoots != null && moduleRoots.length > 1;
+//            final FilePath moduleRoot = multipleModuleRoots ? build.getWorkspace() : build.getModuleRoot();
 
             CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern());
             CppcheckReport cppcheckReport;
             try {
-                cppcheckReport = moduleRoot.act(parser);
+                cppcheckReport = build.getWorkspace().act(parser);
             }
             catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
@@ -103,7 +103,7 @@ public class CppcheckPublisher extends Recorder {
                 return false;
             }
 
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, moduleRoot, cppcheckReport.getEverySeverities());
+            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), cppcheckReport.getEverySeverities());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
 
