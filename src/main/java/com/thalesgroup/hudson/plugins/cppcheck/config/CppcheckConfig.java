@@ -23,9 +23,9 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.config;
 
-import java.io.Serializable;
-
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.io.Serializable;
 
 public class CppcheckConfig implements Serializable {
 
@@ -66,32 +66,35 @@ public class CppcheckConfig implements Serializable {
      *
      * @return the created object
      */
+    @SuppressWarnings("deprecated")
     private Object readResolve() {
 
-        configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
+        if (configSeverityEvaluation == null) {
+            configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
+            configSeverityEvaluation.setSeverityError(severityError);
+            configSeverityEvaluation.setSeverityPossibleError(severityPossibleError);
+            configSeverityEvaluation.setSeverityStyle(severityStyle);
+            configSeverityEvaluation.setSeverityPossibleStyle(severityPossibleStyle);
 
-        if (threshold != null) {
-            configSeverityEvaluation.setThreshold(threshold);
+            if (threshold != null) {
+                configSeverityEvaluation.setThreshold(threshold);
+            }
+            if (newThreshold != null) {
+                configSeverityEvaluation.setNewThreshold(newThreshold);
+            }
+            if (failureThreshold != null) {
+                configSeverityEvaluation.setFailureThreshold(failureThreshold);
+            }
+            if (newFailureThreshold != null) {
+                configSeverityEvaluation.setNewFailureThreshold(newFailureThreshold);
+            }
+            if (healthy != null) {
+                configSeverityEvaluation.setHealthy(healthy);
+            }
+            if (unHealthy != null) {
+                configSeverityEvaluation.setUnHealthy(unHealthy);
+            }
         }
-        if (newThreshold != null) {
-            configSeverityEvaluation.setNewThreshold(newThreshold);
-        }
-        if (failureThreshold != null) {
-            configSeverityEvaluation.setFailureThreshold(failureThreshold);
-        }
-        if (newFailureThreshold != null) {
-            configSeverityEvaluation.setNewFailureThreshold(newFailureThreshold);
-        }
-        if (healthy != null) {
-            configSeverityEvaluation.setHealthy(healthy);
-        }
-        if (unHealthy != null) {
-            configSeverityEvaluation.setUnHealthy(unHealthy);
-        }
-        configSeverityEvaluation.setSeverityError(severityError);
-        configSeverityEvaluation.setSeverityPossibleError(severityPossibleError);
-        configSeverityEvaluation.setSeverityStyle(severityStyle);
-        configSeverityEvaluation.setSeverityPossibleStyle(severityPossibleStyle);
 
         return this;
     }
