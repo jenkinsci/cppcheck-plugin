@@ -52,6 +52,9 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     public final boolean isDisplayGraph() {
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
+        if (b == null){
+            return false;
+        }
 
         //Affect previous
         b = b.getPreviousBuild();
