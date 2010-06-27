@@ -31,7 +31,7 @@
    </j:if>    
 
   <f:entry title="${%Cppcheck report XMLs}"
-	description="${%description.pattern}">
+	description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
         <f:textbox name="cppcheckReportPattern" value="${config.cppcheckReportPattern}"/>
     </f:entry>
 
