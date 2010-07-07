@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +11,7 @@
     <artifactId>cppcheck</artifactId>
     <packaging>hpi</packaging>
     <name>Hudson Cppcheck Plug-in</name>
-    <version>0.10.1-SNAPSHOT</version>
+    <version>0.10.1</version>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Cppcheck+Plugin</url>
 
     <licenses>
@@ -125,4 +124,10 @@
             </plugin>
         </plugins>
     </build>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/cppcheck-0.10.1</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/cppcheck-0.10.1</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/cppcheck-0.10.1</url>
+  </scm>
 </project>
