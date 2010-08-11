@@ -11,7 +11,7 @@
     <artifactId>cppcheck</artifactId>
     <packaging>hpi</packaging>
     <name>Hudson Cppcheck Plug-in</name>
-    <version>0.10.2</version>
+    <version>0.10.3-SNAPSHOT</version>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Cppcheck+Plugin</url>
 
     <licenses>
@@ -124,10 +124,4 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/cppcheck-0.10.2</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/cppcheck-0.10.2</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/cppcheck-0.10.2</url>
-  </scm>
 </project>
