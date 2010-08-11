@@ -23,6 +23,7 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.FilePath;
 import hudson.model.BuildListener;
 
@@ -31,8 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
-
 public class CppcheckSourceContainer {
 
 
@@ -40,22 +39,29 @@ public class CppcheckSourceContainer {
 
     public CppcheckSourceContainer(BuildListener listener, FilePath basedir, List<CppcheckFile> files) throws IOException, InterruptedException {
         for (CppcheckFile cppcheckFile : files) {
+
             CppcheckWorkspaceFile cppcheckWorkspaceFile = new CppcheckWorkspaceFile();
-            FilePath sourceFilePath = new FilePath(basedir, cppcheckFile.getFileName());
 
-            if (!sourceFilePath.exists()) {
-                CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
-                cppcheckWorkspaceFile.setSourceIgnored(true);
+            String cppcheckFileName = cppcheckFile.getFileName();
+            if (cppcheckFileName == null) {
                 cppcheckWorkspaceFile.setFileName(null);
-            } else if (sourceFilePath.isDirectory()) {
-                cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
-                cppcheckWorkspaceFile.setSourceIgnored(true);
-            } else {
-                cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
                 cppcheckWorkspaceFile.setSourceIgnored(false);
+            } else {
+                FilePath sourceFilePath = new FilePath(basedir, cppcheckFileName);
+                if (!sourceFilePath.exists()) {
+                    CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+                    cppcheckWorkspaceFile.setSourceIgnored(true);
+                    cppcheckWorkspaceFile.setFileName(null);
+                } else if (sourceFilePath.isDirectory()) {
+                    cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
+                    cppcheckWorkspaceFile.setSourceIgnored(true);
+                } else {
+                    cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
+                    cppcheckWorkspaceFile.setSourceIgnored(false);
+                }
             }
-            cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
 
+            cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
             internalMap.put(cppcheckFile.getKey(), cppcheckWorkspaceFile);
         }
     }
