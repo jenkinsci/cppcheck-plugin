@@ -67,6 +67,9 @@ public class CppcheckWorkspaceFile {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+        if (fileName == null){
+            setSourceIgnored(true);
+        }
     }
 
 

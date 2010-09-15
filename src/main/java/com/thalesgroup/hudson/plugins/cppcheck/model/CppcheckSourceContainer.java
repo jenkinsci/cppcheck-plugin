@@ -45,13 +45,13 @@ public class CppcheckSourceContainer {
             String cppcheckFileName = cppcheckFile.getFileName();
             if (cppcheckFileName == null) {
                 cppcheckWorkspaceFile.setFileName(null);
-                cppcheckWorkspaceFile.setSourceIgnored(false);
+                cppcheckWorkspaceFile.setSourceIgnored(true);
             } else {
                 FilePath sourceFilePath = new FilePath(basedir, cppcheckFileName);
                 if (!sourceFilePath.exists()) {
-                    CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
-                    cppcheckWorkspaceFile.setSourceIgnored(true);
+                    CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");                    
                     cppcheckWorkspaceFile.setFileName(null);
+                    cppcheckWorkspaceFile.setSourceIgnored(true);
                 } else if (sourceFilePath.isDirectory()) {
                     cppcheckWorkspaceFile.setFileName(sourceFilePath.getRemote());
                     cppcheckWorkspaceFile.setSourceIgnored(true);
