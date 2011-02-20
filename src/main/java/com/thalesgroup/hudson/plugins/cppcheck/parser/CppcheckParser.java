@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Copyright (c) 2009-2011 Thales Corporate Services SAS                        *
  * Author : Gregory Boissinot                                                   *
  *                                                                              *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
@@ -23,29 +23,25 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.parser;
 
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
+import com.thalesgroup.hudson.plugins.cppcheck.exception.CppcheckException;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.jenkinsci.plugins.model.Results;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-
-import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
 public class CppcheckParser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public CppcheckReport parse(final File file) throws IOException, JDOMException {
+    public CppcheckReport parse(final File file) throws IOException {
 
         if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");
@@ -57,17 +53,6 @@ public class CppcheckParser implements Serializable {
 
 
         CppcheckReport cppCheckReport = new CppcheckReport();
-
-        Document document = null;
-        SAXBuilder sxb = new SAXBuilder();
-        FileInputStream fis = new FileInputStream(file);
-        InputStreamReader isr = new InputStreamReader(fis);
-        document = sxb.build(isr);
-        fis.close();
-        isr.close();
-
-        Element results = document.getRootElement();
-        List list = results.getChildren();
         List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
         List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
         List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
@@ -75,36 +60,45 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
-        CppcheckFile cppcheckFile;
-        for (int i = 0; i < list.size(); i++) {
-            Element elt = (Element) list.get(i);
-            cppcheckFile = new CppcheckFile();
-            cppcheckFile.setKey(i + 1);
-            cppcheckFile.setFileName(elt.getAttributeValue("file"));
-            //line can be optional
-            String lineAtr = null;
-            if ((lineAtr = elt.getAttributeValue("line")) != null) {
-                cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+        try {
+            JAXBContext jc = JAXBContext.newInstance("com.thalesgroup.jenkinsci.plugins.model");
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            Results results = (Results) unmarshaller.unmarshal(file);
+
+            CppcheckFile cppcheckFile;
+            for (int i = 0; i < results.getError().size(); i++) {
+                com.thalesgroup.jenkinsci.plugins.model.Error error = results.getError().get(i);
+                cppcheckFile = new CppcheckFile();
+                cppcheckFile = new CppcheckFile();
+                cppcheckFile.setKey(i + 1);
+                cppcheckFile.setFileName(error.getFile());
+
+                //line can be optional
+                String lineAtr = null;
+                if ((lineAtr = error.getLine()) != null) {
+                    cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+                }
+
+                cppcheckFile.setCppCheckId(error.getId());
+                cppcheckFile.setSeverity(error.getSeverity());
+                cppcheckFile.setMessage(error.getMsg());
+
+                if ("possible error".equals(cppcheckFile.getSeverity())) {
+                    possibleErrorSeverities.add(cppcheckFile);
+                } else if ("style".equals(cppcheckFile.getSeverity())) {
+                    styleSeverities.add(cppcheckFile);
+                } else if ("possible style".equals(cppcheckFile.getSeverity())) {
+                    possibleStyleSeverities.add(cppcheckFile);
+                } else if ("error".equals(cppcheckFile.getSeverity())) {
+                    errorSeverities.add(cppcheckFile);
+                } else {
+                    noCategorySeverities.add(cppcheckFile);
+                }
+                everyErrors.add(cppcheckFile);
             }
 
-            cppcheckFile.setCppCheckId(elt.getAttributeValue("id"));
-            cppcheckFile.setSeverity(elt.getAttributeValue("severity"));
-            cppcheckFile.setMessage(elt.getAttributeValue("msg"));
-
-            if ("possible error".equals(cppcheckFile.getSeverity())) {
-                possibleErrorSeverities.add(cppcheckFile);
-            } else if ("style".equals(cppcheckFile.getSeverity())) {
-                styleSeverities.add(cppcheckFile);
-            } else if ("possible style".equals(cppcheckFile.getSeverity())) {
-                possibleStyleSeverities.add(cppcheckFile);
-            } else if ("error".equals(cppcheckFile.getSeverity())) {
-                errorSeverities.add(cppcheckFile);
-            } else {
-                noCategorySeverities.add(cppcheckFile);
-            }
-            everyErrors.add(cppcheckFile);
-
-
+        } catch (JAXBException jaxbe) {
+            throw new CppcheckException("Can't parse cppcheck result file " + file.getPath(), jaxbe);
         }
 
         cppCheckReport.setEverySeverities(everyErrors);
@@ -115,5 +109,6 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setNoCategorySeverities(noCategorySeverities);
 
         return cppCheckReport;
+
     }
 }

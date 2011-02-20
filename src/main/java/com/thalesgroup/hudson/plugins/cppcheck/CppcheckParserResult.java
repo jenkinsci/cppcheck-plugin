@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Copyright (c) 2009-2011 Thales Corporate Services SAS                        *
  * Author : Gregory Boissinot                                                   *
  *                                                                              *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
@@ -23,19 +23,17 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
-import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
+import java.io.File;
+import java.io.IOException;
 
 public class CppcheckParserResult implements FilePath.FileCallable<CppcheckReport> {
 
@@ -81,9 +79,8 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
                 CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppchecReportkFileName));
                 mergeReport(cppcheckReportResult, cppcheckReport);
             }
-        }
-        catch (Exception e) {
-            CppcheckLogger.log(listener, "Parsing has been canceled. " + e.getMessage());
+        } catch (Exception e) {
+            CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getMessage());
             return null;
         }
 
