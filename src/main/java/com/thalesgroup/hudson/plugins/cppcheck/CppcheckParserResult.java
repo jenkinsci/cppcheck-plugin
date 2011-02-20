@@ -106,8 +106,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
     private String[] findCppcheckReports(File parentPath) {
         FileSet fs = Util.createFileSet(parentPath, this.cppcheckReportPattern);
         DirectoryScanner ds = fs.getDirectoryScanner();
-        String[] cppcheckFiles = ds.getIncludedFiles();
-        return cppcheckFiles;
+        return ds.getIncludedFiles();
     }
 
     public String getCppcheckReportPattern() {

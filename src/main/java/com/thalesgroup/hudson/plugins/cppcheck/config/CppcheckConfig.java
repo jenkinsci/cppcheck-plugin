@@ -128,33 +128,43 @@ public class CppcheckConfig implements Serializable {
     // Backward compatibility. Do not remove.
     // CPPCHECK:OFF
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String threshold;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String newThreshold;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String failureThreshold;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String newFailureThreshold;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String healthy;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient String unHealthy;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient boolean severityError = true;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient boolean severityPossibleError = true;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient boolean severityStyle = true;
 
     @Deprecated
+    @SuppressWarnings("unused")
     private transient boolean severityPossibleStyle = true;
 
 }

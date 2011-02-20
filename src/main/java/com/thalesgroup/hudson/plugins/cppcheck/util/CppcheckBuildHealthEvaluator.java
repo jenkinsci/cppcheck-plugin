@@ -39,14 +39,13 @@ public class CppcheckBuildHealthEvaluator {
 
         if (isHealthyReportEnabled(cppcheckConfig)) {
             int percentage;
-            int counter = nbErrorForSeverity;
 
-            if (counter < CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) {
+            if (nbErrorForSeverity < CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) {
                 percentage = 100;
-            } else if (counter > CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy())) {
+            } else if (nbErrorForSeverity > CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy())) {
                 percentage = 0;
             } else {
-                percentage = 100 - ((counter - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) * 100
+                percentage = 100 - ((nbErrorForSeverity - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) * 100
                         / (CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())));
             }
 

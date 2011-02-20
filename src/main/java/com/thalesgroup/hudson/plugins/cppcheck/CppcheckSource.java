@@ -133,7 +133,7 @@ public class CppcheckSource implements Serializable {
      *
      * @param sourceFile the source code of the whole file as rendered HTML string
      */
-    private final void splitSourceFile(final String sourceFile) {
+    private void splitSourceFile(final String sourceFile) {
         StringBuilder output = new StringBuilder(sourceFile.length());
 
         CppcheckFile cppcheckFile = cppcheckWorkspaceFile.getCppcheckFile();
