@@ -23,37 +23,29 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.FreeStyleProject;
-import hudson.model.Result;
+import hudson.model.*;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-
-import net.sf.json.JSONObject;
-
-import org.kohsuke.stapler.StaplerRequest;
-
-import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 
 public class CppcheckPublisher extends Recorder {
 
@@ -91,8 +83,7 @@ public class CppcheckPublisher extends Recorder {
             CppcheckReport cppcheckReport;
             try {
                 cppcheckReport = build.getWorkspace().act(parser);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
                 build.setResult(Result.FAILURE);
                 return false;
@@ -182,7 +173,14 @@ public class CppcheckPublisher extends Recorder {
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return FreeStyleProject.class.isAssignableFrom(jobType) || MatrixProject.class.isAssignableFrom(jobType);
+            boolean isIvyProject = false;
+            if (Hudson.getInstance().getPlugin("javanet-uploader") != null) {
+                isIvyProject = hudson.ivy.AbstractIvyProject.class.isAssignableFrom(jobType);
+            }
+
+            return FreeStyleProject.class.isAssignableFrom(jobType)
+                    || MatrixProject.class.isAssignableFrom(jobType)
+                    || isIvyProject;
         }
 
         @Override
