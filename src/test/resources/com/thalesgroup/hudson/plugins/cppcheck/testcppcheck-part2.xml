@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<results>
-<error file="testcppcheck.cpp" line="51" id="resourceLeak" severity="error" msg="Resource leak: f"/>
-<error file="testcppcheck.cpp" line="6" id="bufferOverrun" severity="possible error" msg="Buffer overrun"/>
-<error file="testcppcheck.cpp" line="15" id="bufferOverrun" severity="possible error" msg="Buffer overrun"/>
-<error file="testcppcheck.cpp" line="1" id="unusedFunction" severity="style" msg="The function 'foo' is never used"/>
-</results>

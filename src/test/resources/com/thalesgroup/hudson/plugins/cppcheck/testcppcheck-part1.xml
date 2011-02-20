@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<results>
-<error file="testcppcheck.cpp" line="19" id="udivError" severity="error" msg="Unsigned division. The result will be wrong."/>
-<error file="testcppcheck.cpp" line="11" id="charArrayIndex" severity="style" msg="Warning - using char variable as array index"/>
-<error file="testcppcheck.cpp" line="45" id="iterators" severity="error" msg="Same iterator is used with both ints1 and ints2"/>
-</results>
