@@ -26,7 +26,7 @@ package com.thalesgroup.hudson.plugins.cppcheck.parser;
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
 import com.thalesgroup.hudson.plugins.cppcheck.exception.CppcheckException;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.jenkinsci.plugins.model.Results;
+import com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -61,20 +61,19 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
         try {
-            JAXBContext jc = JAXBContext.newInstance("com.thalesgroup.jenkinsci.plugins.model");
+            JAXBContext jc = JAXBContext.newInstance(new Class[]{com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class});
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             Results results = (Results) unmarshaller.unmarshal(file);
 
             CppcheckFile cppcheckFile;
             for (int i = 0; i < results.getError().size(); i++) {
-                com.thalesgroup.jenkinsci.plugins.model.Error error = results.getError().get(i);
-                cppcheckFile = new CppcheckFile();
+                com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error error = results.getError().get(i);
                 cppcheckFile = new CppcheckFile();
                 cppcheckFile.setKey(i + 1);
                 cppcheckFile.setFileName(error.getFile());
 
                 //line can be optional
-                String lineAtr = null;
+                String lineAtr;
                 if ((lineAtr = error.getLine()) != null) {
                     cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
                 }

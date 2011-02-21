@@ -80,7 +80,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
                 mergeReport(cppcheckReportResult, cppcheckReport);
             }
         } catch (Exception e) {
-            CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getMessage());
+            CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getCause().getMessage());
             return null;
         }
 

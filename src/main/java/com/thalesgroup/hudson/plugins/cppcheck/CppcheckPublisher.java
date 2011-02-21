@@ -174,7 +174,7 @@ public class CppcheckPublisher extends Recorder {
 
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             boolean isIvyProject = false;
-            if (Hudson.getInstance().getPlugin("javanet-uploader") != null) {
+            if (Hudson.getInstance().getPlugin("ivy") != null) {
                 isIvyProject = hudson.ivy.AbstractIvyProject.class.isAssignableFrom(jobType);
             }
 
