@@ -58,7 +58,7 @@ public class CppcheckAreaRenderer extends StackedAreaRenderer2 {
     }
 
     /**
-     * Returns the Hudson build label at the specified column.
+     * Returns the Jenkins build label at the specified column.
      *
      * @param dataset data set of values
      * @param column  the column
