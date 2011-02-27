@@ -26,7 +26,7 @@ package com.thalesgroup.hudson.plugins.cppcheck.parser;
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
 import com.thalesgroup.hudson.plugins.cppcheck.exception.CppcheckException;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results;
+import com.thalesgroup.jenkinsci.plugins.cppcheck.model.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CppcheckParser implements Serializable {
 
@@ -61,15 +62,17 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
         try {
-            JAXBContext jc = JAXBContext.newInstance(new Class[]{com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class});
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            AtomicReference<JAXBContext> jc;
+            jc = new AtomicReference<JAXBContext>();
+            jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, Results.class));
+            Unmarshaller unmarshaller = jc.get().createUnmarshaller();
             Results results = (Results) unmarshaller.unmarshal(file);
 
             CppcheckFile cppcheckFile;
             for (int i = 0; i < results.getError().size(); i++) {
                 com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error error = results.getError().get(i);
                 cppcheckFile = new CppcheckFile();
-                cppcheckFile.setKey(i + 1);
+
                 cppcheckFile.setFileName(error.getFile());
 
                 //line can be optional

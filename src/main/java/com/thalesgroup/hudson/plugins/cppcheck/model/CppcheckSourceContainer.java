@@ -38,6 +38,8 @@ public class CppcheckSourceContainer {
     private Map<Integer, CppcheckWorkspaceFile> internalMap = new HashMap<Integer, CppcheckWorkspaceFile>();
 
     public CppcheckSourceContainer(BuildListener listener, FilePath basedir, List<CppcheckFile> files) throws IOException, InterruptedException {
+
+        int key = 1;
         for (CppcheckFile cppcheckFile : files) {
 
             CppcheckWorkspaceFile cppcheckWorkspaceFile = new CppcheckWorkspaceFile();
@@ -49,7 +51,7 @@ public class CppcheckSourceContainer {
             } else {
                 FilePath sourceFilePath = new FilePath(basedir, cppcheckFileName);
                 if (!sourceFilePath.exists()) {
-                    CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");                    
+                    CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
                     cppcheckWorkspaceFile.setFileName(null);
                     cppcheckWorkspaceFile.setSourceIgnored(true);
                 } else if (sourceFilePath.isDirectory()) {
@@ -61,8 +63,11 @@ public class CppcheckSourceContainer {
                 }
             }
 
+            //The key must be unique for all the files/errors through the merge
+            cppcheckFile.setKey(key);
             cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
-            internalMap.put(cppcheckFile.getKey(), cppcheckWorkspaceFile);
+            internalMap.put(key, cppcheckWorkspaceFile);
+            key = ++key;
         }
     }
 

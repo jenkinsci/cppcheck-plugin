@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Thales Corporate Services SAS                             *
+ * Copyright (c) 2009-2011 Thales Corporate Services SAS                        *
  * Author : Gregory Boissinot                                                   *
  *                                                                              *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
@@ -93,6 +93,7 @@ public class CppcheckFile implements ModelObject, Serializable {
     }
 
     @Exported
+    @SuppressWarnings("unused")
     public Integer getKey() {
         return key;
     }

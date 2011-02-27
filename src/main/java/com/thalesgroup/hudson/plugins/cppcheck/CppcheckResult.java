@@ -70,6 +70,7 @@ public class CppcheckResult implements Serializable {
      *
      * @return the remote API
      */
+    @SuppressWarnings("unused")
     public Api getApi() {
         return new Api(report);
     }
@@ -79,11 +80,12 @@ public class CppcheckResult implements Serializable {
         return report;
     }
 
+    @SuppressWarnings("unused")
     public AbstractBuild<?, ?> getOwner() {
         return owner;
     }
 
-
+    @SuppressWarnings("unused")
     public CppcheckSourceContainer getCppcheckSourceContainer() {
         return cppcheckSourceContainer;
     }
@@ -95,6 +97,7 @@ public class CppcheckResult implements Serializable {
      * @param request  Stapler request
      * @param response Stapler response
      * @return the dynamic result of the analysis (detail page).
+     * @throws java.io.IOException  if an error occurs
      */
     @SuppressWarnings("unused")
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
@@ -145,6 +148,7 @@ public class CppcheckResult implements Serializable {
      *
      * @return the previous Cppcheck report
      */
+    @SuppressWarnings("unused")
     private CppcheckReport getPreviousReport() {
         CppcheckResult previous = this.getPreviousResult();
         if (previous == null) {
@@ -203,6 +207,7 @@ public class CppcheckResult implements Serializable {
      * @param cppecheckConfig the Cppcheck configuration object
      * @param checkNewError   true, if the request is for the number of new errors
      * @return the number of errors or new errors (if checkNewEroor is set to true) for the current configuration object
+     * @throws java.io.IOException if an error occurs
      */
     public int getNumberErrorsAccordingConfiguration(CppcheckConfig cppecheckConfig, boolean checkNewError) throws IOException {
 
