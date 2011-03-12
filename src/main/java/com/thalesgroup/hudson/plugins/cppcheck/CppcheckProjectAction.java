@@ -79,7 +79,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     public Integer getLastResultBuild() {
-        for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
+        for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
             if (b.getResult() == Result.FAILURE)
                 continue;
             CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);

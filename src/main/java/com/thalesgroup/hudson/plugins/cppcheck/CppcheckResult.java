@@ -178,7 +178,7 @@ public class CppcheckResult implements Serializable {
      *
      * @return the previous Cppcheck Build Action
      */
-    CppcheckBuildAction getPreviousAction() {
+    private CppcheckBuildAction getPreviousAction() {
         AbstractBuild<?, ?> previousBuild = owner.getPreviousBuild();
         if (previousBuild != null) {
             return previousBuild.getAction(CppcheckBuildAction.class);
