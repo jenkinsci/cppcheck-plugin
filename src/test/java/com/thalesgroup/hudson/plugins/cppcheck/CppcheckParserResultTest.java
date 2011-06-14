@@ -23,19 +23,18 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CppcheckParserResultTest extends AbstractWorkspaceTest {
 
@@ -52,19 +51,19 @@ public class CppcheckParserResultTest extends AbstractWorkspaceTest {
 
     @Test
     public void testNullPattern() {
-        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null);
+        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null, false);
         Assert.assertEquals("With none pattern, the default pattern must be " + CppcheckParserResult.DELAULT_REPORT_MAVEN, CppcheckParserResult.DELAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
     }
 
     @Test
     public void testEmptyPattern() {
-        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null);
+        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null, false);
         Assert.assertEquals("With empty pattern, the default pattern must be " + CppcheckParserResult.DELAULT_REPORT_MAVEN, CppcheckParserResult.DELAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
     }
 
     @Test
     public void testNoMatch() throws Exception {
-        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, "*.xml");
+        CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, "*.xml", false);
         CppcheckReport report = cppcheckParserResult.invoke(new File(workspace.toURI()), channel);
         Assert.assertEquals("A pattern with no match files is not allowed.", null, report);
     }

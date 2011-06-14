@@ -29,8 +29,10 @@ import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.selectors.FileSelector;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,9 +45,11 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
     private final String cppcheckReportPattern;
 
+    private final boolean ignoreBlankFiles;
+
     public static final String DELAULT_REPORT_MAVEN = "**/cppcheck-result.xml";
 
-    public CppcheckParserResult(final BuildListener listener, String cppcheckReportPattern) {
+    public CppcheckParserResult(final BuildListener listener, String cppcheckReportPattern, boolean ignoreBlankFiles) {
 
         if (cppcheckReportPattern == null) {
             cppcheckReportPattern = DELAULT_REPORT_MAVEN;
@@ -57,6 +61,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
         this.listener = listener;
         this.cppcheckReportPattern = cppcheckReportPattern;
+        this.ignoreBlankFiles = ignoreBlankFiles;
     }
 
     public CppcheckReport invoke(java.io.File basedir, VirtualChannel channel) throws IOException {
@@ -98,13 +103,20 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
     }
 
     /**
-     * Return all cppechk report files
+     * Return all cppcheck report files
      *
      * @param parentPath parent
      * @return an array of strings
      */
     private String[] findCppcheckReports(File parentPath) {
         FileSet fs = Util.createFileSet(parentPath, this.cppcheckReportPattern);
+        if (this.ignoreBlankFiles) {
+            fs.add(new FileSelector() {
+                public boolean isSelected(File basedir, String filename, File file) throws BuildException {
+                    return file != null && file.length() != 0;
+                }
+            });
+        }
         DirectoryScanner ds = fs.getDirectoryScanner();
         return ds.getIncludedFiles();
     }

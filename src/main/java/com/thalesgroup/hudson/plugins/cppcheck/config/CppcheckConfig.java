@@ -33,6 +33,8 @@ public class CppcheckConfig implements Serializable {
 
     private String cppcheckReportPattern;
 
+    private boolean ignoreBlankFiles;
+
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
 
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
@@ -41,7 +43,9 @@ public class CppcheckConfig implements Serializable {
     }
 
     @DataBoundConstructor
-    public CppcheckConfig(String cppcheckReportPattern, String threshold,
+    @SuppressWarnings("unused")
+    public CppcheckConfig(String cppcheckReportPattern,
+                          boolean ignoreBlankFiles, String threshold,
                           String newThreshold, String failureThreshold,
                           String newFailureThreshold, String healthy, String unHealthy,
                           boolean severityError, boolean severityPossibleError,
@@ -50,7 +54,7 @@ public class CppcheckConfig implements Serializable {
                           boolean displaySeverityStyle, boolean displaySeverityPossibleStyle) {
 
         this.cppcheckReportPattern = cppcheckReportPattern;
-
+        this.ignoreBlankFiles = ignoreBlankFiles;
         this.configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, severityError, severityPossibleError, severityStyle, severityPossibleStyle);
@@ -104,26 +108,18 @@ public class CppcheckConfig implements Serializable {
         return cppcheckReportPattern;
     }
 
-    public void setCppcheckReportPattern(String cppcheckReportPattern) {
-        this.cppcheckReportPattern = cppcheckReportPattern;
+    public boolean isIgnoreBlankFiles() {
+        return ignoreBlankFiles;
     }
 
     public CppcheckConfigSeverityEvaluation getConfigSeverityEvaluation() {
         return configSeverityEvaluation;
     }
 
-    public void setConfigSeverityEvaluation(
-            CppcheckConfigSeverityEvaluation configSeverityEvaluation) {
-        this.configSeverityEvaluation = configSeverityEvaluation;
-    }
-
     public CppcheckConfigGraph getConfigGraph() {
         return configGraph;
     }
 
-    public void setConfigGraph(CppcheckConfigGraph configGraph) {
-        this.configGraph = configGraph;
-    }
 
     // Backward compatibility. Do not remove.
     // CPPCHECK:OFF
