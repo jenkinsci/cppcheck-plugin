@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*******************************************************************************
+* Author : Gregory Boissinot                                                   *
+******************************************************************************/
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="error">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="location">
+                    <xs:complexType>
+                        <xs:attribute name="file"/>
+                        <xs:attribute name="line"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+            <xs:attribute name="line" type="xs:string" use="optional"/>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="severity" type="xs:string" use="required"/>
+            <xs:attribute name="msg" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cppcheck">
+        <xs:complexType>
+            <xs:attribute name="version"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="errors">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="error" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="results">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="cppcheck" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="errors" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -24,9 +24,9 @@
 package com.thalesgroup.hudson.plugins.cppcheck.parser;
 
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckReport;
-import com.thalesgroup.hudson.plugins.cppcheck.exception.CppcheckException;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.jenkinsci.plugins.cppcheck.model.*;
+import org.jenkinsci.plugins.cppcheck.model.Errors;
+import org.jenkinsci.plugins.cppcheck.model.Results;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -53,6 +53,36 @@ public class CppcheckParser implements Serializable {
         }
 
 
+        CppcheckReport report;
+        AtomicReference<JAXBContext> jc = new AtomicReference<JAXBContext>();
+        try {
+            jc.set(JAXBContext.newInstance(
+                    org.jenkinsci.plugins.cppcheck.model.Error.class,
+                    org.jenkinsci.plugins.cppcheck.model.Errors.class,
+                    org.jenkinsci.plugins.cppcheck.model.Cppcheck.class,
+                    org.jenkinsci.plugins.cppcheck.model.Results.class));
+            Unmarshaller unmarshaller = jc.get().createUnmarshaller();
+            org.jenkinsci.plugins.cppcheck.model.Results results = (org.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
+            if (results.getCppcheck() == null) {
+                throw new JAXBException("Test with versio 1");
+            }
+            report = getReportVersion2(results);
+        } catch (JAXBException jxe) {
+            try {
+                jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class));
+                Unmarshaller unmarshaller = jc.get().createUnmarshaller();
+                com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
+                report = getReportVersion1(results);
+            } catch (JAXBException jxe1) {
+                throw new IOException(jxe1);
+            }
+
+        }
+        return report;
+    }
+
+    private CppcheckReport getReportVersion1(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results) {
+
         CppcheckReport cppCheckReport = new CppcheckReport();
         List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
         List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
@@ -61,16 +91,64 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
         List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
 
-        try {
-            AtomicReference<JAXBContext> jc;
-            jc = new AtomicReference<JAXBContext>();
-            jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, Results.class));
-            Unmarshaller unmarshaller = jc.get().createUnmarshaller();
-            Results results = (Results) unmarshaller.unmarshal(file);
+        CppcheckFile cppcheckFile;
+        for (int i = 0; i < results.getError().size(); i++) {
+            com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error error = results.getError().get(i);
+            cppcheckFile = new CppcheckFile();
 
-            CppcheckFile cppcheckFile;
-            for (int i = 0; i < results.getError().size(); i++) {
-                com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error error = results.getError().get(i);
+            cppcheckFile.setFileName(error.getFile());
+
+            //line can be optional
+            String lineAtr;
+            if ((lineAtr = error.getLine()) != null) {
+                cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+            }
+
+            cppcheckFile.setCppCheckId(error.getId());
+            cppcheckFile.setSeverity(error.getSeverity());
+            cppcheckFile.setMessage(error.getMsg());
+
+            if ("possible error".equals(cppcheckFile.getSeverity())) {
+                possibleErrorSeverities.add(cppcheckFile);
+            } else if ("style".equals(cppcheckFile.getSeverity())) {
+                styleSeverities.add(cppcheckFile);
+            } else if ("possible style".equals(cppcheckFile.getSeverity())) {
+                possibleStyleSeverities.add(cppcheckFile);
+            } else if ("error".equals(cppcheckFile.getSeverity())) {
+                errorSeverities.add(cppcheckFile);
+            } else {
+                noCategorySeverities.add(cppcheckFile);
+            }
+            everyErrors.add(cppcheckFile);
+        }
+
+        cppCheckReport.setEverySeverities(everyErrors);
+        cppCheckReport.setPossibleErrorSeverities(possibleErrorSeverities);
+        cppCheckReport.setStyleSeverities(styleSeverities);
+        cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
+        cppCheckReport.setErrorSeverities(errorSeverities);
+        cppCheckReport.setNoCategorySeverities(noCategorySeverities);
+
+        return cppCheckReport;
+    }
+
+    private CppcheckReport getReportVersion2(Results results) {
+
+        CppcheckReport cppCheckReport = new CppcheckReport();
+        List<CppcheckFile> everyErrors = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> styleSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> possibleStyleSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> errorSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> possibleErrorSeverities = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> noCategorySeverities = new ArrayList<CppcheckFile>();
+
+        CppcheckFile cppcheckFile;
+
+        Errors errors = results.getErrors();
+
+        if (errors != null) {
+            for (int i = 0; i < errors.getError().size(); i++) {
+                org.jenkinsci.plugins.cppcheck.model.Error error = errors.getError().get(i);
                 cppcheckFile = new CppcheckFile();
 
                 cppcheckFile.setFileName(error.getFile());
@@ -98,9 +176,6 @@ public class CppcheckParser implements Serializable {
                 }
                 everyErrors.add(cppcheckFile);
             }
-
-        } catch (JAXBException jaxbe) {
-            throw new CppcheckException("Can't parse cppcheck result file " + file.getPath(), jaxbe);
         }
 
         cppCheckReport.setEverySeverities(everyErrors);
@@ -111,6 +186,7 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setNoCategorySeverities(noCategorySeverities);
 
         return cppCheckReport;
-
     }
+
+
 }

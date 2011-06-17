@@ -109,7 +109,6 @@ public class CppcheckResult implements Serializable {
                 return null;
             }
 
-
             Map<Integer, CppcheckWorkspaceFile> agregateMap = cppcheckSourceContainer.getInternalMap();
             if (agregateMap != null) {
                 CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link, "source.")));

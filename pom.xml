@@ -44,7 +44,7 @@
         <java2html.version>5.0</java2html.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
-        <ivy.plugin.version>1.15</ivy.plugin.version>
+        <ivy.plugin.version>1.19</ivy.plugin.version>
     </properties>
 
     <dependencies>
@@ -89,7 +89,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jvnet.hudson.plugins</groupId>
+            <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>ivy</artifactId>
             <version>${ivy.plugin.version}</version>
             <optional>true</optional>
@@ -112,6 +112,21 @@
                             </schemaDirectory>
                             <schemaFiles>cppcheck-1.0.xsd</schemaFiles>
                             <staleFile>${project.build.directory}/generated-sources/jaxb/cppcheck1/.staleFlag.
+                            </staleFile>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generatedCppcheck2</id>
+                        <configuration>
+                            <packageName>org.jenkinsci.plugins.cppcheck.model</packageName>
+                            <schemaDirectory>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck
+                            </schemaDirectory>
+                            <schemaFiles>cppcheck-2.0.xsd</schemaFiles>
+                            <staleFile>${project.build.directory}/generated-sources/jaxb/cppcheck2/.staleFlag.
                             </staleFile>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
