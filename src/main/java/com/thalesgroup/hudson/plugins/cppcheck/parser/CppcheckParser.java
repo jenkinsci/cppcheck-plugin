@@ -165,9 +165,13 @@ public class CppcheckParser implements Serializable {
 
                 if ("possible error".equals(cppcheckFile.getSeverity())) {
                     possibleErrorSeverities.add(cppcheckFile);
+                } else if ("warning".equals(cppcheckFile.getSeverity())) {
+                    possibleErrorSeverities.add(cppcheckFile);
                 } else if ("style".equals(cppcheckFile.getSeverity())) {
                     styleSeverities.add(cppcheckFile);
                 } else if ("possible style".equals(cppcheckFile.getSeverity())) {
+                    possibleStyleSeverities.add(cppcheckFile);
+                } else if ("information".equals(cppcheckFile.getSeverity())) {
                     possibleStyleSeverities.add(cppcheckFile);
                 } else if ("error".equals(cppcheckFile.getSeverity())) {
                     errorSeverities.add(cppcheckFile);
