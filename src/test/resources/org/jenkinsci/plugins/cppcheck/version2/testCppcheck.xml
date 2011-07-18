@@ -26,7 +26,7 @@
   <error id="missingInclude" severity="information" msg="Include file: &quot;Utility/FormatCharTesters.h&quot; not found." verbose="Include file: &quot;Utility/FormatCharTesters.h&quot; not found.">
     <location file="TestGenericDisplay.cpp" line="28"/>
   </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Utility/Units.h&quot; not found." verbose="Include file: &quot;Utility/Units.h&quot; not found.">
+  <error id="missingInclude" severity="warning" msg="Include file: &quot;Utility/Units.h&quot; not found." verbose="Include file: &quot;Utility/Units.h&quot; not found.">
     <location file="TestGenericDisplay.cpp" line="29"/>
   </error>
   <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestRegion.h&quot; not found." verbose="Include file: &quot;Test/Display/TestRegion.h&quot; not found.">

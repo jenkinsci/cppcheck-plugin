@@ -25,7 +25,7 @@ public class CppcheckParserTest {
 
     @Test
     public void testcppcheck1Version2() throws Exception {
-        processCppcheck("version2/testCppcheck.xml", 16, 0, 0, 0, 2, 14);
+        processCppcheck("version2/testCppcheck.xml", 16, 1, 13, 0, 2, 0);
     }
 
     private void processCppcheck(String filename,
