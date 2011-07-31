@@ -50,10 +50,6 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
         return threshold;
     }
 
-    public void setThreshold(String threshold) {
-        this.threshold = threshold;
-    }
-
     public String getNewThreshold() {
         return newThreshold;
     }
