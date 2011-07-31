@@ -24,11 +24,10 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.ModelObject;
-
-import java.io.Serializable;
-
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
+
+import java.io.Serializable;
 
 @ExportedBean(defaultVisibility = 999)
 public class CppcheckFile implements ModelObject, Serializable {

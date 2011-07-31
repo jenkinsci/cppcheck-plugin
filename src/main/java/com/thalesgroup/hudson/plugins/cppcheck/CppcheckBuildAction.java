@@ -23,24 +23,24 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import hudson.model.AbstractBuild;
-import hudson.model.HealthReport;
-import hudson.util.ChartUtil;
-import hudson.util.DataSetBuilder;
-import hudson.util.Graph;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
-
-import java.io.IOException;
-import java.util.Calendar;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
+import hudson.model.AbstractBuild;
+import hudson.model.HealthReport;
+import hudson.util.ChartUtil;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
+import hudson.util.DataSetBuilder;
+import hudson.util.Graph;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
@@ -87,8 +87,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
     public HealthReport getBuildHealth() {
         try {
             return new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false));
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             return new HealthReport();
         }
     }
@@ -145,11 +144,54 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
      *
      * @return the created object
      */
+    @SuppressWarnings({"unused", "deprecation"})
     private Object readResolve() {
         if (build != null) {
             this.owner = build;
         }
-        return this;
+
+        //Report
+        CppcheckReport report = result.getReport();
+        org.jenkinsci.plugins.cppcheck.CppcheckReport newReport = new org.jenkinsci.plugins.cppcheck.CppcheckReport();
+        if (report != null) {
+            newReport.setAllErrors(report.getEverySeverities());
+            newReport.setErrorSeverityList(report.getErrorSeverities());
+            newReport.setWarningSeverityList(report.getPossibleErrorSeverities());
+            newReport.setStyleSeverityList(report.getStyleSeverities());
+            newReport.setPerformanceSeverityList(report.getPossibleStyleSeverities());
+            newReport.setInformationSeverityList(report.getNoCategorySeverities());
+            newReport.setNoCategorySeverityList(new ArrayList<CppcheckFile>());
+        }
+
+        //Result
+        org.jenkinsci.plugins.cppcheck.CppcheckResult newResult = new org.jenkinsci.plugins.cppcheck.CppcheckResult(newReport, result.getCppcheckSourceContainer(), getOwner());
+
+        //Config
+        org.jenkinsci.plugins.cppcheck.config.CppcheckConfig newConfig = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfig(
+                cppcheckConfig.getCppcheckReportPattern(),
+                cppcheckConfig.isIgnoreBlankFiles(),
+                cppcheckConfig.getConfigSeverityEvaluation().getThreshold(),
+                cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold(),
+                cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold(),
+                cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold(),
+                cppcheckConfig.getConfigSeverityEvaluation().getHealthy(),
+                cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy(),
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityError(),
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError(),
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle(),
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(),
+                true,
+                cppcheckConfig.getConfigGraph().getXSize(),
+                cppcheckConfig.getConfigGraph().getYSize(),
+                cppcheckConfig.getConfigGraph().isDiplayAllError(),
+                cppcheckConfig.getConfigGraph().isDisplaySeverityError(),
+                cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleError(),
+                cppcheckConfig.getConfigGraph().isDisplaySeverityStyle(),
+                cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleStyle(),
+                true);
+
+        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult, newConfig);
+
     }
 
 

@@ -23,11 +23,10 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckProjectAction;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Result;
-
-import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckProjectAction;
 
 
 public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
@@ -41,7 +40,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     public AbstractBuild<?, ?> getLastFinishedBuild() {
-        AbstractBuild<?, ?> lastBuild = (AbstractBuild<?, ?>) project.getLastBuild();
+        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
         while (lastBuild != null && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
             lastBuild = lastBuild.getPreviousBuild();
         }
@@ -52,7 +51,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     public final boolean isDisplayGraph() {
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
-        if (b == null){
+        if (b == null) {
             return false;
         }
 

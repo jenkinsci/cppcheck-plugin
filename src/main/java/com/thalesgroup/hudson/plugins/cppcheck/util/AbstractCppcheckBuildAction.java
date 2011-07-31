@@ -22,17 +22,12 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
-import java.io.IOException;
-
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
-import hudson.model.Actionable;
-import hudson.model.HealthReportingAction;
-import hudson.model.Result;
-
+import hudson.model.*;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import java.io.IOException;
 
 public abstract class AbstractCppcheckBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
 

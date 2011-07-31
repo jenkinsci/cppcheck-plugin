@@ -151,12 +151,14 @@ public class CppcheckParser implements Serializable {
                 org.jenkinsci.plugins.cppcheck.model.Error error = errors.getError().get(i);
                 cppcheckFile = new CppcheckFile();
 
-                cppcheckFile.setFileName(error.getFile());
-
-                //line can be optional
-                String lineAtr;
-                if ((lineAtr = error.getLine()) != null) {
-                    cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+                //FileName and Line
+                org.jenkinsci.plugins.cppcheck.model.Error.Location location = error.getLocation();
+                if (location != null) {
+                    cppcheckFile.setFileName(location.getFile());
+                    String lineAtr;
+                    if ((lineAtr = location.getLine()) != null) {
+                        cppcheckFile.setLineNumber(Integer.parseInt(lineAtr));
+                    }
                 }
 
                 cppcheckFile.setCppCheckId(error.getId());
@@ -188,7 +190,6 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setPossibleStyleSeverities(possibleStyleSeverities);
         cppCheckReport.setErrorSeverities(errorSeverities);
         cppCheckReport.setNoCategorySeverities(noCategorySeverities);
-
         return cppCheckReport;
     }
 

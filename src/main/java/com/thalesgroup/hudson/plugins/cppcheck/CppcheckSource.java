@@ -23,29 +23,19 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+import de.java2html.converter.JavaSource2HTMLConverter;
+import de.java2html.javasource.JavaSource;
+import de.java2html.javasource.JavaSourceParser;
+import de.java2html.options.JavaSourceConversionOptions;
 import hudson.model.AbstractBuild;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
-
-import de.java2html.converter.JavaSource2HTMLConverter;
-import de.java2html.javasource.JavaSource;
-import de.java2html.javasource.JavaSourceParser;
-import de.java2html.options.JavaSourceConversionOptions;
+import java.io.*;
 
 
 public class CppcheckSource implements Serializable {
@@ -114,14 +104,11 @@ public class CppcheckSource implements Serializable {
             }
 
             splitSourceFile(highlightSource(is));
-        }
-        catch (IOException exception) {
+        } catch (IOException exception) {
             sourceCode = "Can't read file: " + exception.getLocalizedMessage();
-        }
-        catch (RuntimeException re) {
+        } catch (RuntimeException re) {
             sourceCode = "Problem for display the source code content: " + re.getLocalizedMessage();
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(is);
         }
     }

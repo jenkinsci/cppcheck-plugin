@@ -153,4 +153,11 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
     public void setSeverityPossibleStyle(boolean severityPossibleStyle) {
         this.severityPossibleStyle = severityPossibleStyle;
     }
+
+//    public Object readResolve() {
+//        return new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation(
+//                threshold, newThreshold, failureThreshold, newFailureThreshold,
+//                healthy, unHealthy,
+//                severityError, severityPossibleError, severityStyle, severityPossibleStyle, true);
+//    }
 }

@@ -99,9 +99,9 @@
       <label for="thresholdLimit.severityError">${%Severity 'error'}</label>
       <st:nbsp />
 
-      <f:checkbox name="${id}.config.configSeverityEvaluation.severityPossibleError" checked="${config.configSeverityEvaluation.severityPossibleError}" id="thresholdLimit.severityPossibleError"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityWarning" checked="${config.configSeverityEvaluation.severityWarning}" id="thresholdLimit.severityWarning"/>
       <st:nbsp/>
-      <label for="thresholdLimit.severityPossibleError">${%Severity 'possible error'}</label>
+      <label for="thresholdLimit.severityWarning">${%Severity 'warning'}</label>
       <st:nbsp />
 
       <f:checkbox name="${id}.config.configSeverityEvaluation.severityStyle" checked="${config.configSeverityEvaluation.severityStyle}" id="thresholdLimit.severityStyle"/>
@@ -109,9 +109,14 @@
       <label for="thresholdLimit.severityStyle">${%Severity 'style'}</label>
       <st:nbsp />
 
-      <f:checkbox name="${id}.config.configSeverityEvaluation.severityPossibleStyle" checked="${config.configSeverityEvaluation.severityPossibleStyle}" id="thresholdLimit.severityPossibleStyle"/>
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityPerformance" checked="${config.configSeverityEvaluation.severityPerformance}" id="thresholdLimit.severityPerformance"/>
       <st:nbsp/>
-      <label for="thresholdLimit.severityPossibleStyle">${%Severity 'possible style'}</label>
+      <label for="thresholdLimit.severityPerformance">${%Severity 'performance'}</label>
+      <st:nbsp />
+
+      <f:checkbox name="${id}.config.configSeverityEvaluation.severityInformation" checked="${config.configSeverityEvaluation.severityInformation}" id="thresholdLimit.severityInformation"/>
+      <st:nbsp/>
+      <label for="thresholdLimit.severityInformation">${%Severity 'information'}</label>
       <st:nbsp />
 
     </f:entry>
@@ -137,46 +142,52 @@
 	      	</tr>
 	      	<tr>		      		
 	      		<td>
-	      		    <f:checkbox name="${id}.config.configGraph.diplayAllError" checked="${config.configGraph.diplayAllError}" id="configGraph.diplayAllError"/>
+	      		    <f:checkbox name="${id}.config.configGraph.displayAllErrors" checked="${config.configGraph.diplayAllError}" id="configGraph.displayAllErrors" default="${true}"/>
       				<st:nbsp/>
-      				<label for="configGraph.diplayAllError">${%Display all errors}</label>
+      				<label for="configGraph.displayAllErrors">${%Display all errors}</label>
       				<st:nbsp />
 	      		</td>
 
 	      		<td>
-	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityError" checked="${config.configGraph.displaySeverityError}" id="configGraph.displaySeverityError"/>
+	      		    <f:checkbox name="${id}.config.configGraph.displayErrorSeverity" checked="${config.configGraph.displayErrorSeverity}" id="configGraph.displayErrorSeverity" default="${true}"/>
       				<st:nbsp/>
-      				<label for="configGraph.displaySeverityError">${%Display Severity 'error'}</label>
+      				<label for="configGraph.displayErrorSeverity">${%Display Severity 'error'}</label>
       				<st:nbsp />
 	      		</td>
 
 	      		<td>
-	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityPossibleError" checked="${config.configGraph.displaySeverityPossibleError}" id="configGraph.displaySeverityPossibleError"/>
+	      		    <f:checkbox name="${id}.config.configGraph.displayWarningSeverity" checked="${config.configGraph.displayWarningSeverity}" id="configGrah.displayWarningSeverity" default="${true}"/>
       				<st:nbsp/>
-      				<label for="configGraph.displaySeverityPossibleError">${%Display Severity 'possible error'}</label>
+      				<label for="configGraph.displayWarningSeverity">${%Display Severity 'warning'}</label>
       				<st:nbsp />
 	      		</td>
 
 	      		<td>
-	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityStyle" checked="${config.configGraph.displaySeverityStyle}" id="configGraph.displaySeverityStyle"/>
+	      		    <f:checkbox name="${id}.config.configGraph.displayStyleSeverity" checked="${config.configGraph.displayStyleSeverity}" id="configGraph.displayStyleSeverity" default="${true}"/>
       				<st:nbsp/>
-      				<label for="configGraph.displaySeverityStyle">${%Display Severity 'style'}</label>
+      				<label for="configGraph.displayStyleSeverity">${%Display Severity 'style'}</label>
       				<st:nbsp />
 	      		</td>
 
 	      		<td>
-	      		    <f:checkbox name="${id}.config.configGraph.displaySeverityPossibleStyle" checked="${config.configGraph.displaySeverityPossibleStyle}" id="configGraph.displaySeverityPossibleStyle"/>
+	      		    <f:checkbox name="${id}.config.configGraph.displayPerformanceSeverity" checked="${config.configGraph.displayPerformanceSeverity}" id="configGraph.displayPerformanceSeverity" default="${true}"/>
       				<st:nbsp/>
-      				<label for="configGraph.displaySeverityPossibleStyle">${%Display Severity 'possible style'}</label>
+      				<label for="configGraph.displayPerformanceSeverity">${%Display Severity 'performance'}</label>
       				<st:nbsp />
 	      		</td>
+
+	      		<td>
+	      		    <f:checkbox name="${id}.config.configGraph.displayInformationSeverity" checked="${config.configGraph.displayInformationSeverity}" id="configGraph.displayInformationSeverity" default="${true}"/>
+      				<st:nbsp/>
+      				<label for="configGraph.displayInformationSeverity">${%Display Severity 'information'}</label>
+      				<st:nbsp />
+	      		</td>
+
 		    </tr>
-		 </table>   		
-
+		 </table>
 
     </f:entry>
-   
-   </f:advanced>
 
+   </f:advanced>
 
 </j:jelly>

@@ -23,15 +23,14 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.export.ExportedBean;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
-
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 
 @ExportedBean
 public class CppcheckReport implements Serializable {
@@ -142,6 +141,7 @@ public class CppcheckReport implements Serializable {
      */
     private Object readResolve() {
 
+        //For old compatibilty
         if (internalMap != null) {
             for (Map.Entry<Integer, CppcheckFile> entry : internalMap.entrySet()) {
 

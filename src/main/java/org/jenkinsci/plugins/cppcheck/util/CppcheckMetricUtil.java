@@ -1,8 +1,11 @@
-package com.thalesgroup.hudson.plugins.cppcheck;
+package org.jenkinsci.plugins.cppcheck.util;
 
-import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 
+/**
+ * @author Gregory Boissinot
+ */
 public class CppcheckMetricUtil {
 
     public static int convert(String threshold) {
@@ -29,10 +32,20 @@ public class CppcheckMetricUtil {
         return false;
     }
 
+
+    private static boolean isAllSeverities(CppcheckConfig cppcheckConfig) {
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityError()
+                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityWarning()
+                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle()
+                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()
+                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityInformation();
+    }
+
+
     public static String getMessageSelectedSeverties(CppcheckConfig cppcheckConfig) {
         StringBuffer sb = new StringBuffer();
 
-        if (cppcheckConfig.getConfigSeverityEvaluation().isAllSeverities()) {
+        if (isAllSeverities(cppcheckConfig)) {
             sb.append("with all severities");
             return sb.toString();
         }
@@ -42,21 +55,25 @@ public class CppcheckMetricUtil {
             sb.append("severity 'error'");
         }
 
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()) {
+        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
             sb.append(" and ");
-            sb.append("severity 'possible error'");
+            sb.append("severity 'warning'");
         }
-
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()) {
-            sb.append(" and ");
-            sb.append("severity 'possible style'");
-        }
-
 
         if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
             sb.append(" and ");
             sb.append("severity 'style'");
+        }
+
+        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()) {
+            sb.append(" and ");
+            sb.append("severity 'performance'");
+        }
+
+
+        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
+            sb.append(" and ");
+            sb.append("severity 'information'");
         }
 
         if (sb.length() != 0)

@@ -22,16 +22,15 @@
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
 -->
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-  xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-  xmlns:i="jelly:fmt" xmlns:local="local">
-         
-     <j:if test="${it.report.allErrors != null and it.report.allErrors.size() != 0}">
-        <st:header name="Content-Type" value="text/html;charset=UTF-8" />
-         <j:if test="${it.cppcheckSourceContainer != null}">
-            <h2>Details</h2>
-            <st:include page="summary.jelly" />
-         </j:if>
-     </j:if>
-
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout xmlns:rcov="/hudson/plugins/rubyMetrics/tags" css="/plugin/rubyMetrics/css/style.css">
+        <st:include it="${it.owner.project}" page="sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>No valid permission</h1>
+            <p>
+                The current user must have the WORSPACE permission for the job.
+            </p>
+        </l:main-panel>
+    </l:layout>
 </j:jelly>

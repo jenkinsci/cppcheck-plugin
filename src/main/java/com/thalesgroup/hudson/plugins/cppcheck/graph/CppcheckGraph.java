@@ -26,10 +26,6 @@ import hudson.model.AbstractBuild;
 import hudson.util.ColorPalette;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -42,6 +38,8 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
+
+import java.awt.*;
 
 public class CppcheckGraph extends Graph {
 

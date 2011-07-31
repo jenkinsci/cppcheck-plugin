@@ -24,10 +24,9 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.AbstractBuild;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
-
-import org.apache.commons.lang.StringUtils;
 
 public class CppcheckWorkspaceFile {
 
@@ -67,7 +66,7 @@ public class CppcheckWorkspaceFile {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-        if (fileName == null){
+        if (fileName == null) {
             setSourceIgnored(true);
         }
     }

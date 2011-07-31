@@ -23,9 +23,9 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.config;
 
-import java.io.Serializable;
-
 import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
+
+import java.io.Serializable;
 
 public class CppcheckConfigGraph implements Serializable {
 
@@ -66,55 +66,34 @@ public class CppcheckConfigGraph implements Serializable {
         return xSize;
     }
 
-    public void setXSize(int size) {
-        xSize = size;
-    }
-
     public int getYSize() {
         return ySize;
-    }
-
-    public void setYSize(int size) {
-        ySize = size;
     }
 
     public boolean isDiplayAllError() {
         return diplayAllError;
     }
 
-    public void setDiplayAllError(boolean diplayAllError) {
-        this.diplayAllError = diplayAllError;
-    }
-
     public boolean isDisplaySeverityError() {
         return displaySeverityError;
-    }
-
-    public void setDisplaySeverityError(boolean displaySeverityError) {
-        this.displaySeverityError = displaySeverityError;
     }
 
     public boolean isDisplaySeverityPossibleError() {
         return displaySeverityPossibleError;
     }
 
-    public void setDisplaySeverityPossibleError(boolean displaySeverityPossibleError) {
-        this.displaySeverityPossibleError = displaySeverityPossibleError;
-    }
-
     public boolean isDisplaySeverityStyle() {
         return displaySeverityStyle;
-    }
-
-    public void setDisplaySeverityStyle(boolean displaySeverityStyle) {
-        this.displaySeverityStyle = displaySeverityStyle;
     }
 
     public boolean isDisplaySeverityPossibleStyle() {
         return displaySeverityPossibleStyle;
     }
 
-    public void setDisplaySeverityPossibleStyle(boolean displaySeverityPossibleStyle) {
-        this.displaySeverityPossibleStyle = displaySeverityPossibleStyle;
-    }
+//    public Object readResolve() {
+//        return new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph(
+//                xSize,
+//                ySize, diplayAllError, displaySeverityError, displaySeverityPossibleError, displaySeverityStyle, displaySeverityPossibleStyle, true);
+//    }
+
 }

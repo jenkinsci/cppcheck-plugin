@@ -24,14 +24,40 @@
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-  xmlns:i="jelly:fmt" xmlns:local="local">
-         
-     <j:if test="${it.report.allErrors != null and it.report.allErrors.size() != 0}">
-        <st:header name="Content-Type" value="text/html;charset=UTF-8" />
-         <j:if test="${it.cppcheckSourceContainer != null}">
-            <h2>Details</h2>
-            <st:include page="summary.jelly" />
-         </j:if>
-     </j:if>
+  xmlns:i="jelly:fmt" xmlns:g="/jelly/cppcheck" xmlns:local="local">
+  <st:header name="Content-Type" value="text/html;charset=UTF-8" />
+  <table class="pane sortable" id="files">
+    <tr>
+      <td class="pane-header">Filename</td>
+      <td class="pane-header" style="width:2em">LineNumber</td>
+      <td class="pane-header" style="width:2em">CppCheckId</td>
+      <td class="pane-header" style="width:2em">Severity</td>
+      <td class="pane-header" style="width:60%">Message</td>
+    </tr>
+    <tbody>
 
+        <j:forEach var="elt" items="${it.cppcheckSourceContainer.internalMap.values()}">    
+            <j:set var="cppcheckfile" value="${elt.cppcheckFile}"/>
+            <tr>
+              <td class="pane">
+                <j:if test="${elt.isSourceIgnored()}">
+                     ${cppcheckfile.fileName}
+                </j:if>
+                <j:if test="${not elt.isSourceIgnored()}">
+                      <a href="source.${cppcheckfile.key}">${cppcheckfile.fileName}</a>
+                </j:if>
+
+
+              </td>
+              <g:format value="${cppcheckfile.lineNumber}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.cppCheckId}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.severity}" severity="${cppcheckfile.severity}"/>
+              <g:format value="${cppcheckfile.message}" severity="${cppcheckfile.severity}"/>
+            </tr>
+        </j:forEach>
+
+
+
+    </tbody>    
+  </table>
 </j:jelly>

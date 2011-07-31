@@ -23,10 +23,9 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
-import hudson.model.HealthReport;
-
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckMetricUtil;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import hudson.model.HealthReport;
 
 public class CppcheckBuildHealthEvaluator {
 

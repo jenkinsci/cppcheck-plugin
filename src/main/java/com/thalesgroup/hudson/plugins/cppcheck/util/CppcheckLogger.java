@@ -27,8 +27,6 @@ import hudson.model.BuildListener;
 
 import java.io.Serializable;
 
-import org.jvnet.localizer.ResourceBundleHolder;
-
 public class CppcheckLogger implements Serializable {
 
     private static final long serialVersionUID = 1L;

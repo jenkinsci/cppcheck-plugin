@@ -65,45 +65,6 @@ public class CppcheckConfig implements Serializable {
     }
 
 
-    /**
-     * Initializes members that were not present in previous versions of this plug-in.
-     *
-     * @return the created object
-     */
-    @SuppressWarnings("deprecated")
-    private Object readResolve() {
-
-        if (configSeverityEvaluation == null) {
-            configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
-            configSeverityEvaluation.setSeverityError(severityError);
-            configSeverityEvaluation.setSeverityPossibleError(severityPossibleError);
-            configSeverityEvaluation.setSeverityStyle(severityStyle);
-            configSeverityEvaluation.setSeverityPossibleStyle(severityPossibleStyle);
-
-            if (threshold != null) {
-                configSeverityEvaluation.setThreshold(threshold);
-            }
-            if (newThreshold != null) {
-                configSeverityEvaluation.setNewThreshold(newThreshold);
-            }
-            if (failureThreshold != null) {
-                configSeverityEvaluation.setFailureThreshold(failureThreshold);
-            }
-            if (newFailureThreshold != null) {
-                configSeverityEvaluation.setNewFailureThreshold(newFailureThreshold);
-            }
-            if (healthy != null) {
-                configSeverityEvaluation.setHealthy(healthy);
-            }
-            if (unHealthy != null) {
-                configSeverityEvaluation.setUnHealthy(unHealthy);
-            }
-        }
-
-        return this;
-    }
-
-
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
     }
@@ -163,4 +124,44 @@ public class CppcheckConfig implements Serializable {
     @SuppressWarnings("unused")
     private transient boolean severityPossibleStyle = true;
 
+
+    /**
+     * Initializes members that were not present in previous versions of this plug-in.
+     *
+     * @return the created object
+     */
+    @SuppressWarnings("deprecation")
+    private Object readResolve() {
+
+        //Backward
+        if (configSeverityEvaluation == null) {
+            configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
+            configSeverityEvaluation.setSeverityError(severityError);
+            configSeverityEvaluation.setSeverityPossibleError(severityPossibleError);
+            configSeverityEvaluation.setSeverityStyle(severityStyle);
+            configSeverityEvaluation.setSeverityPossibleStyle(severityPossibleStyle);
+
+            if (threshold != null) {
+                configSeverityEvaluation.setThreshold(threshold);
+            }
+            if (newThreshold != null) {
+                configSeverityEvaluation.setNewThreshold(newThreshold);
+            }
+            if (failureThreshold != null) {
+                configSeverityEvaluation.setFailureThreshold(failureThreshold);
+            }
+            if (newFailureThreshold != null) {
+                configSeverityEvaluation.setNewFailureThreshold(newFailureThreshold);
+            }
+            if (healthy != null) {
+                configSeverityEvaluation.setHealthy(healthy);
+            }
+            if (unHealthy != null) {
+                configSeverityEvaluation.setUnHealthy(unHealthy);
+            }
+
+
+        }
+        return this;
+    }
 }

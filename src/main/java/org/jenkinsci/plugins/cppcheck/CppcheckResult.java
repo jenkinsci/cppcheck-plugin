@@ -1,45 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009 Thales Corporate Services SAS                             *
- * Author : Gregory Boissinot                                                   *
- *                                                                              *
- * Permission is hereby granted, free of charge, to any person obtaining a copy *
- * of this software and associated documentation files (the "Software"), to deal*
- * in the Software without restriction, including without limitation the rights *
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
- * copies of the Software, and to permit persons to whom the Software is        *
- * furnished to do so, subject to the following conditions:                     *
- *                                                                              *
- * The above copyright notice and this permission notice shall be included in   *
- * all copies or substantial portions of the Software.                          *
- *                                                                              *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
- * THE SOFTWARE.                                                                *
- *******************************************************************************/
+package org.jenkinsci.plugins.cppcheck;
 
-package com.thalesgroup.hudson.plugins.cppcheck;
-
-import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckSource;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.Item;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
-import org.kohsuke.stapler.export.ExportedBean;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
-@ExportedBean
+/**
+ * @author Gregory Boissinot
+ */
 public class CppcheckResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -195,13 +174,13 @@ public class CppcheckResult implements Serializable {
         if (previousCppcheckResult == null) {
             return 0;
         } else {
-            int diff = this.report.getNumberTotal() - previousCppcheckResult.getReport().getNumberTotal();
+            int diff = this.report.getAllErrors().size() - previousCppcheckResult.getReport().getAllErrors().size();
             return (diff > 0) ? diff : 0;
         }
     }
 
     /**
-     * Gets the number of errors according the selected severitiies form the configuration user object.
+     * Gets the number of errors according the selected severities form the configuration user object.
      *
      * @param cppecheckConfig the Cppcheck configuration object
      * @param checkNewError   true, if the request is for the number of new errors
@@ -218,34 +197,48 @@ public class CppcheckResult implements Serializable {
         int nbPreviousError = 0;
         CppcheckResult previousResult = this.getPreviousResult();
 
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError()) {
-            nbErrors = this.getReport().getPossibleErrorSeverities().size();
-            if (previousResult != null) {
-                nbPreviousError = previousResult.getReport().getPossibleErrorSeverities().size();
-            }
-        }
 
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
-            nbErrors = nbErrors + this.getReport().getStyleSeverities().size();
-            if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getStyleSeverities().size();
-            }
-
-        }
-
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle()) {
-            nbErrors = nbErrors + this.getReport().getPossibleStyleSeverities().size();
-            if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getPossibleStyleSeverities().size();
-            }
-        }
-
+        //Error
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()) {
-            nbErrors = nbErrors + this.getReport().getErrorSeverities().size();
+            nbErrors = nbErrors + this.getReport().getErrorSeverityList().size();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getErrorSeverities().size();
+                nbPreviousError = nbPreviousError + previousResult.getReport().getErrorSeverityList().size();
             }
         }
+
+        //Warnings
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
+            nbErrors = this.getReport().getWarningSeverityList().size();
+            if (previousResult != null) {
+                nbPreviousError = previousResult.getReport().getWarningSeverityList().size();
+            }
+        }
+
+        //Style
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
+            nbErrors = nbErrors + this.getReport().getStyleSeverityList().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getStyleSeverityList().size();
+            }
+
+        }
+
+        //Performance
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()) {
+            nbErrors = nbErrors + this.getReport().getPerformanceSeverityList().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getPerformanceSeverityList().size();
+            }
+        }
+
+        //Information
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
+            nbErrors = nbErrors + this.getReport().getPerformanceSeverityList().size();
+            if (previousResult != null) {
+                nbPreviousError = nbPreviousError + previousResult.getReport().getInformationSeverityList().size();
+            }
+        }
+
 
         if (checkNewError) {
             if (previousResult != null) {
@@ -256,4 +249,5 @@ public class CppcheckResult implements Serializable {
         } else
             return nbErrors;
     }
+
 }

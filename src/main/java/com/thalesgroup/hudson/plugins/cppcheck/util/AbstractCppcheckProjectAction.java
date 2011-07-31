@@ -23,17 +23,15 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
+import com.thalesgroup.hudson.plugins.cppcheck.CppcheckBuildAction;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Actionable;
 import hudson.model.ProminentProjectAction;
-
-import java.io.IOException;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import com.thalesgroup.hudson.plugins.cppcheck.CppcheckBuildAction;
+import java.io.IOException;
 
 public abstract class AbstractCppcheckProjectAction extends Actionable implements ProminentProjectAction {
 
@@ -46,7 +44,6 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
     public AbstractProject<?, ?> getProject() {
         return project;
     }
-
 
     public String getIconFileName() {
         return "/plugin/cppcheck/icons/cppcheck-24.png";
