@@ -7,7 +7,6 @@
         <version>1.410</version>
     </parent>
 
-    <groupId>com.thalesgroup.jenkins-ci.plugins</groupId>
     <artifactId>cppcheck</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Cppcheck Plug-in</name>
