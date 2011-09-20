@@ -56,7 +56,7 @@ public class CppcheckPublisher extends Publisher {
             CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern(), cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
-                cppcheckReport = build.getWorkspace().act(parser);
+                cppcheckReport = build.getModuleRoot().act(parser);
             } catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
                 build.setResult(Result.FAILURE);
@@ -68,7 +68,7 @@ public class CppcheckPublisher extends Publisher {
                 return false;
             }
 
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), cppcheckReport.getAllErrors());
+            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getModuleRoot(), cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
 
@@ -89,7 +89,7 @@ public class CppcheckPublisher extends Publisher {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
             }
 
-            CppcheckLogger.log(listener, "End of the cppcheck analysis.");
+            CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
         }
         return true;
     }
