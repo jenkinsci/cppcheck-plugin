@@ -53,10 +53,14 @@ public class CppcheckPublisher extends Publisher {
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
 
-            CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getCppcheckReportPattern(), cppcheckConfig.isIgnoreBlankFiles());
+            CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
-                cppcheckReport = build.getModuleRoot().act(parser);
+                if (cppcheckConfig.isUseWorkspaceAsRootPath()) {
+                    cppcheckReport = build.getWorkspace().act(parser);
+                } else {
+                    cppcheckReport = build.getModuleRoot().act(parser);
+                }
             } catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
                 build.setResult(Result.FAILURE);
@@ -180,7 +184,6 @@ public class CppcheckPublisher extends Publisher {
                 throws hudson.model.Descriptor.FormException {
 
             CppcheckPublisher pub = new CppcheckPublisher();
-
             CppcheckConfig cppcheckConfig = req.bindJSON(CppcheckConfig.class, formData);
             pub.setCppcheckConfig(cppcheckConfig);
 

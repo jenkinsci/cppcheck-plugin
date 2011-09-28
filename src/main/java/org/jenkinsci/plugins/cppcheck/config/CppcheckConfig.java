@@ -10,7 +10,11 @@ import java.io.Serializable;
  */
 public class CppcheckConfig implements Serializable {
 
-    private String cppcheckReportPattern;
+    private transient String cppcheckReportPattern;
+
+    private String pattern;
+
+    private boolean useWorkspaceAsRootPath;
 
     private boolean ignoreBlankFiles;
 
@@ -23,7 +27,8 @@ public class CppcheckConfig implements Serializable {
 
     @DataBoundConstructor
     @SuppressWarnings("unused")
-    public CppcheckConfig(String cppcheckReportPattern,
+    public CppcheckConfig(String pattern,
+                          boolean useWorkspaceAsRootPath,
                           boolean ignoreBlankFiles, String threshold,
                           String newThreshold, String failureThreshold,
                           String newFailureThreshold, String healthy, String unHealthy,
@@ -40,7 +45,8 @@ public class CppcheckConfig implements Serializable {
                           boolean displayPerformanceSeverity,
                           boolean displayInformationSeverity) {
 
-        this.cppcheckReportPattern = cppcheckReportPattern;
+        this.pattern = pattern;
+        this.useWorkspaceAsRootPath = useWorkspaceAsRootPath;
         this.ignoreBlankFiles = ignoreBlankFiles;
         this.configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
@@ -59,8 +65,17 @@ public class CppcheckConfig implements Serializable {
                 displayInformationSeverity);
     }
 
+    public String getPattern() {
+        return pattern;
+    }
+
+    @Deprecated
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
+    }
+
+    public boolean isUseWorkspaceAsRootPath() {
+        return useWorkspaceAsRootPath;
     }
 
     public boolean isIgnoreBlankFiles() {
@@ -73,5 +88,13 @@ public class CppcheckConfig implements Serializable {
 
     public CppcheckConfigGraph getConfigGraph() {
         return configGraph;
+    }
+
+    @SuppressWarnings("unused")
+    private Object readResolve() {
+        if (this.cppcheckReportPattern != null) {
+            this.pattern = cppcheckReportPattern;
+        }
+        return this;
     }
 }

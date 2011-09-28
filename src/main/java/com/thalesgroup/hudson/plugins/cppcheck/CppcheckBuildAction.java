@@ -169,6 +169,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         //Config
         org.jenkinsci.plugins.cppcheck.config.CppcheckConfig newConfig = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfig(
                 cppcheckConfig.getCppcheckReportPattern(),
+                true,
                 cppcheckConfig.isIgnoreBlankFiles(),
                 cppcheckConfig.getConfigSeverityEvaluation().getThreshold(),
                 cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold(),
