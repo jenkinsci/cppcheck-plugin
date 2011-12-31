@@ -6,7 +6,9 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Gregory Boissinot
@@ -14,13 +16,29 @@ import java.util.List;
 @ExportedBean
 public class CppcheckReport implements Serializable {
 
+    private String version;
+
     private transient List<CppcheckFile> allErrors = new ArrayList<CppcheckFile>();
+    private transient Set<String> versions = new HashSet<String>();
+
     private List<CppcheckFile> errorSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> warningSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> styleSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> performanceSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> informationSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> noCategorySeverityList = new ArrayList<CppcheckFile>();
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Set<String> getVersions() {
+        return versions;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public List<CppcheckFile> getAllErrors() {
         return allErrors;

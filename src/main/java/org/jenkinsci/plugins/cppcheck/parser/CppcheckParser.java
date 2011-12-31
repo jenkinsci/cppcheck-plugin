@@ -173,6 +173,10 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setStyleSeverityList(styleSeverityList);
         cppCheckReport.setWarningSeverityList(warningSeverityList);
 
+        if (results.getCppcheck() != null) {
+            cppCheckReport.setVersion(results.getCppcheck().getVersion());
+        }
+
         return cppCheckReport;
     }
 

@@ -83,6 +83,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
         cppcheckReportResult.getInformationSeverityList().addAll(cppcheckReport.getInformationSeverityList());
         cppcheckReportResult.getNoCategorySeverityList().addAll(cppcheckReport.getNoCategorySeverityList());
         cppcheckReportResult.getAllErrors().addAll(cppcheckReport.getAllErrors());
+        cppcheckReportResult.getVersions().add(cppcheckReport.getVersion());
     }
 
     /**

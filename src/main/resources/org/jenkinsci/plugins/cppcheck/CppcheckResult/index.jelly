@@ -20,8 +20,7 @@
 					</tr>
 				</tbody>
 			 </table>	
-			 
-			 
+
 			 <h2>Summary</h2>
 			 <table class="pane sortable">
     				<tr>
@@ -44,7 +43,21 @@
 	          			<td class="pane">${it.report.numberNoCategorySeverity}</td>
 					</tr>
 				</tbody>
-			 </table>			 
+			 </table>
+
+             <j:if test="${it.report.versions != null}">
+                 <h2>Cppcheck Information</h2>
+                 <table class="pane sortable">
+                        <tr>
+                            <td class="pane-header">Cppcheck Engine versions</td>
+                        </tr>
+                    <tbody>
+                        <tr>
+                            <td class="pane">${it.report.versions}</td>
+                        </tr>
+                    </tbody>
+                 </table>
+			 </j:if>
 			 	          				
 	        <st:include page="/tabview/main.jelly" />
 		</l:main-panel>
