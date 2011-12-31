@@ -12,11 +12,6 @@
     </f:entry>
 
     <f:entry>
-        <f:checkbox name="cppcheck.useWorkspaceAsRootPath" checked="${config.useWorkspaceAsRootPath}"/>
-        <label>${%Use the workspace as root path to look for reports}</label>
-    </f:entry>
-
-    <f:entry>
         <f:checkbox name="cppcheck.ignoreBlankFiles" checked="${config.ignoreBlankFiles}"/>
         <label>${%Ignore blank files}</label>
     </f:entry>

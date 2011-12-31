@@ -56,11 +56,7 @@ public class CppcheckPublisher extends Publisher {
             CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
-                if (cppcheckConfig.isUseWorkspaceAsRootPath()) {
-                    cppcheckReport = build.getWorkspace().act(parser);
-                } else {
-                    cppcheckReport = build.getModuleRoot().act(parser);
-                }
+                cppcheckReport = build.getWorkspace().act(parser);
             } catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
                 build.setResult(Result.FAILURE);

@@ -10,16 +10,9 @@ import java.io.Serializable;
  */
 public class CppcheckConfig implements Serializable {
 
-    private transient String cppcheckReportPattern;
-
     private String pattern;
-
-    private boolean useWorkspaceAsRootPath;
-
     private boolean ignoreBlankFiles;
-
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
-
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
 
     public CppcheckConfig() {
@@ -28,7 +21,6 @@ public class CppcheckConfig implements Serializable {
     @DataBoundConstructor
     @SuppressWarnings("unused")
     public CppcheckConfig(String pattern,
-                          boolean useWorkspaceAsRootPath,
                           boolean ignoreBlankFiles, String threshold,
                           String newThreshold, String failureThreshold,
                           String newFailureThreshold, String healthy, String unHealthy,
@@ -46,7 +38,6 @@ public class CppcheckConfig implements Serializable {
                           boolean displayInformationSeverity) {
 
         this.pattern = pattern;
-        this.useWorkspaceAsRootPath = useWorkspaceAsRootPath;
         this.ignoreBlankFiles = ignoreBlankFiles;
         this.configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
@@ -90,6 +81,12 @@ public class CppcheckConfig implements Serializable {
         return configGraph;
     }
 
+    /*
+    Backward compatibility
+     */
+    private transient String cppcheckReportPattern;
+    private transient boolean useWorkspaceAsRootPath;
+
     @SuppressWarnings("unused")
     private Object readResolve() {
         if (this.cppcheckReportPattern != null) {
@@ -97,4 +94,5 @@ public class CppcheckConfig implements Serializable {
         }
         return this;
     }
+
 }
