@@ -32,7 +32,6 @@ public class CppcheckParser implements Serializable {
             throw new IllegalArgumentException("File input " + file.getName() + " must exist.");
         }
 
-
         CppcheckReport report;
         AtomicReference<JAXBContext> jc = new AtomicReference<JAXBContext>();
         try {

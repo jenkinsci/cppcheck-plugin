@@ -56,6 +56,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
                         + basedir + "'."
                         + "  Did you enter a pattern relative to the correct directory?"
                         + "  Did you generate the XML report(s) for Cppcheck?";
+                CppcheckLogger.log(listener, msg);
                 throw new IllegalArgumentException(msg);
             }
 

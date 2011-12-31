@@ -26,7 +26,7 @@ public class CppcheckBuildResultEvaluator {
         if (isErrorCountExceeded(errorsCount, cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold())) {
             CppcheckLogger.log(listener, "Setting build status to FAILURE since total number of errors ("
                     + CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)
-                    + ") exceeds the threshold value ;" + cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold() + "'.");
+                    + ") exceeds the threshold value '" + cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold() + "'.");
             return Result.FAILURE;
         }
         if (isErrorCountExceeded(newErrorsCount, cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold())) {
