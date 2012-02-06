@@ -49,7 +49,15 @@
 
 
               </td>
-              <g:format value="${cppcheckfile.lineNumber}" severity="${cppcheckfile.severity}"/>
+              <td class="pane">
+                <j:if
+                    test="${elt.isSourceIgnored()}">
+                  ${cppcheckfile.lineNumber}
+                </j:if>
+                <j:if test="${not elt.isSourceIgnored()}">
+                  <a href="source.${cppcheckfile.key}#${cppcheckfile.lineNumber}">${cppcheckfile.lineNumber}</a>
+                </j:if>
+              </td>
               <g:format value="${cppcheckfile.cppCheckId}" severity="${cppcheckfile.severity}"/>
               <g:format value="${cppcheckfile.severity}" severity="${cppcheckfile.severity}"/>
               <g:format value="${cppcheckfile.message}" severity="${cppcheckfile.severity}"/>
