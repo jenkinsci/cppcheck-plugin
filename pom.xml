@@ -10,7 +10,7 @@
     <artifactId>cppcheck</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Cppcheck Plug-in</name>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Cppcheck+Plugin</url>
 
     <licenses>
