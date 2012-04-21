@@ -169,6 +169,7 @@ public class CppcheckResult implements Serializable {
      *
      * @return the number of new errors
      */
+    @SuppressWarnings("unused")
     public int getNumberNewErrorsFromPreviousBuild() {
         CppcheckResult previousCppcheckResult = getPreviousResult();
         if (previousCppcheckResult == null) {
