@@ -1,4 +1,4 @@
-package org.jenkinsci;
+package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
@@ -17,6 +17,10 @@ import java.util.Map;
 public class CppcheckSourceContainer {
 
     private Map<Integer, CppcheckWorkspaceFile> internalMap = new HashMap<Integer, CppcheckWorkspaceFile>();
+
+    public CppcheckSourceContainer(Map<Integer, CppcheckWorkspaceFile> internalMap) {
+        this.internalMap = internalMap;
+    }
 
     public CppcheckSourceContainer(BuildListener listener,
                                    FilePath workspace,

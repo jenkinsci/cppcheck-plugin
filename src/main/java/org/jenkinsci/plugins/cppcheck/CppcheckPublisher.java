@@ -12,7 +12,6 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import net.sf.json.JSONObject;
-import org.jenkinsci.CppcheckSourceContainer;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import org.kohsuke.stapler.StaplerRequest;

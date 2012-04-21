@@ -6,7 +6,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.Item;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.CppcheckSourceContainer;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;

@@ -27,6 +27,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 import hudson.model.AbstractBuild;
@@ -164,7 +165,9 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         }
 
         //Result
-        org.jenkinsci.plugins.cppcheck.CppcheckResult newResult = new org.jenkinsci.plugins.cppcheck.CppcheckResult(newReport, result.getCppcheckSourceContainer(), getOwner());
+        CppcheckSourceContainer sourceContainer = result.getCppcheckSourceContainer();
+        org.jenkinsci.plugins.cppcheck.CppcheckSourceContainer newSourceContainer = new org.jenkinsci.plugins.cppcheck.CppcheckSourceContainer(sourceContainer.getInternalMap());
+        org.jenkinsci.plugins.cppcheck.CppcheckResult newResult = new org.jenkinsci.plugins.cppcheck.CppcheckResult(newReport, newSourceContainer, getOwner());
 
         //Config
         org.jenkinsci.plugins.cppcheck.config.CppcheckConfig newConfig = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfig(
