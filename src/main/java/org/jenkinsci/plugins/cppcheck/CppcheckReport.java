@@ -135,7 +135,7 @@ public class CppcheckReport implements Serializable {
     @Exported
     @SuppressWarnings("unused")
     public int getNumberNoCategorySeverity() {
-        return (noCategorySeverityList == null) ? 0 : errorSeverityList.size();
+        return (noCategorySeverityList == null) ? 0 : noCategorySeverityList.size();
     }
 
 
