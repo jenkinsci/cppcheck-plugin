@@ -10,12 +10,6 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
  */
 public class CppcheckBuildResultEvaluator {
 
-    private boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
-        if (errorCount > 0 && CppcheckMetricUtil.isValid(errorThreshold)) {
-            return errorCount > CppcheckMetricUtil.convert(errorThreshold);
-        }
-        return false;
-    }
 
     public Result evaluateBuildResult(
             final BuildListener listener,
@@ -52,4 +46,10 @@ public class CppcheckBuildResultEvaluator {
         return Result.SUCCESS;
     }
 
+    private boolean isErrorCountExceeded(final int errorCount, final String errorThreshold) {
+        if (errorCount > 0 && CppcheckMetricUtil.isValid(errorThreshold)) {
+            return errorCount > CppcheckMetricUtil.convert(errorThreshold);
+        }
+        return false;
+    }
 }

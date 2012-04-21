@@ -1,65 +1,62 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+    <l:layout norefresh="true">
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>Cppcheck Result</h1>
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-	<l:layout norefresh="true">
-		<st:include it="${it.owner}" page="sidepanel.jelly" />
-		<l:main-panel>
-			 <h1>Cppcheck Result</h1>
-			
-			 <h2>Errors Trend</h2>
-			 <table class="pane sortable">
-    				<tr>
-      					<td class="pane-header">All errors</td>
-      					<td class="pane-header" style="width:2em">New errors</td>
-				    </tr>
-    			<tbody>
-			        <tr>
-	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
-					</tr>
-				</tbody>
-			 </table>	
+            <h2>Errors Trend</h2>
+            <table class="pane sortable">
+                <tr>
+                    <td class="pane-header">All errors</td>
+                    <td class="pane-header" style="width:2em">New errors</td>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-			 <h2>Summary</h2>
-			 <table class="pane sortable">
-    				<tr>
-      					<td class="pane-header">Total</td>
-      					<td class="pane-header" style="width:2em">Severity 'error'</td>
-      					<td class="pane-header" style="width:2em">Severity 'warning'</td>
-      					<td class="pane-header" style="width:2em">Severity 'style'</td>
-      					<td class="pane-header" style="width:2em">Severity 'performance'</td>
-      					<td class="pane-header" style="width:2em">Severity 'information'</td>
-      					<td class="pane-header" style="width:2em">No category</td>
-				    </tr>
-    			<tbody>
-			        <tr>
-	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.report.numberErrorSeverity}</td>
-	          			<td class="pane">${it.report.numberWarningSeverity}</td>
-	          			<td class="pane">${it.report.numberStyleSeverity}</td>
-	          			<td class="pane">${it.report.numberPerformanceSeverity}</td>
-	          			<td class="pane">${it.report.numberInformationSeverity}</td>
-	          			<td class="pane">${it.report.numberNoCategorySeverity}</td>
-					</tr>
-				</tbody>
-			 </table>
+            <h2>Summary</h2>
+            <table class="pane sortable">
+                <tr>
+                    <td class="pane-header">Total</td>
+                    <td class="pane-header" style="width:2em">Severity 'error'</td>
+                    <td class="pane-header" style="width:2em">Severity 'warning'</td>
+                    <td class="pane-header" style="width:2em">Severity 'style'</td>
+                    <td class="pane-header" style="width:2em">Severity 'performance'</td>
+                    <td class="pane-header" style="width:2em">Severity 'information'</td>
+                    <td class="pane-header" style="width:2em">No category</td>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.report.numberErrorSeverity}</td>
+                        <td class="pane">${it.report.numberWarningSeverity}</td>
+                        <td class="pane">${it.report.numberStyleSeverity}</td>
+                        <td class="pane">${it.report.numberPerformanceSeverity}</td>
+                        <td class="pane">${it.report.numberInformationSeverity}</td>
+                        <td class="pane">${it.report.numberNoCategorySeverity}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-             <j:if test="${it.report.versions != null}">
-                 <h2>Cppcheck Information</h2>
-                 <table class="pane sortable">
-                        <tr>
-                            <td class="pane-header">Cppcheck Engine versions</td>
-                        </tr>
+            <j:if test="${it.report.versions != null}">
+                <h2>Cppcheck Information</h2>
+                <table class="pane sortable">
+                    <tr>
+                        <td class="pane-header">Cppcheck Engine versions</td>
+                    </tr>
                     <tbody>
                         <tr>
                             <td class="pane">${it.report.versions}</td>
                         </tr>
                     </tbody>
-                 </table>
-			 </j:if>
-			 	          				
-	        <st:include page="/tabview/main.jelly" />
-		</l:main-panel>
-	</l:layout>
+                </table>
+            </j:if>
+
+            <st:include page="/tabview/main.jelly"/>
+        </l:main-panel>
+    </l:layout>
 </j:jelly>

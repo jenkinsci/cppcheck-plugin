@@ -46,7 +46,7 @@ public class CppcheckMetricUtil {
         StringBuffer sb = new StringBuffer();
 
         if (isAllSeverities(cppcheckConfig)) {
-            sb.append("with all severities");
+            sb.append("With all severity values");
             return sb.toString();
         }
 

@@ -1,13 +1,9 @@
 <j:jelly xmlns:j="jelly:core"
-	xmlns:d="jelly:define"
-    xmlns:l="/lib/layout"
-    xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form"
-    xmlns:i="jelly:fmt">
-    <t:summary icon="/plugin/cppcheck/icons/cppcheck-24.png">
-		${it.result.summary}
-		<ul>
-		${it.result.details}
-		</ul>
+         xmlns:t="/lib/hudson">
+    <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">
+        ${it.result.summary}
+        <ul>
+            ${it.result.details}
+        </ul>
     </t:summary>
 </j:jelly>
