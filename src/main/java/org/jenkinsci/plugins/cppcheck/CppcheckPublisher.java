@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.Extension;
@@ -13,6 +12,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import net.sf.json.JSONObject;
+import org.jenkinsci.CppcheckSourceContainer;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import org.kohsuke.stapler.StaplerRequest;
@@ -68,7 +68,7 @@ public class CppcheckPublisher extends Publisher {
                 return false;
             }
 
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getModuleRoot(), cppcheckReport.getAllErrors());
+            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), build.getModuleRoot(), cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
 
