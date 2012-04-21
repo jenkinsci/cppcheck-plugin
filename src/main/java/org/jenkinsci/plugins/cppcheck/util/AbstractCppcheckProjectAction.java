@@ -21,13 +21,13 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
         this.project = project;
     }
 
+    @SuppressWarnings("unused")
     public AbstractProject<?, ?> getProject() {
         return project;
     }
 
-
     public String getIconFileName() {
-        return "/plugin/cppcheck/icons/cppcheck-24.png";
+        return "/plugin/cppcheck/icons/cppcheck-48.png";
     }
 
     public String getSearchUrl() {
@@ -38,6 +38,7 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
 
     protected abstract Integer getLastResultBuild();
 
+    @SuppressWarnings("unused")
     public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
         AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
         CppcheckBuildAction cppcheckBuildAction = lastBuild.getAction(CppcheckBuildAction.class);
@@ -46,6 +47,7 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
         }
     }
 
+    @SuppressWarnings("unused")
     public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException {
         Integer buildNumber = getLastResultBuild();
         if (buildNumber == null) {
