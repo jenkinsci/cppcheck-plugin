@@ -208,9 +208,9 @@ public class CppcheckResult implements Serializable {
 
         //Warnings
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
-            nbErrors = this.getReport().getWarningSeverityList().size();
+            nbErrors = nbErrors + this.getReport().getWarningSeverityList().size();
             if (previousResult != null) {
-                nbPreviousError = previousResult.getReport().getWarningSeverityList().size();
+                nbPreviousError = nbPreviousError + previousResult.getReport().getWarningSeverityList().size();
             }
         }
 
