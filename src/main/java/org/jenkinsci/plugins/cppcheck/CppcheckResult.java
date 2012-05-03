@@ -220,7 +220,6 @@ public class CppcheckResult implements Serializable {
             if (previousResult != null) {
                 nbPreviousError = nbPreviousError + previousResult.getReport().getStyleSeverityList().size();
             }
-
         }
 
         //Performance
@@ -246,8 +245,9 @@ public class CppcheckResult implements Serializable {
             } else {
                 return 0;
             }
-        } else
+        } else {
             return nbErrors;
+        }
     }
 
 }
