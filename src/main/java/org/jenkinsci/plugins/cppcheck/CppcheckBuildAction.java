@@ -117,7 +117,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         }
 
         Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(),
-                "Number of error", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
+                "Number of errors", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
         g.doPng(req, rsp);
     }
 
