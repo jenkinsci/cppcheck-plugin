@@ -36,6 +36,7 @@ import hudson.util.ChartUtil;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
 import hudson.util.Graph;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -170,9 +171,11 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         org.jenkinsci.plugins.cppcheck.CppcheckResult newResult = new org.jenkinsci.plugins.cppcheck.CppcheckResult(newReport, newSourceContainer, getOwner());
 
         //Config
-        org.jenkinsci.plugins.cppcheck.config.CppcheckConfig newConfig = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfig(
-                cppcheckConfig.getCppcheckReportPattern(),
-                cppcheckConfig.isIgnoreBlankFiles(),
+        org.jenkinsci.plugins.cppcheck.config.CppcheckConfig newConfig = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfig();
+
+        newConfig.setPattern(cppcheckConfig.getCppcheckReportPattern());
+        newConfig.setIgnoreBlankFiles(cppcheckConfig.isIgnoreBlankFiles());
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 cppcheckConfig.getConfigSeverityEvaluation().getThreshold(),
                 cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold(),
                 cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold(),
@@ -182,8 +185,9 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityError(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle(),
-                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(),
-                true,
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(), true);
+        newConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
+        org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph configGraph = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph(
                 cppcheckConfig.getConfigGraph().getXSize(),
                 cppcheckConfig.getConfigGraph().getYSize(),
                 cppcheckConfig.getConfigGraph().isDiplayAllError(),
@@ -192,6 +196,8 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
                 cppcheckConfig.getConfigGraph().isDisplaySeverityStyle(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleStyle(),
                 true);
+        newConfig.setConfigGraph(configGraph);
+
 
         return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult, newConfig);
 
