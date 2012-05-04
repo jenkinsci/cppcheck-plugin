@@ -23,51 +23,51 @@
 *******************************************************************************/
 -->
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-	<l:layout norefresh="true">
-		<st:include it="${it.owner}" page="sidepanel.jelly" />
-		<l:main-panel>
-			 <h1>Cppcheck Result</h1>
-			
-			 <h2>Errors Trend</h2>
-			 <table class="pane sortable">
-    				<tr>
-      					<td class="pane-header">All errors</td>
-      					<td class="pane-header" style="width:2em">New errors</td>
-				    </tr>
-    			<tbody>
-			        <tr>
-	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
-					</tr>
-				</tbody>
-			 </table>	
-			 
-			 
-			 <h2>Summary</h2>
-			 <table class="pane sortable">
-    				<tr>
-      					<td class="pane-header">Total</td>
-      					<td class="pane-header" style="width:2em">Severity 'error'</td>
-      					<td class="pane-header" style="width:2em">Severity 'possible error'</td>
-      					<td class="pane-header" style="width:2em">Severity 'style'</td>
-      					<td class="pane-header" style="width:2em">Severity 'possible style'</td>
-      					<td class="pane-header" style="width:2em">no category</td>
-				    </tr>
-    			<tbody>
-			        <tr>
-	          			<td class="pane">${it.report.numberTotal}</td>
-	          			<td class="pane">${it.report.numberSeverityError}</td>
-	          			<td class="pane">${it.report.numberSeverityPossibleError}</td>
-	          			<td class="pane">${it.report.numberSeverityStyle}</td>
-	          			<td class="pane">${it.report.numberSeverityPossibleStyle}</td>
-	          			<td class="pane">${it.report.numberSeverityNoCategory}</td>
-					</tr>
-				</tbody>
-			 </table>			 
-			 	          				
-	        <st:include page="/tabview/main.jelly" />
-		</l:main-panel>
-	</l:layout>
+         xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+         xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+    <l:layout norefresh="true">
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>Cppcheck Result</h1>
+
+            <h2>Errors Trend</h2>
+            <table class="pane sortable">
+                <tr>
+                    <td class="pane-header">All errors</td>
+                    <td class="pane-header" style="width:2em">New errors</td>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h2>Summary</h2>
+            <table class="pane sortable">
+                <tr>
+                    <td class="pane-header">Total</td>
+                    <td class="pane-header" style="width:2em">Severity 'error'</td>
+                    <td class="pane-header" style="width:2em">Severity 'possible error'</td>
+                    <td class="pane-header" style="width:2em">Severity 'style'</td>
+                    <td class="pane-header" style="width:2em">Severity 'possible style'</td>
+                    <td class="pane-header" style="width:2em">no category</td>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.report.numberSeverityError}</td>
+                        <td class="pane">${it.report.numberSeverityPossibleError}</td>
+                        <td class="pane">${it.report.numberSeverityStyle}</td>
+                        <td class="pane">${it.report.numberSeverityPossibleStyle}</td>
+                        <td class="pane">${it.report.numberSeverityNoCategory}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <st:include page="/tabview/main.jelly"/>
+        </l:main-panel>
+    </l:layout>
 </j:jelly>

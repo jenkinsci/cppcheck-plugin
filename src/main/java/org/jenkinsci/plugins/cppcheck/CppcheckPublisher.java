@@ -11,10 +11,11 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
-import net.sf.json.JSONObject;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,9 +29,52 @@ public class CppcheckPublisher extends Publisher {
 
     private CppcheckConfig cppcheckConfig;
 
-    @Override
-    public CppcheckDescriptor getDescriptor() {
-        return DESCRIPTOR;
+    @DataBoundConstructor
+    @SuppressWarnings("unused")
+    public CppcheckPublisher(String pattern,
+                             boolean ignoreBlankFiles, String threshold,
+                             String newThreshold, String failureThreshold,
+                             String newFailureThreshold, String healthy, String unHealthy,
+                             boolean severityError,
+                             boolean severityWarning,
+                             boolean severityStyle,
+                             boolean severityPerformance,
+                             boolean severityInformation,
+                             int xSize, int ySize,
+                             boolean displayAllErrors,
+                             boolean displayErrorSeverity,
+                             boolean displayWarningSeverity,
+                             boolean displayStyleSeverity,
+                             boolean displayPerformanceSeverity,
+                             boolean displayInformationSeverity) {
+
+        cppcheckConfig = new CppcheckConfig();
+
+        cppcheckConfig.setPattern(pattern);
+        cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
+        CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
+                threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
+                severityError,
+                severityWarning,
+                severityStyle,
+                severityPerformance,
+                severityInformation);
+        cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
+        CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
+                xSize, ySize,
+                displayAllErrors,
+                displayErrorSeverity,
+                displayWarningSeverity,
+                displayStyleSeverity,
+                displayPerformanceSeverity,
+                displayInformationSeverity);
+        cppcheckConfig.setConfigGraph(configGraph);
+    }
+
+
+    @SuppressWarnings("unused")
+    public CppcheckConfig getCppcheckConfig() {
+        return cppcheckConfig;
     }
 
     @Override
@@ -132,11 +176,6 @@ public class CppcheckPublisher extends Publisher {
     }
 
     @Extension
-    public static final CppcheckDescriptor DESCRIPTOR = new CppcheckDescriptor();
-
-    /**
-     * The Cppcheck Descriptor
-     */
     public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
 
         public CppcheckDescriptor() {
@@ -174,27 +213,22 @@ public class CppcheckPublisher extends Publisher {
             return new CppcheckConfig();
         }
 
-        @Override
-        public Publisher newInstance(StaplerRequest req, JSONObject formData)
-                throws hudson.model.Descriptor.FormException {
-
-            CppcheckPublisher pub = new CppcheckPublisher();
-            CppcheckConfig cppcheckConfig = req.bindJSON(CppcheckConfig.class, formData);
-            pub.setCppcheckConfig(cppcheckConfig);
-
-            return pub;
-        }
+//        @Override
+//        public Publisher newInstance(StaplerRequest req, JSONObject formData)
+//                throws hudson.model.Descriptor.FormException {
+//
+//            CppcheckPublisher pub = new CppcheckPublisher();
+//            CppcheckConfig cppcheckConfig = req.bindJSON(CppcheckConfig.class, formData);
+//            pub.setCppcheckConfig(cppcheckConfig);
+//
+//            return pub;
+//        }
     }
 
-
-    @SuppressWarnings("unused")
-    public CppcheckConfig getCppcheckConfig() {
-        return cppcheckConfig;
-    }
-
-    public void setCppcheckConfig(CppcheckConfig cppcheckConfig) {
-        this.cppcheckConfig = cppcheckConfig;
-    }
+//
+//    public void setCppcheckConfig(CppcheckConfig cppcheckConfig) {
+//        this.cppcheckConfig = cppcheckConfig;
+//    }
 
 
 }

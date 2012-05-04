@@ -28,7 +28,7 @@ public class CppcheckSummary {
         if (nbErrors == 0) {
             summary.append(Messages.cppcheck_ResultAction_NoError());
         } else {
-            summary.append("<a href=\"" + com.thalesgroup.hudson.plugins.cppcheck.CppcheckBuildAction.URL_NAME + "\">");
+            summary.append("<a href=\"" + CppcheckBuildAction.URL_NAME + "\">");
 
             if (nbErrors == 1) {
                 summary.append(Messages.cppcheck_ResultAction_OneError());

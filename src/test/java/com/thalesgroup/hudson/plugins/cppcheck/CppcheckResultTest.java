@@ -23,20 +23,18 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class CppcheckResultTest {

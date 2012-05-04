@@ -24,16 +24,14 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 
-import java.io.File;
-import java.util.List;
-
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.hudson.plugins.cppcheck.parser.CppcheckParser;
+import java.io.File;
+import java.util.List;
 
 public class CppcheckParserTest {
 
@@ -51,8 +49,7 @@ public class CppcheckParserTest {
         try {
             cppcheckParser.parse(null);
             Assert.fail("null parameter is not allowed.");
-        }
-        catch (IllegalArgumentException iea) {
+        } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
         }
     }
@@ -62,8 +59,7 @@ public class CppcheckParserTest {
         try {
             cppcheckParser.parse(new File("nonExistFile"));
             Assert.fail("A valid file is mandatory.");
-        }
-        catch (IllegalArgumentException iea) {
+        } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
         }
     }

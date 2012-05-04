@@ -1,13 +1,13 @@
 <j:jelly xmlns:j="jelly:core">
     <j:if test="${from.isDisplayGraph()}">
-	    <div align="right">
-          <p/>
-		  <div class="test-trend-caption">Cppcheck Trend</div>
-		  <div>
-		        <a href="${from.urlName}/">		  
-		    		<img src="${from.urlName}/graph"/>
-		    	</a>	
-		  </div>
-	   	</div>
-	</j:if>
+        <div align="right">
+            <p/>
+            <div class="test-trend-caption">Cppcheck Trend</div>
+            <div>
+                <a href="${from.urlName}/">
+                    <img src="${from.urlName}/graph"/>
+                </a>
+            </div>
+        </div>
+    </j:if>
 </j:jelly>

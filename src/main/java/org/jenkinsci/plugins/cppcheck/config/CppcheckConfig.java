@@ -1,8 +1,6 @@
 package org.jenkinsci.plugins.cppcheck.config;
 
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.Serializable;
 
 /**
@@ -15,45 +13,28 @@ public class CppcheckConfig implements Serializable {
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
 
-    public CppcheckConfig() {
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
-    @DataBoundConstructor
-    @SuppressWarnings("unused")
-    public CppcheckConfig(String pattern,
-                          boolean ignoreBlankFiles, String threshold,
-                          String newThreshold, String failureThreshold,
-                          String newFailureThreshold, String healthy, String unHealthy,
-                          boolean severityError,
-                          boolean severityWarning,
-                          boolean severityStyle,
-                          boolean severityPerformance,
-                          boolean severityInformation,
-                          int xSize, int ySize,
-                          boolean displayAllErrors,
-                          boolean displayErrorSeverity,
-                          boolean displayWarningSeverity,
-                          boolean displayStyleSeverity,
-                          boolean displayPerformanceSeverity,
-                          boolean displayInformationSeverity) {
-
-        this.pattern = pattern;
+    public void setIgnoreBlankFiles(boolean ignoreBlankFiles) {
         this.ignoreBlankFiles = ignoreBlankFiles;
-        this.configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
-                threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
-                severityError,
-                severityWarning,
-                severityStyle,
-                severityPerformance,
-                severityInformation);
-        this.configGraph = new CppcheckConfigGraph(
-                xSize, ySize,
-                displayAllErrors,
-                displayErrorSeverity,
-                displayWarningSeverity,
-                displayStyleSeverity,
-                displayPerformanceSeverity,
-                displayInformationSeverity);
+    }
+
+    public void setConfigSeverityEvaluation(CppcheckConfigSeverityEvaluation configSeverityEvaluation) {
+        this.configSeverityEvaluation = configSeverityEvaluation;
+    }
+
+    public void setConfigGraph(CppcheckConfigGraph configGraph) {
+        this.configGraph = configGraph;
+    }
+
+    public void setCppcheckReportPattern(String cppcheckReportPattern) {
+        this.cppcheckReportPattern = cppcheckReportPattern;
+    }
+
+    public void setUseWorkspaceAsRootPath(boolean useWorkspaceAsRootPath) {
+        this.useWorkspaceAsRootPath = useWorkspaceAsRootPath;
     }
 
     public String getPattern() {

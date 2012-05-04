@@ -23,14 +23,14 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import static org.mockito.Mockito.*;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Locale;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CppcheckSummaryTest {
 
@@ -127,6 +127,6 @@ public class CppcheckSummaryTest {
     @Test
     public void test5NewErrors() {
         checkSummaryDetailsText(5, "<li>New Errors: 5</li>");
-	}
+    }
 
 }

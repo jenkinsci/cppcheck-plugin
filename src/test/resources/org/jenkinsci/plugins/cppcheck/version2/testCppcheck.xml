@@ -1,54 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <results version="2">
-  <cppcheck version="1.48"/>
-  <errors>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestGenericDisplay.h&quot; not found." verbose="Include file: &quot;Test/Display/TestGenericDisplay.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="21"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Server/SuperFly.h&quot; not found." verbose="Include file: &quot;Test/Server/SuperFly.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="22"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Graphics/DispColors.h&quot; not found." verbose="Include file: &quot;Graphics/DispColors.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="23"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Graphics/TextureData.h&quot; not found." verbose="Include file: &quot;Graphics/TextureData.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="24"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Graphics/Decals.h&quot; not found." verbose="Include file: &quot;Graphics/Decals.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="25"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;InterfaceTest/InterfaceTest.hpp&quot; not found." verbose="Include file: &quot;InterfaceTest/InterfaceTest.hpp&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="26"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Utility/Assert.h&quot; not found." verbose="Include file: &quot;Utility/Assert.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="27"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Utility/FormatCharTesters.h&quot; not found." verbose="Include file: &quot;Utility/FormatCharTesters.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="28"/>
-  </error>
-  <error id="missingInclude" severity="warning" msg="Include file: &quot;Utility/Units.h&quot; not found." verbose="Include file: &quot;Utility/Units.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="29"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestRegion.h&quot; not found." verbose="Include file: &quot;Test/Display/TestRegion.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="31"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;DisplayExec/DisplayModel.h&quot; not found." verbose="Include file: &quot;DisplayExec/DisplayModel.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="32"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestIndicatorFactory.h&quot; not found." verbose="Include file: &quot;Test/Display/TestIndicatorFactory.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="33"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestDataMonitor.h&quot; not found." verbose="Include file: &quot;Test/Display/TestDataMonitor.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="35"/>
-  </error>
-  <error id="missingInclude" severity="information" msg="Include file: &quot;Test/Display/TestStatusBlock.h&quot; not found." verbose="Include file: &quot;Test/Display/TestStatusBlock.h&quot; not found.">
-    <location file="TestGenericDisplay.cpp" line="38"/>
-  </error>
-  <error id="syntaxError" severity="error" msg="Invalid number of charTestter ({) when these macros are defined: 'TEST;TEST_VM2;TODO_TESTS_REFACTOR'." verbose="Invalid number of charTestter ({) when these macros are defined: 'TEST;TEST_VM2;TODO_TESTS_REFACTOR'.">
-    <location file="TestGenericDisplay.cpp" line="1600"/>
-  </error>
-  <error id="syntaxError" severity="error" msg="Invalid number of charTestter ({) when these macros are defined: 'TODO_TESTS_REFACTOR'." verbose="Invalid number of charTestter ({) when these macros are defined: 'TODO_TESTS_REFACTOR'.">
-    <location file="TestGenericDisplay.cpp" line="1600"/>
-  </error>
-  </errors>
+    <cppcheck version="1.48"/>
+    <errors>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Display/TestGenericDisplay.h&quot; not found."
+               verbose="Include file: &quot;Test/Display/TestGenericDisplay.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="21"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Server/SuperFly.h&quot; not found."
+               verbose="Include file: &quot;Test/Server/SuperFly.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="22"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Graphics/DispColors.h&quot; not found."
+               verbose="Include file: &quot;Graphics/DispColors.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="23"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Graphics/TextureData.h&quot; not found."
+               verbose="Include file: &quot;Graphics/TextureData.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="24"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;Graphics/Decals.h&quot; not found."
+               verbose="Include file: &quot;Graphics/Decals.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="25"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;InterfaceTest/InterfaceTest.hpp&quot; not found."
+               verbose="Include file: &quot;InterfaceTest/InterfaceTest.hpp&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="26"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;Utility/Assert.h&quot; not found."
+               verbose="Include file: &quot;Utility/Assert.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="27"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Utility/FormatCharTesters.h&quot; not found."
+               verbose="Include file: &quot;Utility/FormatCharTesters.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="28"/>
+        </error>
+        <error id="missingInclude" severity="warning" msg="Include file: &quot;Utility/Units.h&quot; not found."
+               verbose="Include file: &quot;Utility/Units.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="29"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Display/TestRegion.h&quot; not found."
+               verbose="Include file: &quot;Test/Display/TestRegion.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="31"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;DisplayExec/DisplayModel.h&quot; not found."
+               verbose="Include file: &quot;DisplayExec/DisplayModel.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="32"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Display/TestIndicatorFactory.h&quot; not found."
+               verbose="Include file: &quot;Test/Display/TestIndicatorFactory.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="33"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Display/TestDataMonitor.h&quot; not found."
+               verbose="Include file: &quot;Test/Display/TestDataMonitor.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="35"/>
+        </error>
+        <error id="missingInclude" severity="information"
+               msg="Include file: &quot;Test/Display/TestStatusBlock.h&quot; not found."
+               verbose="Include file: &quot;Test/Display/TestStatusBlock.h&quot; not found.">
+            <location file="TestGenericDisplay.cpp" line="38"/>
+        </error>
+        <error id="syntaxError" severity="error"
+               msg="Invalid number of charTestter ({) when these macros are defined: 'TEST;TEST_VM2;TODO_TESTS_REFACTOR'."
+               verbose="Invalid number of charTestter ({) when these macros are defined: 'TEST;TEST_VM2;TODO_TESTS_REFACTOR'.">
+            <location file="TestGenericDisplay.cpp" line="1600"/>
+        </error>
+        <error id="syntaxError" severity="error"
+               msg="Invalid number of charTestter ({) when these macros are defined: 'TODO_TESTS_REFACTOR'."
+               verbose="Invalid number of charTestter ({) when these macros are defined: 'TODO_TESTS_REFACTOR'.">
+            <location file="TestGenericDisplay.cpp" line="1600"/>
+        </error>
+    </errors>
 </results>

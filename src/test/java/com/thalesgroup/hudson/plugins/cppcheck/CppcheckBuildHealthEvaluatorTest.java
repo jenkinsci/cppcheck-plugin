@@ -23,17 +23,16 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import hudson.model.HealthReport;
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
+import hudson.model.HealthReport;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CppcheckBuildHealthEvaluatorTest {
 
