@@ -232,7 +232,7 @@ public class CppcheckResult implements Serializable {
 
         //Information
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
-            nbErrors = nbErrors + this.getReport().getPerformanceSeverityList().size();
+            nbErrors = nbErrors + this.getReport().getInformationSeverityList().size();
             if (previousResult != null) {
                 nbPreviousError = nbPreviousError + previousResult.getReport().getInformationSeverityList().size();
             }
