@@ -72,6 +72,10 @@ public class CppcheckPublisher extends Publisher {
     }
 
 
+    public CppcheckPublisher(CppcheckConfig cppcheckConfig) {
+        this.cppcheckConfig = cppcheckConfig;
+    }
+
     @SuppressWarnings("unused")
     public CppcheckConfig getCppcheckConfig() {
         return cppcheckConfig;
@@ -213,22 +217,6 @@ public class CppcheckPublisher extends Publisher {
             return new CppcheckConfig();
         }
 
-//        @Override
-//        public Publisher newInstance(StaplerRequest req, JSONObject formData)
-//                throws hudson.model.Descriptor.FormException {
-//
-//            CppcheckPublisher pub = new CppcheckPublisher();
-//            CppcheckConfig cppcheckConfig = req.bindJSON(CppcheckConfig.class, formData);
-//            pub.setCppcheckConfig(cppcheckConfig);
-//
-//            return pub;
-//        }
     }
-
-//
-//    public void setCppcheckConfig(CppcheckConfig cppcheckConfig) {
-//        this.cppcheckConfig = cppcheckConfig;
-//    }
-
 
 }
