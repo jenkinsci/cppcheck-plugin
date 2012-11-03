@@ -11,6 +11,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
@@ -25,7 +26,7 @@ import java.util.Collection;
 /**
  * @author Gregory Boissinot
  */
-public class CppcheckPublisher extends Publisher {
+public class CppcheckPublisher extends Recorder {
 
     private CppcheckConfig cppcheckConfig;
 
