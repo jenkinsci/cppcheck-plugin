@@ -12,7 +12,7 @@ public class CppcheckConfigGraph implements Serializable {
 
     private int xSize = DEFAULT_CHART_WIDTH;
     private int ySize = DEFAULT_CHART_HEIGHT;
-    private boolean displayAllErrors;
+    private boolean displayAllErrors = true;
     private boolean displayErrorSeverity;
     private boolean displayWarningSeverity;
     private boolean displayStyleSeverity;

@@ -137,8 +137,7 @@
                 <tr>
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayAllErrors"
-                                    checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"
-                                    default="${true}"/>
+                                    checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"/>
                         <st:nbsp/>
                         <label for="configGraph.displayAllErrors">${%Display All errors}</label>
                         <st:nbsp/>
@@ -147,7 +146,7 @@
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayErrorSeverity"
                                     checked="${config.configGraph.displayErrorSeverity}"
-                                    id="configGraph.displayErrorSeverity" default="${true}"/>
+                                    id="configGraph.displayErrorSeverity"/>
                         <st:nbsp/>
                         <label for="configGraph.displayErrorSeverity">${%Display errors}</label>
                         <st:nbsp/>
@@ -156,7 +155,7 @@
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayWarningSeverity"
                                     checked="${config.configGraph.displayWarningSeverity}"
-                                    id="configGrah.displayWarningSeverity" default="${true}"/>
+                                    id="configGrah.displayWarningSeverity"/>
                         <st:nbsp/>
                         <label for="configGraph.displayWarningSeverity">${%Display warnings}</label>
                         <st:nbsp/>
@@ -165,7 +164,7 @@
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayStyleSeverity"
                                     checked="${config.configGraph.displayStyleSeverity}"
-                                    id="configGraph.displayStyleSeverity" default="${true}"/>
+                                    id="configGraph.displayStyleSeverity"/>
                         <st:nbsp/>
                         <label for="configGraph.displayStyleSeverity">${%Display styles}</label>
                         <st:nbsp/>
@@ -174,7 +173,7 @@
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayPerformanceSeverity"
                                     checked="${config.configGraph.displayPerformanceSeverity}"
-                                    id="configGraph.displayPerformanceSeverity" default="${true}"/>
+                                    id="configGraph.displayPerformanceSeverity"/>
                         <st:nbsp/>
                         <label for="configGraph.displayPerformanceSeverity">${%Display performances}</label>
                         <st:nbsp/>
@@ -183,7 +182,7 @@
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayInformationSeverity"
                                     checked="${config.configGraph.displayInformationSeverity}"
-                                    id="configGraph.displayInformationSeverity" default="${true}"/>
+                                    id="configGraph.displayInformationSeverity"/>
                         <st:nbsp/>
                         <label for="configGraph.displayInformationSeverity">${%Display information}</label>
                         <st:nbsp/>
