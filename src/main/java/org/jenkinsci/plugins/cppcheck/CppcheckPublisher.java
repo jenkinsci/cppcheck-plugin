@@ -6,6 +6,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixProject;
+import hudson.maven.MavenModuleSet;
 import hudson.model.*;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
@@ -195,6 +196,7 @@ public class CppcheckPublisher extends Recorder {
             }
 
             return FreeStyleProject.class.isAssignableFrom(jobType)
+                    || MavenModuleSet.class.isAssignableFrom(jobType)
                     || MatrixProject.class.isAssignableFrom(jobType)
                     || isIvyProject;
         }
