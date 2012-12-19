@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.cppcheck;
 
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
@@ -11,6 +10,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.jenkinsci.plugins.cppcheck.parser.CppcheckParser;
+import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
 import java.io.File;
 import java.io.IOException;

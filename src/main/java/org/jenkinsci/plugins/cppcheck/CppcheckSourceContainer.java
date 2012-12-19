@@ -2,9 +2,9 @@ package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.FilePath;
 import hudson.model.BuildListener;
+import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
 import java.io.IOException;
 import java.util.HashMap;

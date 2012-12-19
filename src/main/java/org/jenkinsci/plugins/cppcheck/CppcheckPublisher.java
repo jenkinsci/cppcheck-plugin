@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -17,6 +16,7 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
+import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;

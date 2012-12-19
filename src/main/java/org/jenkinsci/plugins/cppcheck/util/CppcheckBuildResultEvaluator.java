@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
+
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
