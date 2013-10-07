@@ -35,6 +35,8 @@ public class CppcheckConfig implements Serializable {
 
     private boolean ignoreBlankFiles;
 
+    private boolean allowNoReport;
+
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
 
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
@@ -44,7 +46,7 @@ public class CppcheckConfig implements Serializable {
 
     @DataBoundConstructor
     @SuppressWarnings("unused")
-    public CppcheckConfig(String cppcheckReportPattern,
+    public CppcheckConfig(String cppcheckReportPattern, boolean allowNoReport,
                           boolean ignoreBlankFiles, String threshold,
                           String newThreshold, String failureThreshold,
                           String newFailureThreshold, String healthy, String unHealthy,
@@ -55,6 +57,7 @@ public class CppcheckConfig implements Serializable {
 
         this.cppcheckReportPattern = cppcheckReportPattern;
         this.ignoreBlankFiles = ignoreBlankFiles;
+        this.allowNoReport = allowNoReport;
         this.configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, severityError, severityPossibleError, severityStyle, severityPossibleStyle);
@@ -71,6 +74,10 @@ public class CppcheckConfig implements Serializable {
 
     public boolean isIgnoreBlankFiles() {
         return ignoreBlankFiles;
+    }
+
+    public boolean isAllowNoReport() {
+        return allowNoReport;
     }
 
     public CppcheckConfigSeverityEvaluation getConfigSeverityEvaluation() {
