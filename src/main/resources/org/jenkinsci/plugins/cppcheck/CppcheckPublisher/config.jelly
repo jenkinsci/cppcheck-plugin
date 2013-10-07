@@ -15,6 +15,11 @@
         <label>${%Ignore blank files}</label>
     </f:entry>
 
+    <f:entry>
+        <f:checkbox name="cppcheck.allowNoReport" checked="${config.allowNoReport}"/>
+        <label>${%Do not fail the build if the Cppcheck report is not found}</label>
+    </f:entry>
+
     <f:advanced>
         <u:thresholds id="cppcheck"/>
     </f:advanced>
