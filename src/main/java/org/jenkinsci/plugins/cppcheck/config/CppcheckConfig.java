@@ -10,6 +10,7 @@ public class CppcheckConfig implements Serializable {
 
     private String pattern;
     private boolean ignoreBlankFiles;
+    private boolean allowNoReport;
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
 
@@ -19,6 +20,10 @@ public class CppcheckConfig implements Serializable {
 
     public void setIgnoreBlankFiles(boolean ignoreBlankFiles) {
         this.ignoreBlankFiles = ignoreBlankFiles;
+    }
+
+    public void setAllowNoReport(boolean allowNoReport) {
+        this.allowNoReport = allowNoReport;
     }
 
     public void setConfigSeverityEvaluation(CppcheckConfigSeverityEvaluation configSeverityEvaluation) {
@@ -52,6 +57,10 @@ public class CppcheckConfig implements Serializable {
 
     public boolean isIgnoreBlankFiles() {
         return ignoreBlankFiles;
+    }
+
+    public boolean getAllowNoReport() {
+        return allowNoReport;
     }
 
     public CppcheckConfigSeverityEvaluation getConfigSeverityEvaluation() {
