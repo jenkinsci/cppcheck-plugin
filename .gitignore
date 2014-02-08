@@ -3,3 +3,7 @@ work
 *.ipr
 *.iml
 *.iws
+/.project
+/.classpath
+/.settings
+/Makefile
