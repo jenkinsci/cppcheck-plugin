@@ -21,7 +21,7 @@ public class CppcheckSummary {
     public static String createReportSummary(CppcheckResult result) {
 
         StringBuilder summary = new StringBuilder();
-        int nbErrors = result.getReport().getAllErrors().size();
+        int nbErrors = result.getStatistics().getNumberTotal();
 
         summary.append(Messages.cppcheck_Errors_ProjectAction_Name());
         summary.append(": ");
@@ -59,37 +59,38 @@ public class CppcheckSummary {
 
         CppcheckResult previousCppcheckResult = cppcheckResult.getPreviousResult();
 
-        CppcheckReport cppcheckReport = cppcheckResult.getReport();
-        CppcheckReport previousCppcheckReport = previousCppcheckResult.getReport();
+        CppcheckStatistics current = cppcheckResult.getStatistics();
+        // FIXME: May be null, NPE always thrown for first build
+        CppcheckStatistics previous = previousCppcheckResult.getStatistics();
 
         builder.append("<li>");
-        int nbNewErrorSeverity = getNbNew(cppcheckReport.getNumberErrorSeverity(), previousCppcheckReport.getNumberErrorSeverity());
-        builder.append(String.format("Severity Error (nb/new) : %s/+%s", cppcheckReport.getNumberErrorSeverity(), nbNewErrorSeverity));
+        int nbNewErrorSeverity = getNbNew(current.getNumberErrorSeverity(), previous.getNumberErrorSeverity());
+        builder.append(String.format("Severity Error (nb/new) : %s/+%s", current.getNumberErrorSeverity(), nbNewErrorSeverity));
         builder.append("</li>");
 
         builder.append("<li>");
-        int nbNewWarningSeverity = getNbNew(cppcheckReport.getNumberWarningSeverity(), previousCppcheckReport.getNumberWarningSeverity());
-        builder.append(String.format("Severity Warning (nb/new) : %s/+%s", cppcheckReport.getNumberWarningSeverity(), nbNewWarningSeverity));
+        int nbNewWarningSeverity = getNbNew(current.getNumberWarningSeverity(), previous.getNumberWarningSeverity());
+        builder.append(String.format("Severity Warning (nb/new) : %s/+%s", current.getNumberWarningSeverity(), nbNewWarningSeverity));
         builder.append("</li>");
 
         builder.append("<li>");
-        int nbNewStyleSeverity = getNbNew(cppcheckReport.getNumberStyleSeverity(), previousCppcheckReport.getNumberStyleSeverity());
-        builder.append(String.format("Severity Style (nb/new) : %s/+%s", cppcheckReport.getNumberStyleSeverity(), nbNewStyleSeverity));
+        int nbNewStyleSeverity = getNbNew(current.getNumberStyleSeverity(), previous.getNumberStyleSeverity());
+        builder.append(String.format("Severity Style (nb/new) : %s/+%s", current.getNumberStyleSeverity(), nbNewStyleSeverity));
         builder.append("</li>");
 
         builder.append("<li>");
-        int nbNewPerformanceSeverity = getNbNew(cppcheckReport.getNumberPerformanceSeverity(), previousCppcheckReport.getNumberPerformanceSeverity());
-        builder.append(String.format("Severity Performance (nb/new) : %s/+%s", cppcheckReport.getNumberPerformanceSeverity(), nbNewPerformanceSeverity));
+        int nbNewPerformanceSeverity = getNbNew(current.getNumberPerformanceSeverity(), previous.getNumberPerformanceSeverity());
+        builder.append(String.format("Severity Performance (nb/new) : %s/+%s", current.getNumberPerformanceSeverity(), nbNewPerformanceSeverity));
         builder.append("</li>");
 
         builder.append("<li>");
-        int nbNewInformationSeverity = getNbNew(cppcheckReport.getNumberInformationSeverity(), previousCppcheckReport.getNumberInformationSeverity());
-        builder.append(String.format("Severity Information (nb/new) : %s/+%s", cppcheckReport.getNumberInformationSeverity(), nbNewInformationSeverity));
+        int nbNewInformationSeverity = getNbNew(current.getNumberInformationSeverity(), previous.getNumberInformationSeverity());
+        builder.append(String.format("Severity Information (nb/new) : %s/+%s", current.getNumberInformationSeverity(), nbNewInformationSeverity));
         builder.append("</li>");
 
         builder.append("<li>");
-        int nbNewNoCategorySeverity = getNbNew(cppcheckReport.getNumberNoCategorySeverity(), previousCppcheckReport.getNumberNoCategorySeverity());
-        builder.append(String.format("Severity Unknown (nb/new) : %s/%s", cppcheckReport.getNumberNoCategorySeverity(), nbNewNoCategorySeverity));
+        int nbNewNoCategorySeverity = getNbNew(current.getNumberNoCategorySeverity(), previous.getNumberNoCategorySeverity());
+        builder.append(String.format("Severity Unknown (nb/new) : %s/%s", current.getNumberNoCategorySeverity(), nbNewNoCategorySeverity));
         builder.append("</li>");
 
         return builder.toString();
@@ -97,6 +98,8 @@ public class CppcheckSummary {
 
     private static int getNbNew(int numberError, int numberPreviousError) {
         int diff = numberError - numberPreviousError;
+
+        // TODO: This is probably incorrect
         return (diff > 0) ? diff : 0;
     }
 

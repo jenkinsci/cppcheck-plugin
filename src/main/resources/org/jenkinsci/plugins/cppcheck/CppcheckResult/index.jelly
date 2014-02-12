@@ -12,7 +12,7 @@
                 </tr>
                 <tbody>
                     <tr>
-                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.statistics.numberTotal}</td>
                         <td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
                     </tr>
                 </tbody>
@@ -31,18 +31,18 @@
                 </tr>
                 <tbody>
                     <tr>
-                        <td class="pane">${it.report.numberTotal}</td>
-                        <td class="pane">${it.report.numberErrorSeverity}</td>
-                        <td class="pane">${it.report.numberWarningSeverity}</td>
-                        <td class="pane">${it.report.numberStyleSeverity}</td>
-                        <td class="pane">${it.report.numberPerformanceSeverity}</td>
-                        <td class="pane">${it.report.numberInformationSeverity}</td>
-                        <td class="pane">${it.report.numberNoCategorySeverity}</td>
+                        <td class="pane">${it.statistics.numberTotal}</td>
+                        <td class="pane">${it.statistics.numberErrorSeverity}</td>
+                        <td class="pane">${it.statistics.numberWarningSeverity}</td>
+                        <td class="pane">${it.statistics.numberStyleSeverity}</td>
+                        <td class="pane">${it.statistics.numberPerformanceSeverity}</td>
+                        <td class="pane">${it.statistics.numberInformationSeverity}</td>
+                        <td class="pane">${it.statistics.numberNoCategorySeverity}</td>
                     </tr>
                 </tbody>
             </table>
 
-            <j:if test="${it.report.versions != null}">
+            <j:if test="${it.statistics.versions != null}">
                 <h2>Cppcheck Information</h2>
                 <table class="pane sortable">
                     <tr>
@@ -50,13 +50,18 @@
                     </tr>
                     <tbody>
                         <tr>
-                            <td class="pane">${it.report.versions}</td>
+                            <td class="pane">${it.statistics.versions}</td>
                         </tr>
                     </tbody>
                 </table>
             </j:if>
 
-            <st:include page="/tabview/main.jelly"/>
+            <j:if test="${it.statistics.numberTotal != 0}">
+                <j:if test="${it.cppcheckSourceContainer != null}">
+                    <h2>Details</h2>
+                    <st:include page="summary.jelly"/>
+                </j:if>
+            </j:if>
         </l:main-panel>
     </l:layout>
 </j:jelly>

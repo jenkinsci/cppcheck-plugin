@@ -1,46 +1,85 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckSource;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+
+import hudson.XmlFile;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.Item;
+
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 /**
  * @author Gregory Boissinot
  */
 public class CppcheckResult implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
-     * The Cppcheck report
+     * The Cppcheck report. Backward compatibility with version 1.14 and less.
      */
-    private CppcheckReport report;
+    private transient CppcheckReport report;
 
     /**
-     * The Cppcheck container with all source files
+     * The Cppcheck container with all source files. Backward compatibility
+     * with version 1.14 and less.
      */
-    private CppcheckSourceContainer cppcheckSourceContainer;
+    private transient CppcheckSourceContainer cppcheckSourceContainer;
 
     /**
-     * The build owner
+     * The build owner.
      */
     private AbstractBuild<?, ?> owner;
 
+    /**
+     * The Cppcheck report statistics.
+     * 
+     * @since 1.15
+     */
+    private CppcheckStatistics statistics;
+
+    /**
+     * Constructor.
+     * 
+     * @param statistics
+     *            the Cppcheck report statistics
+     * @param owner
+     *            the build owner
+     * 
+     * @since 1.15
+     */
+    public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner) {
+        this.statistics = statistics;
+        this.owner = owner;
+    }
+    
+    /**
+     * Constructor. Only for backward compatibility with previous versions.
+     * 
+     * @param report
+     * @param cppcheckSourceContainer
+     * @param owner
+     * 
+     * @deprecated Use a different constructor instead.
+     */
     public CppcheckResult(CppcheckReport report, CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?, ?> owner) {
         this.report = report;
         this.cppcheckSourceContainer = cppcheckSourceContainer;
         this.owner = owner;
+        this.statistics = report.getStatistics();
     }
 
     /**
@@ -48,23 +87,31 @@ public class CppcheckResult implements Serializable {
      *
      * @return the remote API
      */
-    @SuppressWarnings("unused")
     public Api getApi() {
-        return new Api(report);
+        return new Api(getStatistics());
     }
 
     @Exported
-    public CppcheckReport getReport() {
-        return report;
+    public CppcheckStatistics getReport() {
+        return getStatistics();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Get the statistics.
+     * 
+     * @return the statistics, always non-null value should be returned
+     */
+    @Exported
+    public CppcheckStatistics getStatistics() {
+        return statistics;
+    }
+
     public AbstractBuild<?, ?> getOwner() {
         return owner;
     }
 
-    @SuppressWarnings("unused")
     public CppcheckSourceContainer getCppcheckSourceContainer() {
+        lazyLoadSourceContainer();
         return cppcheckSourceContainer;
     }
 
@@ -77,7 +124,6 @@ public class CppcheckResult implements Serializable {
      * @return the dynamic result of the analysis (detail page).
      * @throws java.io.IOException if an error occurs
      */
-    @SuppressWarnings("unused")
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
 
         if (link.startsWith("source.")) {
@@ -87,7 +133,7 @@ public class CppcheckResult implements Serializable {
                 return null;
             }
 
-            Map<Integer, CppcheckWorkspaceFile> agregateMap = cppcheckSourceContainer.getInternalMap();
+            Map<Integer, CppcheckWorkspaceFile> agregateMap = getCppcheckSourceContainer().getInternalMap();
             if (agregateMap != null) {
                 CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link, "source.")));
                 if (vCppcheckWorkspaceFile == null) {
@@ -105,7 +151,6 @@ public class CppcheckResult implements Serializable {
      *
      * @return the HTML fragment of the summary Cppcheck report
      */
-    @SuppressWarnings("unused")
     public String getSummary() {
         return CppcheckSummary.createReportSummary(this);
     }
@@ -115,24 +160,8 @@ public class CppcheckResult implements Serializable {
      *
      * @return the HTML fragment of the summary Cppcheck report
      */
-    @SuppressWarnings("unused")
     public String getDetails() {
         return CppcheckSummary.createReportSummaryDetails(this);
-    }
-
-    /**
-     * Gets the previous Cppcheck report for the build result.
-     *
-     * @return the previous Cppcheck report
-     */
-    @SuppressWarnings("unused")
-    private CppcheckReport getPreviousReport() {
-        CppcheckResult previous = this.getPreviousResult();
-        if (previous == null) {
-            return null;
-        } else {
-            return previous.getReport();
-        }
     }
 
     /**
@@ -168,13 +197,15 @@ public class CppcheckResult implements Serializable {
      *
      * @return the number of new errors
      */
-    @SuppressWarnings("unused")
     public int getNumberNewErrorsFromPreviousBuild() {
         CppcheckResult previousCppcheckResult = getPreviousResult();
         if (previousCppcheckResult == null) {
             return 0;
         } else {
-            int diff = this.report.getAllErrors().size() - previousCppcheckResult.getReport().getAllErrors().size();
+            int diff = getStatistics().getNumberTotal()
+                    - previousCppcheckResult.getStatistics().getNumberTotal();
+
+            // TODO: This is probably incorrect
             return (diff > 0) ? diff : 0;
         }
     }
@@ -197,47 +228,51 @@ public class CppcheckResult implements Serializable {
         int nbPreviousError = 0;
         CppcheckResult previousResult = this.getPreviousResult();
 
+        CppcheckStatistics st = getStatistics();
+        CppcheckStatistics prev = (previousResult != null)
+                ? previousResult.getStatistics() : null;
 
         //Error
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()) {
-            nbErrors = nbErrors + this.getReport().getErrorSeverityList().size();
+            nbErrors += st.getNumberErrorSeverity();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getErrorSeverityList().size();
+                nbPreviousError += prev.getNumberErrorSeverity();
             }
         }
 
         //Warnings
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
-            nbErrors = nbErrors + this.getReport().getWarningSeverityList().size();
+            nbErrors += st.getNumberWarningSeverity();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getWarningSeverityList().size();
+                nbPreviousError += prev.getNumberWarningSeverity();
             }
         }
 
         //Style
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
-            nbErrors = nbErrors + this.getReport().getStyleSeverityList().size();
+            nbErrors += st.getNumberStyleSeverity();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getStyleSeverityList().size();
+                nbPreviousError += prev.getNumberStyleSeverity();
             }
         }
 
         //Performance
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()) {
-            nbErrors = nbErrors + this.getReport().getPerformanceSeverityList().size();
+            nbErrors += st.getNumberPerformanceSeverity();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getPerformanceSeverityList().size();
+                nbPreviousError += prev.getNumberPerformanceSeverity();
             }
         }
 
         //Information
         if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
-            nbErrors = nbErrors + this.getReport().getInformationSeverityList().size();
+            nbErrors += st.getNumberInformationSeverity();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getInformationSeverityList().size();
+                nbPreviousError += prev.getNumberInformationSeverity();
             }
         }
 
+        // TODO: st.getNumberNoCategorySeverity()
 
         if (checkNewError) {
             if (previousResult != null) {
@@ -250,4 +285,48 @@ public class CppcheckResult implements Serializable {
         }
     }
 
+    /**
+     * Convert legacy data in format of cppcheck plugin version 1.14
+     * to the new one that uses statistics.
+     * 
+     * @return this with optionally updated data
+     */
+    private Object readResolve() {
+        if (report != null && statistics == null) {
+            statistics = report.getStatistics();
+        }
+
+        // Just for sure
+        if (statistics == null) {
+            statistics = new CppcheckStatistics(0, 0, 0, 0, 0, 0,
+                    Collections.<String>emptySet());
+        }
+
+        return this;
+    }
+
+    /**
+     * Lazy load source container data if they are not already loaded.
+     */
+    private void lazyLoadSourceContainer() {
+        if(cppcheckSourceContainer != null) {
+            return;
+        }
+
+        XmlFile xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
+                CppcheckPublisher.XML_FILE_DETAILS));
+        try {
+            cppcheckSourceContainer = (CppcheckSourceContainer) xmlSourceContainer.read();
+        } catch (IOException e) {
+            try {
+                cppcheckSourceContainer = new CppcheckSourceContainer(null,
+                        owner.getWorkspace(), owner.getModuleRoot(),
+                        new ArrayList<CppcheckFile>());
+            } catch (IOException e1) {
+                // Ignore, there is nothing to do
+            } catch (InterruptedException e1) {
+                // Ignore, there is nothing to do
+            }
+        }
+    }
 }

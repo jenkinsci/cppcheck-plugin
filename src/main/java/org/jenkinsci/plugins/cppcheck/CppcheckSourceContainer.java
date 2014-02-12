@@ -55,7 +55,10 @@ public class CppcheckSourceContainer {
         CppcheckWorkspaceFile cppcheckWorkspaceFile = new CppcheckWorkspaceFile();
         FilePath sourceFilePath = getSourceFile(workspace, scmRootDir, cppcheckFileName);
         if (!sourceFilePath.exists()) {
-            CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+            if(listener != null) {
+                CppcheckLogger.log(listener, "[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+            }
+
             cppcheckWorkspaceFile.setFileName(null);
             cppcheckWorkspaceFile.setSourceIgnored(true);
         } else if (sourceFilePath.isDirectory()) {

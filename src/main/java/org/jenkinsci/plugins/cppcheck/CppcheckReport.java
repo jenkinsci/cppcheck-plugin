@@ -97,49 +97,40 @@ public class CppcheckReport implements Serializable {
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberTotal() {
         return (allErrors == null) ? 0 : allErrors.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberErrorSeverity() {
         return (errorSeverityList == null) ? 0 : errorSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberWarningSeverity() {
         return (warningSeverityList == null) ? 0 : warningSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberStyleSeverity() {
         return (styleSeverityList == null) ? 0 : styleSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberPerformanceSeverity() {
         return (performanceSeverityList == null) ? 0 : performanceSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberInformationSeverity() {
         return (informationSeverityList == null) ? 0 : informationSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberNoCategorySeverity() {
         return (noCategorySeverityList == null) ? 0 : noCategorySeverityList.size();
     }
 
-
-    @SuppressWarnings("unused")
     private Object readResolve() {
         this.allErrors = new ArrayList<CppcheckFile>();
         this.allErrors.addAll(errorSeverityList);
@@ -149,5 +140,17 @@ public class CppcheckReport implements Serializable {
         this.allErrors.addAll(informationSeverityList);
         this.allErrors.addAll(noCategorySeverityList);
         return this;
+    }
+
+    /**
+     * Get statistics for this report.
+     * 
+     * @return the statistics
+     */
+    public CppcheckStatistics getStatistics() {
+        return new CppcheckStatistics(getNumberErrorSeverity(),
+                getNumberWarningSeverity(), getNumberStyleSeverity(),
+                getNumberPerformanceSeverity(), getNumberInformationSeverity(),
+                getNumberNoCategorySeverity(), versions);
     }
 }

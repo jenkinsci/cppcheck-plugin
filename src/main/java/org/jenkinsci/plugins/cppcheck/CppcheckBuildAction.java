@@ -74,33 +74,34 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
         for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
             ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
-            CppcheckReport report = a.getResult().getReport();
+            CppcheckStatistics statistics = a.getResult().getStatistics();
             CppcheckConfigGraph configGraph = cppcheckConfig.getConfigGraph();
 
             // error
             if (configGraph.isDisplayErrorSeverity())
-                dsb.add(report.getErrorSeverityList().size(), "Severity 'error'", label);
+                dsb.add(statistics.getNumberErrorSeverity(), "Severity 'error'", label);
 
             //warning
             if (configGraph.isDisplayWarningSeverity())
-                dsb.add(report.getWarningSeverityList().size(), "Severity 'warning'", label);
+                dsb.add(statistics.getNumberWarningSeverity(), "Severity 'warning'", label);
 
             //style
             if (configGraph.isDisplayStyleSeverity())
-                dsb.add(report.getStyleSeverityList().size(), "Severity 'style'", label);
+                dsb.add(statistics.getNumberStyleSeverity(), "Severity 'style'", label);
 
             //performance
             if (configGraph.isDisplayPerformanceSeverity())
-                dsb.add(report.getPerformanceSeverityList().size(), "Severity 'performance'", label);
+                dsb.add(statistics.getNumberPerformanceSeverity(), "Severity 'performance'", label);
 
             //information
             if (configGraph.isDisplayInformationSeverity())
-                dsb.add(report.getPerformanceSeverityList().size(), "Severity 'information'", label);
+                dsb.add(statistics.getNumberInformationSeverity(), "Severity 'information'", label);
+            
+            // TODO: getNumberNoCategorySeverity()
 
             // all errors
             if (configGraph.isDisplayAllErrors())
-                dsb.add(report.getAllErrors().size(), "All errors", label);
-
+                dsb.add(statistics.getNumberTotal(), "All errors", label);
         }
         return dsb;
     }

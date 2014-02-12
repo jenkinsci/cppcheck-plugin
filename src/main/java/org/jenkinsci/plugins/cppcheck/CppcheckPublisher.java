@@ -1,9 +1,11 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.XmlFile;
 import hudson.matrix.MatrixProject;
 import hudson.maven.MavenModuleSet;
 import hudson.model.*;
@@ -12,6 +14,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
@@ -28,11 +31,16 @@ import java.util.Collection;
  * @author Gregory Boissinot
  */
 public class CppcheckPublisher extends Recorder {
+    /**
+     * XML file with source container data. Lazy loading instead of data in build.xml.
+     * 
+     * @since 1.15
+     */
+    public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
 
     private CppcheckConfig cppcheckConfig;
 
     @DataBoundConstructor
-    @SuppressWarnings("unused")
     public CppcheckPublisher(String pattern,
                              boolean ignoreBlankFiles, String threshold,
                              boolean allowNoReport,
@@ -80,7 +88,6 @@ public class CppcheckPublisher extends Recorder {
         this.cppcheckConfig = cppcheckConfig;
     }
 
-    @SuppressWarnings("unused")
     public CppcheckConfig getCppcheckConfig() {
         return cppcheckConfig;
     }
@@ -126,7 +133,7 @@ public class CppcheckPublisher extends Recorder {
 
             CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), build.getModuleRoot(), cppcheckReport.getAllErrors());
 
-            CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
                     listener, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false),
@@ -140,6 +147,9 @@ public class CppcheckPublisher extends Recorder {
             CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
             build.addAction(buildAction);
 
+            XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),
+                    XML_FILE_DETAILS));
+            xmlSourceContainer.write(cppcheckSourceContainer);
 
             if (build.getWorkspace().isRemote()) {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
@@ -222,11 +232,8 @@ public class CppcheckPublisher extends Recorder {
             return "/plugin/cppcheck/";
         }
 
-        @SuppressWarnings("unused")
         public CppcheckConfig getConfig() {
             return new CppcheckConfig();
         }
-
     }
-
 }
