@@ -57,10 +57,7 @@
             </j:if>
 
             <j:if test="${it.statistics.numberTotal != 0}">
-                <j:if test="${it.cppcheckSourceContainer != null}">
-                    <h2>Details</h2>
-                    <st:include page="summary.jelly"/>
-                </j:if>
+                <st:include page="summary.jelly"/>
             </j:if>
         </l:main-panel>
     </l:layout>

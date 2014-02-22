@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckSource;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.XmlFile;
@@ -18,8 +17,8 @@ import org.kohsuke.stapler.export.Exported;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -111,8 +110,7 @@ public class CppcheckResult implements Serializable {
     }
 
     public CppcheckSourceContainer getCppcheckSourceContainer() {
-        lazyLoadSourceContainer();
-        return cppcheckSourceContainer;
+        return lazyLoadSourceContainer();
     }
 
     /**
@@ -307,26 +305,22 @@ public class CppcheckResult implements Serializable {
 
     /**
      * Lazy load source container data if they are not already loaded.
+     * 
+     * @return the loaded and parsed data or empty object on error
      */
-    private void lazyLoadSourceContainer() {
+    private CppcheckSourceContainer lazyLoadSourceContainer() {
+        // Backward compatibility with version 1.14 and less
         if(cppcheckSourceContainer != null) {
-            return;
+            return cppcheckSourceContainer;
         }
 
         XmlFile xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
                 CppcheckPublisher.XML_FILE_DETAILS));
         try {
-            cppcheckSourceContainer = (CppcheckSourceContainer) xmlSourceContainer.read();
+            return (CppcheckSourceContainer) xmlSourceContainer.read();
         } catch (IOException e) {
-            try {
-                cppcheckSourceContainer = new CppcheckSourceContainer(null,
-                        owner.getWorkspace(), owner.getModuleRoot(),
-                        new ArrayList<CppcheckFile>());
-            } catch (IOException e1) {
-                // Ignore, there is nothing to do
-            } catch (InterruptedException e1) {
-                // Ignore, there is nothing to do
-            }
+            return new CppcheckSourceContainer(new HashMap<Integer,
+                    CppcheckWorkspaceFile>());
         }
     }
 }
