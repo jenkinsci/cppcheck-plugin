@@ -143,29 +143,10 @@ public class CppcheckResult implements Serializable {
         return null;
     }
 
-
-    /**
-     * Renders the summary Cppcheck report for the build result.
-     *
-     * @return the HTML fragment of the summary Cppcheck report
-     */
-    public String getSummary() {
-        return CppcheckSummary.createReportSummary(this);
-    }
-
-    /**
-     * Renders the detailed summary Cppcheck report for the build result.
-     *
-     * @return the HTML fragment of the summary Cppcheck report
-     */
-    public String getDetails() {
-        return CppcheckSummary.createReportSummaryDetails(this);
-    }
-
     /**
      * Gets the previous Cppcheck result for the build result.
      *
-     * @return the previous Cppcheck result
+     * @return the previous Cppcheck result or null
      */
     public CppcheckResult getPreviousResult() {
         CppcheckBuildAction previousAction = getPreviousAction();
@@ -188,6 +169,31 @@ public class CppcheckResult implements Serializable {
             return previousBuild.getAction(CppcheckBuildAction.class);
         }
         return null;
+    }
+
+    /**
+     * Get differences between current and previous statistics.
+     * 
+     * @return the differences
+     */
+    public CppcheckStatistics getDiff(){
+        CppcheckStatistics current = getStatistics();
+        CppcheckResult previousResult = getPreviousResult();
+
+        if(previousResult == null) {
+            return new CppcheckStatistics(0, 0, 0, 0, 0, 0, current.getVersions());
+        }
+
+        CppcheckStatistics previous = previousResult.getStatistics();
+
+        return new CppcheckStatistics(
+                current.getNumberErrorSeverity() - previous.getNumberErrorSeverity(),
+                current.getNumberWarningSeverity() - previous.getNumberWarningSeverity(),
+                current.getNumberStyleSeverity() - previous.getNumberStyleSeverity(),
+                current.getNumberPerformanceSeverity() - previous.getNumberPerformanceSeverity(),
+                current.getNumberInformationSeverity() - previous.getNumberInformationSeverity(),
+                current.getNumberNoCategorySeverity() - previous.getNumberNoCategorySeverity(),
+                current.getVersions());
     }
 
     /**

@@ -113,4 +113,14 @@ public class CppcheckStatistics implements Serializable {
 		return (versions != null) ? Collections.unmodifiableSet(versions)
 				: null;
 	}
+	
+	public String formatDiff(int value)
+	{
+		if(value == 0)
+		{
+			return "";
+		}
+
+		return String.format("%+d", value);
+	}
 }
