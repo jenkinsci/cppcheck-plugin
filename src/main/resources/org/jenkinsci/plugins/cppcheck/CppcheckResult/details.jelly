@@ -5,18 +5,24 @@
 
     <j:if test="${cachedContainer != null}">
 
-        <h2>Details</h2>
+        <h2>${%Details}</h2>
 
-        <table class="pane sortable" id="files">
-            <tr>
-                <td class="pane-header">Filename</td>
-                <td class="pane-header" style="width:2em">LineNumber</td>
-                <td class="pane-header" style="width:2em">CppCheckId</td>
-                <td class="pane-header" style="width:2em">Severity</td>
-                <td class="pane-header" style="width:60%">Message</td>
-            </tr>
+        <style type="text/css">
+        #cppcheckDetails { width: auto; }
+        #cppcheckDetails td { white-space: normal; }
+        </style>
+
+        <table class="pane sortable" id="cppcheckDetails">
+            <thead>
+                <tr>
+                    <td class="pane-header">${%File}</td>
+                    <td class="pane-header">${%Line}</td>
+                    <td class="pane-header">${%Severity}</td>
+                    <td class="pane-header">${%Type}</td>
+                    <td class="pane-header">${%Message}</td>
+                </tr>
+            </thead>
             <tbody>
-
                 <j:forEach var="elt" items="${cachedContainer.internalMap.values()}">
                     <j:set var="cppcheckfile" value="${elt.cppcheckFile}"/>
                     <tr>
@@ -33,19 +39,16 @@
                                 ${cppcheckfile.lineNumber}
                             </j:if>
                             <j:if test="${not elt.isSourceIgnored()}">
-                                <a href="source.${cppcheckfile.key}#${cppcheckfile.lineNumber}">${cppcheckfile.lineNumber}
-                                </a>
+                                <a href="source.${cppcheckfile.key}#${cppcheckfile.lineNumber}">${cppcheckfile.lineNumber}</a>
                             </j:if>
                         </td>
-                        <g:format value="${cppcheckfile.cppCheckId}" severity="${cppcheckfile.severity}"/>
-                        <g:format value="${cppcheckfile.severity}" severity="${cppcheckfile.severity}"/>
-                        <g:format value="${cppcheckfile.message}" severity="${cppcheckfile.severity}"/>
+                        <td class="pane">${cppcheckfile.severity}</td>
+                        <td class="pane">${cppcheckfile.cppCheckId}</td>
+                        <td class="pane">${cppcheckfile.message}</td>
                     </tr>
                 </j:forEach>
-
             </tbody>
         </table>
 
     </j:if>
-
 </j:jelly>

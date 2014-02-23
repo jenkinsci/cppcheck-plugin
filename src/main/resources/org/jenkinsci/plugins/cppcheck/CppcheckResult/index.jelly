@@ -2,63 +2,23 @@
     <l:layout norefresh="true">
         <st:include it="${it.owner}" page="sidepanel.jelly"/>
         <l:main-panel>
-            <h1>Cppcheck Result</h1>
 
-            <h2>Errors Trend</h2>
-            <table class="pane sortable">
-                <tr>
-                    <td class="pane-header">All errors</td>
-                    <td class="pane-header" style="width:2em">New errors</td>
-                </tr>
-                <tbody>
-                    <tr>
-                        <td class="pane">${it.statistics.numberTotal}</td>
-                        <td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h1>${%Cppcheck Results}</h1>
 
-            <h2>Summary</h2>
-            <table class="pane sortable">
-                <tr>
-                    <td class="pane-header">Total</td>
-                    <td class="pane-header" style="width:2em">Severity 'error'</td>
-                    <td class="pane-header" style="width:2em">Severity 'warning'</td>
-                    <td class="pane-header" style="width:2em">Severity 'style'</td>
-                    <td class="pane-header" style="width:2em">Severity 'performance'</td>
-                    <td class="pane-header" style="width:2em">Severity 'information'</td>
-                    <td class="pane-header" style="width:2em">No category</td>
-                </tr>
-                <tbody>
-                    <tr>
-                        <td class="pane">${it.statistics.numberTotal}</td>
-                        <td class="pane">${it.statistics.numberErrorSeverity}</td>
-                        <td class="pane">${it.statistics.numberWarningSeverity}</td>
-                        <td class="pane">${it.statistics.numberStyleSeverity}</td>
-                        <td class="pane">${it.statistics.numberPerformanceSeverity}</td>
-                        <td class="pane">${it.statistics.numberInformationSeverity}</td>
-                        <td class="pane">${it.statistics.numberNoCategorySeverity}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h2>${%Summary}</h2>
+            <j:set var="stat" value="${it.statistics}"/>
+            <j:set var="diff" value="${it.diff}"/>
+            <st:include page="../CppcheckBuildAction/statistics.jelly"/>
 
-            <j:if test="${it.statistics.versions != null}">
-                <h2>Cppcheck Information</h2>
-                <table class="pane sortable">
-                    <tr>
-                        <td class="pane-header">Cppcheck Engine versions</td>
-                    </tr>
-                    <tbody>
-                        <tr>
-                            <td class="pane">${it.statistics.versions}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <j:if test="${stat.versions != null}">
+                <h2>${%Cppcheck Engine}</h2>
+                <p>${stat.versions}</p>
             </j:if>
 
-            <j:if test="${it.statistics.numberTotal != 0}">
-                <st:include page="summary.jelly"/>
+            <j:if test="${stat.numberTotal != 0}">
+                <st:include page="details.jelly"/>
             </j:if>
+
         </l:main-panel>
     </l:layout>
 </j:jelly>

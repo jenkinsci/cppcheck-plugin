@@ -197,24 +197,6 @@ public class CppcheckResult implements Serializable {
     }
 
     /**
-     * Returns the number of new errors from the previous build result.
-     *
-     * @return the number of new errors
-     */
-    public int getNumberNewErrorsFromPreviousBuild() {
-        CppcheckResult previousCppcheckResult = getPreviousResult();
-        if (previousCppcheckResult == null) {
-            return 0;
-        } else {
-            int diff = getStatistics().getNumberTotal()
-                    - previousCppcheckResult.getStatistics().getNumberTotal();
-
-            // TODO: This is probably incorrect
-            return (diff > 0) ? diff : 0;
-        }
-    }
-
-    /**
      * Gets the number of errors according the selected severities form the configuration user object.
      *
      * @param cppecheckConfig the Cppcheck configuration object
