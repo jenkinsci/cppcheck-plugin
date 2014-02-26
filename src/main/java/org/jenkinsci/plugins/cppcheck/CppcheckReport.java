@@ -27,6 +27,7 @@ public class CppcheckReport implements Serializable {
     private List<CppcheckFile> performanceSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> informationSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> noCategorySeverityList = new ArrayList<CppcheckFile>();
+    private List<CppcheckFile> portabilitySeverityList = new ArrayList<CppcheckFile>();
 
     public String getVersion() {
         return version;
@@ -96,6 +97,14 @@ public class CppcheckReport implements Serializable {
         this.noCategorySeverityList = noCategorySeverityList;
     }
 
+    public List<CppcheckFile> getPortabilitySeverityList() {
+        return portabilitySeverityList;
+    }
+
+    public void setPortabilitySeverityList(List<CppcheckFile> portabilitySeverityList) {
+        this.portabilitySeverityList = portabilitySeverityList;
+    }
+
     @Exported
     public int getNumberTotal() {
         return (allErrors == null) ? 0 : allErrors.size();
@@ -131,6 +140,11 @@ public class CppcheckReport implements Serializable {
         return (noCategorySeverityList == null) ? 0 : noCategorySeverityList.size();
     }
 
+    @Exported
+    public int getNumberPortabilitySeverity() {
+        return (portabilitySeverityList == null) ? 0 : portabilitySeverityList.size();
+    }
+
     private Object readResolve() {
         this.allErrors = new ArrayList<CppcheckFile>();
         this.allErrors.addAll(errorSeverityList);
@@ -139,6 +153,15 @@ public class CppcheckReport implements Serializable {
         this.allErrors.addAll(performanceSeverityList);
         this.allErrors.addAll(informationSeverityList);
         this.allErrors.addAll(noCategorySeverityList);
+
+        // Backward compatibility with version 1.14 and less
+        if(portabilitySeverityList == null)
+        {
+            portabilitySeverityList = new ArrayList<CppcheckFile>();
+        }
+
+        this.allErrors.addAll(portabilitySeverityList);
+
         return this;
     }
 
@@ -151,6 +174,7 @@ public class CppcheckReport implements Serializable {
         return new CppcheckStatistics(getNumberErrorSeverity(),
                 getNumberWarningSeverity(), getNumberStyleSeverity(),
                 getNumberPerformanceSeverity(), getNumberInformationSeverity(),
-                getNumberNoCategorySeverity(), versions);
+                getNumberNoCategorySeverity(), getNumberPortabilitySeverity(),
+                versions);
     }
 }

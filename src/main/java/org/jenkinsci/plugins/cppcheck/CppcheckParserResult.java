@@ -82,6 +82,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
         cppcheckReportResult.getPerformanceSeverityList().addAll(cppcheckReport.getPerformanceSeverityList());
         cppcheckReportResult.getInformationSeverityList().addAll(cppcheckReport.getInformationSeverityList());
         cppcheckReportResult.getNoCategorySeverityList().addAll(cppcheckReport.getNoCategorySeverityList());
+        cppcheckReportResult.getPortabilitySeverityList().addAll(cppcheckReport.getPortabilitySeverityList());
         cppcheckReportResult.getAllErrors().addAll(cppcheckReport.getAllErrors());
         cppcheckReportResult.getVersions().add(cppcheckReport.getVersion());
     }
@@ -105,9 +106,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
         return ds.getIncludedFiles();
     }
 
-    @SuppressWarnings("unused")
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
     }
-
 }

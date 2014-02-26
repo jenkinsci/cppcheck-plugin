@@ -20,13 +20,13 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
 
     public AbstractBuild<?, ?> getLastFinishedBuild() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();
-        while (lastBuild != null && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
+        while (lastBuild != null && (lastBuild.isBuilding()
+                || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
             lastBuild = lastBuild.getPreviousBuild();
         }
         return lastBuild;
     }
 
-    @SuppressWarnings("unused")
     public final boolean isDisplayGraph() {
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
@@ -67,7 +67,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
 
 
     public String getDisplayName() {
-        return "Cppcheck Results";
+        return Messages.cppcheck_CppcheckResults();
     }
 
     public String getUrlName() {

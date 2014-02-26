@@ -38,7 +38,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
     }
 
     public String getDisplayName() {
-        return "Cppcheck Result";
+        return Messages.cppcheck_CppcheckResults();
     }
 
     public String getUrlName() {
@@ -63,14 +63,16 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
     public HealthReport getBuildHealth() {
         try {
-            return new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false));
+            return new CppcheckBuildHealthEvaluator().evaluatBuildHealth(cppcheckConfig,
+                    result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false));
         } catch (IOException ioe) {
             return new HealthReport();
         }
     }
 
     private DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> getDataSetBuilder() {
-        DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
+        DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb
+                = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
         for (CppcheckBuildAction a = this; a != null; a = a.getPreviousResult()) {
             ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
@@ -79,29 +81,43 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
             // error
             if (configGraph.isDisplayErrorSeverity())
-                dsb.add(statistics.getNumberErrorSeverity(), "Severity 'error'", label);
+                dsb.add(statistics.getNumberErrorSeverity(),
+                        Messages.cppcheck_Error(), label);
 
             //warning
             if (configGraph.isDisplayWarningSeverity())
-                dsb.add(statistics.getNumberWarningSeverity(), "Severity 'warning'", label);
+                dsb.add(statistics.getNumberWarningSeverity(),
+                        Messages.cppcheck_Warning(), label);
 
             //style
             if (configGraph.isDisplayStyleSeverity())
-                dsb.add(statistics.getNumberStyleSeverity(), "Severity 'style'", label);
+                dsb.add(statistics.getNumberStyleSeverity(),
+                        Messages.cppcheck_Style(), label);
 
             //performance
             if (configGraph.isDisplayPerformanceSeverity())
-                dsb.add(statistics.getNumberPerformanceSeverity(), "Severity 'performance'", label);
+                dsb.add(statistics.getNumberPerformanceSeverity(),
+                        Messages.cppcheck_Performance(), label);
 
             //information
             if (configGraph.isDisplayInformationSeverity())
-                dsb.add(statistics.getNumberInformationSeverity(), "Severity 'information'", label);
-            
-            // TODO: getNumberNoCategorySeverity()
+                dsb.add(statistics.getNumberInformationSeverity(),
+                        Messages.cppcheck_Information(), label);
+
+            //no category
+            if (configGraph.isDisplayNoCategorySeverity())
+                dsb.add(statistics.getNumberNoCategorySeverity(),
+                        Messages.cppcheck_NoCategory(), label);
+
+            //portability
+            if (configGraph.isDisplayPortabilitySeverity())
+                dsb.add(statistics.getNumberPortabilitySeverity(),
+                        Messages.cppcheck_Portability(), label);
 
             // all errors
             if (configGraph.isDisplayAllErrors())
-                dsb.add(statistics.getNumberTotal(), "All errors", label);
+                dsb.add(statistics.getNumberTotal(),
+                        Messages.cppcheck_AllErrors(), label);
         }
         return dsb;
     }
@@ -118,7 +134,9 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         }
 
         Graph g = new CppcheckGraph(getOwner(), getDataSetBuilder().build(),
-                "Number of errors", cppcheckConfig.getConfigGraph().getXSize(), cppcheckConfig.getConfigGraph().getYSize());
+                Messages.cppcheck_NumberOfErrors(),
+                cppcheckConfig.getConfigGraph().getXSize(),
+                cppcheckConfig.getConfigGraph().getYSize());
         g.doPng(req, rsp);
     }
 
@@ -131,12 +149,10 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
      *
      * @return the created object
      */
-    @SuppressWarnings({"deprecation", "unused"})
     private Object readResolve() {
         if (build != null) {
             this.owner = build;
         }
         return this;
     }
-
 }

@@ -29,10 +29,19 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
 
     private boolean severityInformation = true;
 
+    private boolean severityNoCategory = true;
+
+    private boolean severityPortability = true;
+
     public CppcheckConfigSeverityEvaluation() {
     }
 
-    public CppcheckConfigSeverityEvaluation(String threshold, String newThreshold, String failureThreshold, String newFailureThreshold, String healthy, String unHealthy, boolean severityError, boolean severityWarning, boolean severityStyle, boolean severityPerformance, boolean severityInformation) {
+    public CppcheckConfigSeverityEvaluation(String threshold, String newThreshold,
+            String failureThreshold, String newFailureThreshold, String healthy,
+            String unHealthy, boolean severityError, boolean severityWarning,
+            boolean severityStyle, boolean severityPerformance,
+            boolean severityInformation, boolean severityNoCategory,
+            boolean severityPortability) {
         this.threshold = threshold;
         this.newThreshold = newThreshold;
         this.failureThreshold = failureThreshold;
@@ -44,6 +53,8 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
         this.severityStyle = severityStyle;
         this.severityPerformance = severityPerformance;
         this.severityInformation = severityInformation;
+        this.severityNoCategory = severityNoCategory;
+        this.severityPortability = severityPortability;
     }
 
     public String getThreshold() {
@@ -88,5 +99,13 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
 
     public boolean isSeverityInformation() {
         return severityInformation;
+    }
+
+    public boolean isSeverityNoCategory() {
+        return severityNoCategory;
+    }
+
+    public boolean isSeverityPortability() {
+        return severityPortability;
     }
 }

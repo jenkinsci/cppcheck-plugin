@@ -44,13 +44,19 @@
             </tr>
 
             <tr>
+                <td class="pane" data="3">${%Portability}</td>
+                <td class="pane number" data="${stat.numberPortabilitySeverity}">${stat.numberPortabilitySeverity}</td>
+                <td class="pane number" data="${diff.numberPortabilitySeverity}">${diff.formatDiff(diff.numberPortabilitySeverity)}</td>
+            </tr>
+
+            <tr>
                 <td class="pane" data="2">${%Information}</td>
                 <td class="pane number" data="${stat.numberInformationSeverity}">${stat.numberInformationSeverity}</td>
                 <td class="pane number" data="${diff.numberInformationSeverity}">${diff.formatDiff(diff.numberInformationSeverity)}</td>
             </tr>
 
             <tr>
-                <td class="pane" data="1">${%No Category}</td>
+                <td class="pane" data="1">${%No category}</td>
                 <td class="pane number" data="${stat.numberNoCategorySeverity}">${stat.numberNoCategorySeverity}</td>
                 <td class="pane number" data="${diff.numberNoCategorySeverity}">${diff.formatDiff(diff.numberNoCategorySeverity)}</td>
             </tr>

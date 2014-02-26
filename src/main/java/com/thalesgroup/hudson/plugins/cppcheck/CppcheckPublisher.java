@@ -62,7 +62,7 @@ public class CppcheckPublisher extends Recorder {
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(),
-                true);
+                true, true, true);
         config.setConfigSeverityEvaluation(configSeverityEvaluation);
 
         org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph configGraph = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph(
@@ -73,7 +73,7 @@ public class CppcheckPublisher extends Recorder {
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleError(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityStyle(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleStyle(),
-                true);
+                true, true, true);
         config.setConfigGraph(configGraph);
 
         org.jenkinsci.plugins.cppcheck.CppcheckPublisher cppcheckPublisher = new org.jenkinsci.plugins.cppcheck.CppcheckPublisher(config);

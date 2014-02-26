@@ -70,6 +70,7 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> performanceSeverityList = new ArrayList<CppcheckFile>();
         List<CppcheckFile> informationSeverityList = new ArrayList<CppcheckFile>();
         List<CppcheckFile> noCategorySeverityList = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> portabilitySeverityList = new ArrayList<CppcheckFile>();
 
         CppcheckFile cppcheckFile;
         for (int i = 0; i < results.getError().size(); i++) {
@@ -109,6 +110,7 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setPerformanceSeverityList(performanceSeverityList);
         cppCheckReport.setStyleSeverityList(styleSeverityList);
         cppCheckReport.setWarningSeverityList(warningSeverityList);
+        cppCheckReport.setPortabilitySeverityList(portabilitySeverityList);
 
 
         return cppCheckReport;
@@ -124,6 +126,7 @@ public class CppcheckParser implements Serializable {
         List<CppcheckFile> performanceSeverityList = new ArrayList<CppcheckFile>();
         List<CppcheckFile> informationSeverityList = new ArrayList<CppcheckFile>();
         List<CppcheckFile> noCategorySeverityList = new ArrayList<CppcheckFile>();
+        List<CppcheckFile> portabilitySeverityList = new ArrayList<CppcheckFile>();
 
         CppcheckFile cppcheckFile;
 
@@ -148,6 +151,8 @@ public class CppcheckParser implements Serializable {
                     errorSeverityList.add(cppcheckFile);
                 } else if ("information".equals(cppcheckFile.getSeverity())) {
                     informationSeverityList.add(cppcheckFile);
+                } else if ("portability".equals(cppcheckFile.getSeverity())) {
+                    portabilitySeverityList.add(cppcheckFile);
                 } else {
                     noCategorySeverityList.add(cppcheckFile);
                 }
@@ -172,6 +177,7 @@ public class CppcheckParser implements Serializable {
         cppCheckReport.setPerformanceSeverityList(performanceSeverityList);
         cppCheckReport.setStyleSeverityList(styleSeverityList);
         cppCheckReport.setWarningSeverityList(warningSeverityList);
+        cppCheckReport.setPortabilitySeverityList(portabilitySeverityList);
 
         if (results.getCppcheck() != null) {
             cppCheckReport.setVersion(results.getCppcheck().getVersion());
@@ -179,7 +185,5 @@ public class CppcheckParser implements Serializable {
 
         return cppCheckReport;
     }
-
-
 }
 

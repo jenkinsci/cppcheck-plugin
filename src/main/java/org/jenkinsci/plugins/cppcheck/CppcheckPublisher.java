@@ -51,13 +51,17 @@ public class CppcheckPublisher extends Recorder {
                              boolean severityStyle,
                              boolean severityPerformance,
                              boolean severityInformation,
+                             boolean severityNoCategory,
+                             boolean severityPortability,
                              int xSize, int ySize,
                              boolean displayAllErrors,
                              boolean displayErrorSeverity,
                              boolean displayWarningSeverity,
                              boolean displayStyleSeverity,
                              boolean displayPerformanceSeverity,
-                             boolean displayInformationSeverity) {
+                             boolean displayInformationSeverity,
+                             boolean displayNoCategorySeverity,
+                             boolean displayPortabilitySeverity) {
 
         cppcheckConfig = new CppcheckConfig();
 
@@ -70,7 +74,9 @@ public class CppcheckPublisher extends Recorder {
                 severityWarning,
                 severityStyle,
                 severityPerformance,
-                severityInformation);
+                severityInformation,
+                severityNoCategory,
+                severityPortability);
         cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
         CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
                 xSize, ySize,
@@ -79,7 +85,9 @@ public class CppcheckPublisher extends Recorder {
                 displayWarningSeverity,
                 displayStyleSeverity,
                 displayPerformanceSeverity,
-                displayInformationSeverity);
+                displayInformationSeverity,
+                displayNoCategorySeverity,
+                displayPortabilitySeverity);
         cppcheckConfig.setConfigGraph(configGraph);
     }
 
@@ -106,12 +114,14 @@ public class CppcheckPublisher extends Recorder {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
+            BuildListener listener) throws InterruptedException, IOException {
 
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
 
-            CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
+            CppcheckParserResult parser = new CppcheckParserResult(listener,
+                    cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
                 cppcheckReport = build.getWorkspace().act(parser);
@@ -131,7 +141,9 @@ public class CppcheckPublisher extends Recorder {
                 }
             }
 
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), build.getModuleRoot(), cppcheckReport.getAllErrors());
+            CppcheckSourceContainer cppcheckSourceContainer
+                    = new CppcheckSourceContainer(listener, build.getWorkspace(),
+                            build.getModuleRoot(), cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
 
@@ -152,7 +164,8 @@ public class CppcheckPublisher extends Recorder {
             xmlSourceContainer.write(cppcheckSourceContainer);
 
             if (build.getWorkspace().isRemote()) {
-                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
+                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(),
+                        cppcheckSourceContainer.getInternalMap().values());
             }
 
             CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
@@ -172,7 +185,8 @@ public class CppcheckPublisher extends Recorder {
      * @throws InterruptedException          if the user cancels the processing
      */
     private void copyFilesFromSlaveToMaster(final File rootDir,
-                                            final VirtualChannel channel, final Collection<CppcheckWorkspaceFile> sourcesFiles)
+            final VirtualChannel channel,
+            final Collection<CppcheckWorkspaceFile> sourcesFiles)
             throws IOException, InterruptedException {
 
         File directory = new File(rootDir, CppcheckWorkspaceFile.WORKSPACE_FILES);
@@ -220,7 +234,7 @@ public class CppcheckPublisher extends Recorder {
 
         @Override
         public String getDisplayName() {
-            return "Publish Cppcheck results";
+            return Messages.cppcheck_PublishResults();
         }
 
         @Override

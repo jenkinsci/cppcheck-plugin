@@ -17,7 +17,6 @@ import org.kohsuke.stapler.export.Exported;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -181,7 +180,7 @@ public class CppcheckResult implements Serializable {
         CppcheckResult previousResult = getPreviousResult();
 
         if(previousResult == null) {
-            return new CppcheckStatistics(0, 0, 0, 0, 0, 0, current.getVersions());
+            return new CppcheckStatistics();
         }
 
         CppcheckStatistics previous = previousResult.getStatistics();
@@ -193,6 +192,7 @@ public class CppcheckResult implements Serializable {
                 current.getNumberPerformanceSeverity() - previous.getNumberPerformanceSeverity(),
                 current.getNumberInformationSeverity() - previous.getNumberInformationSeverity(),
                 current.getNumberNoCategorySeverity() - previous.getNumberNoCategorySeverity(),
+                current.getNumberPortabilitySeverity() - previous.getNumberPortabilitySeverity(),
                 current.getVersions());
     }
 
@@ -258,7 +258,21 @@ public class CppcheckResult implements Serializable {
             }
         }
 
-        // TODO: st.getNumberNoCategorySeverity()
+        //NoCategory
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityNoCategory()) {
+            nbErrors += st.getNumberNoCategorySeverity();
+            if (previousResult != null) {
+                nbPreviousError += prev.getNumberNoCategorySeverity();
+            }
+        }
+
+        //Portability
+        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPortability()) {
+            nbErrors += st.getNumberPortabilitySeverity();
+            if (previousResult != null) {
+                nbPreviousError += prev.getNumberPortabilitySeverity();
+            }
+        }
 
         if (checkNewError) {
             if (previousResult != null) {
@@ -284,8 +298,7 @@ public class CppcheckResult implements Serializable {
 
         // Just for sure
         if (statistics == null) {
-            statistics = new CppcheckStatistics(0, 0, 0, 0, 0, 0,
-                    Collections.<String>emptySet());
+            statistics = new CppcheckStatistics();
         }
 
         return this;

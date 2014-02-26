@@ -18,11 +18,17 @@ public class CppcheckConfigGraph implements Serializable {
     private boolean displayStyleSeverity;
     private boolean displayPerformanceSeverity;
     private boolean displayInformationSeverity;
+    private boolean displayNoCategorySeverity;
+    private boolean displayPortabilitySeverity;
 
     public CppcheckConfigGraph() {
     }
 
-    public CppcheckConfigGraph(int xSize, int ySize, boolean displayAllErrors, boolean displayErrorSeverity, boolean displayWarningSeverity, boolean displayStyleSeverity, boolean displayPerformanceSeverity, boolean displayInformationSeverity) {
+    public CppcheckConfigGraph(int xSize, int ySize, boolean displayAllErrors,
+            boolean displayErrorSeverity, boolean displayWarningSeverity,
+            boolean displayStyleSeverity, boolean displayPerformanceSeverity,
+            boolean displayInformationSeverity, boolean displayNoCategorySeverity,
+            boolean displayPortabilitySeverity) {
         this.xSize = xSize;
         this.ySize = ySize;
         this.displayAllErrors = displayAllErrors;
@@ -31,6 +37,8 @@ public class CppcheckConfigGraph implements Serializable {
         this.displayStyleSeverity = displayStyleSeverity;
         this.displayPerformanceSeverity = displayPerformanceSeverity;
         this.displayInformationSeverity = displayInformationSeverity;
+        this.displayNoCategorySeverity = displayNoCategorySeverity;
+        this.displayPortabilitySeverity = displayPortabilitySeverity;
     }
 
     public int getXSize() {
@@ -63,5 +71,13 @@ public class CppcheckConfigGraph implements Serializable {
 
     public boolean isDisplayInformationSeverity() {
         return displayInformationSeverity;
+    }
+    
+    public boolean isDisplayNoCategorySeverity() {
+        return displayNoCategorySeverity;
+    }
+    
+    public boolean isDisplayPortabilitySeverity() {
+        return displayPortabilitySeverity;
     }
 }

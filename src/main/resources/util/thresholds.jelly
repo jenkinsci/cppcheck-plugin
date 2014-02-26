@@ -104,11 +104,25 @@
         <label for="thresholdLimit.severityPerformance">${%Performance}</label>
         <st:nbsp/>
 
+        <f:checkbox name="${id}.config.configSeverityEvaluation.severityPortability"
+                    checked="${config.configSeverityEvaluation.severityPortability}"
+                    id="thresholdLimit.severityPortability"/>
+        <st:nbsp/>
+        <label for="thresholdLimit.severityPortability">${%Portability}</label>
+        <st:nbsp/>
+
         <f:checkbox name="${id}.config.configSeverityEvaluation.severityInformation"
                     checked="${config.configSeverityEvaluation.severityInformation}"
                     id="thresholdLimit.severityInformation"/>
         <st:nbsp/>
         <label for="thresholdLimit.severityInformation">${%Information}</label>
+        <st:nbsp/>
+
+        <f:checkbox name="${id}.config.configSeverityEvaluation.severityNoCategory"
+                    checked="${config.configSeverityEvaluation.severityNoCategory}"
+                    id="thresholdLimit.severityNoCategory"/>
+        <st:nbsp/>
+        <label for="thresholdLimit.severityNoCategory">${%No Category}</label>
         <st:nbsp/>
 
     </f:entry>
@@ -130,7 +144,7 @@
                         <f:textbox name="${id}.config.configGraph.ySize" value="${config.configGraph.ySize}"
                                    id="configGraph.ySize"/>
                     </td>
-                    <td colspan="3">
+                    <td colspan="2">
                         <st:nbsp/>
                     </td>
                 </tr>
@@ -139,7 +153,7 @@
                         <f:checkbox name="${id}.config.configGraph.displayAllErrors"
                                     checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"/>
                         <st:nbsp/>
-                        <label for="configGraph.displayAllErrors">${%Display All errors}</label>
+                        <label for="configGraph.displayAllErrors">${%Display all errors}</label>
                         <st:nbsp/>
                     </td>
 
@@ -166,16 +180,26 @@
                                     checked="${config.configGraph.displayStyleSeverity}"
                                     id="configGraph.displayStyleSeverity"/>
                         <st:nbsp/>
-                        <label for="configGraph.displayStyleSeverity">${%Display styles}</label>
+                        <label for="configGraph.displayStyleSeverity">${%Display style}</label>
                         <st:nbsp/>
                     </td>
-
+                </tr>
+                <tr>
                     <td>
                         <f:checkbox name="${id}.config.configGraph.displayPerformanceSeverity"
                                     checked="${config.configGraph.displayPerformanceSeverity}"
                                     id="configGraph.displayPerformanceSeverity"/>
                         <st:nbsp/>
-                        <label for="configGraph.displayPerformanceSeverity">${%Display performances}</label>
+                        <label for="configGraph.displayPerformanceSeverity">${%Display performance}</label>
+                        <st:nbsp/>
+                    </td>
+
+                    <td>
+                        <f:checkbox name="${id}.config.configGraph.displayPortabilitySeverity"
+                                    checked="${config.configGraph.displayPortabilitySeverity}"
+                                    id="configGraph.displayPortabilitySeverity"/>
+                        <st:nbsp/>
+                        <label for="configGraph.displayPortabilitySeverity">${%Display portability}</label>
                         <st:nbsp/>
                     </td>
 
@@ -188,6 +212,14 @@
                         <st:nbsp/>
                     </td>
 
+                    <td>
+                        <f:checkbox name="${id}.config.configGraph.displayNoCategorySeverity"
+                                    checked="${config.configGraph.displayNoCategorySeverity}"
+                                    id="configGraph.displayNoCategorySeverity"/>
+                        <st:nbsp/>
+                        <label for="configGraph.displayNoCategorySeverity">${%Display no category}</label>
+                        <st:nbsp/>
+                    </td>
                 </tr>
             </table>
 
