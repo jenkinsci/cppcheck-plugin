@@ -2,7 +2,7 @@
     <j:if test="${from.isDisplayGraph()}">
         <div align="right">
             <p/>
-            <div class="test-trend-caption">Cppcheck Trend</div>
+            <div class="test-trend-caption">${%Cppcheck Trend}</div>
             <div>
                 <a href="${from.urlName}/">
                     <img src="${from.urlName}/graph"/>

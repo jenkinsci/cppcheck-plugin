@@ -27,6 +27,7 @@ public class CppcheckReport implements Serializable {
     private List<CppcheckFile> performanceSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> informationSeverityList = new ArrayList<CppcheckFile>();
     private List<CppcheckFile> noCategorySeverityList = new ArrayList<CppcheckFile>();
+    private List<CppcheckFile> portabilitySeverityList = new ArrayList<CppcheckFile>();
 
     public String getVersion() {
         return version;
@@ -96,50 +97,54 @@ public class CppcheckReport implements Serializable {
         this.noCategorySeverityList = noCategorySeverityList;
     }
 
+    public List<CppcheckFile> getPortabilitySeverityList() {
+        return portabilitySeverityList;
+    }
+
+    public void setPortabilitySeverityList(List<CppcheckFile> portabilitySeverityList) {
+        this.portabilitySeverityList = portabilitySeverityList;
+    }
+
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberTotal() {
         return (allErrors == null) ? 0 : allErrors.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberErrorSeverity() {
         return (errorSeverityList == null) ? 0 : errorSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberWarningSeverity() {
         return (warningSeverityList == null) ? 0 : warningSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberStyleSeverity() {
         return (styleSeverityList == null) ? 0 : styleSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberPerformanceSeverity() {
         return (performanceSeverityList == null) ? 0 : performanceSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberInformationSeverity() {
         return (informationSeverityList == null) ? 0 : informationSeverityList.size();
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public int getNumberNoCategorySeverity() {
         return (noCategorySeverityList == null) ? 0 : noCategorySeverityList.size();
     }
 
+    @Exported
+    public int getNumberPortabilitySeverity() {
+        return (portabilitySeverityList == null) ? 0 : portabilitySeverityList.size();
+    }
 
-    @SuppressWarnings("unused")
     private Object readResolve() {
         this.allErrors = new ArrayList<CppcheckFile>();
         this.allErrors.addAll(errorSeverityList);
@@ -148,6 +153,28 @@ public class CppcheckReport implements Serializable {
         this.allErrors.addAll(performanceSeverityList);
         this.allErrors.addAll(informationSeverityList);
         this.allErrors.addAll(noCategorySeverityList);
+
+        // Backward compatibility with version 1.14 and less
+        if(portabilitySeverityList == null)
+        {
+            portabilitySeverityList = new ArrayList<CppcheckFile>();
+        }
+
+        this.allErrors.addAll(portabilitySeverityList);
+
         return this;
+    }
+
+    /**
+     * Get statistics for this report.
+     * 
+     * @return the statistics
+     */
+    public CppcheckStatistics getStatistics() {
+        return new CppcheckStatistics(getNumberErrorSeverity(),
+                getNumberWarningSeverity(), getNumberStyleSeverity(),
+                getNumberPerformanceSeverity(), getNumberInformationSeverity(),
+                getNumberNoCategorySeverity(), getNumberPortabilitySeverity(),
+                versions);
     }
 }

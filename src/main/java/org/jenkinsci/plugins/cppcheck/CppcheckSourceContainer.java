@@ -34,7 +34,7 @@ public class CppcheckSourceContainer {
             cppcheckFile.setKey(key);
             cppcheckWorkspaceFile.setCppcheckFile(cppcheckFile);
             internalMap.put(key, cppcheckWorkspaceFile);
-            key = ++key;
+            ++key;
         }
     }
 

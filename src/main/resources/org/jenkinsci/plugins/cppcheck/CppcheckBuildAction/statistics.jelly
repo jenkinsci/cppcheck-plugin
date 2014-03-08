@@ -1,0 +1,73 @@
+<j:jelly xmlns:j="jelly:core"
+    xmlns:d="jelly:define"
+    xmlns:l="/lib/layout"
+    xmlns:t="/lib/hudson"
+    xmlns:f="/lib/form"
+    xmlns:i="jelly:fmt">
+
+    <style type="text/css">
+    #cppcheckStatistics { width: auto; }
+    #cppcheckStatistics .number { text-align: right; }
+    </style>
+
+    <table class="pane sortable" id="cppcheckStatistics">
+        <thead>
+            <tr>
+                <td class="pane-header">${%Severity}</td>
+                <td class="pane-header">${%Count}</td>
+                <td class="pane-header">${%Delta}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="pane" data="6">${%Error}</td>
+                <td class="pane number" data="${stat.numberErrorSeverity}">${stat.numberErrorSeverity}</td>
+                <td class="pane number" data="${diff.numberErrorSeverity}">${diff.formatDiff(diff.numberErrorSeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="5">${%Warning}</td>
+                <td class="pane number" data="${stat.numberWarningSeverity}">${stat.numberWarningSeverity}</td>
+                <td class="pane number" data="${diff.numberWarningSeverity}">${diff.formatDiff(diff.numberWarningSeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="4">${%Style}</td>
+                <td class="pane number" data="${stat.numberStyleSeverity}">${stat.numberStyleSeverity}</td>
+                <td class="pane number" data="${diff.numberStyleSeverity}">${diff.formatDiff(diff.numberStyleSeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="3">${%Performance}</td>
+                <td class="pane number" data="${stat.numberPerformanceSeverity}">${stat.numberPerformanceSeverity}</td>
+                <td class="pane number" data="${diff.numberPerformanceSeverity}">${diff.formatDiff(diff.numberPerformanceSeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="3">${%Portability}</td>
+                <td class="pane number" data="${stat.numberPortabilitySeverity}">${stat.numberPortabilitySeverity}</td>
+                <td class="pane number" data="${diff.numberPortabilitySeverity}">${diff.formatDiff(diff.numberPortabilitySeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="2">${%Information}</td>
+                <td class="pane number" data="${stat.numberInformationSeverity}">${stat.numberInformationSeverity}</td>
+                <td class="pane number" data="${diff.numberInformationSeverity}">${diff.formatDiff(diff.numberInformationSeverity)}</td>
+            </tr>
+
+            <tr>
+                <td class="pane" data="1">${%No category}</td>
+                <td class="pane number" data="${stat.numberNoCategorySeverity}">${stat.numberNoCategorySeverity}</td>
+                <td class="pane number" data="${diff.numberNoCategorySeverity}">${diff.formatDiff(diff.numberNoCategorySeverity)}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="sortbottom">
+                <td class="pane-header" data="0">${%Total}</td>
+                <td class="pane-header number" data="${stat.numberTotal}">${stat.numberTotal}</td>
+                <td class="pane-header number" data="${diff.numberTotal}">${diff.formatDiff(diff.numberTotal)}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+</j:jelly>

@@ -1,13 +1,11 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 
 /**
  * @author Gregory Boissinot
  */
 public class CppcheckMetricUtil {
-
     public static int convert(String threshold) {
         if (isValid(threshold)) {
             if (StringUtils.isNotBlank(threshold)) {
@@ -31,55 +29,4 @@ public class CppcheckMetricUtil {
         }
         return false;
     }
-
-
-    private static boolean isAllSeverities(CppcheckConfig cppcheckConfig) {
-        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityError()
-                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityWarning()
-                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle()
-                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()
-                && cppcheckConfig.getConfigSeverityEvaluation().isSeverityInformation();
-    }
-
-
-    public static String getMessageSelectedSeverties(CppcheckConfig cppcheckConfig) {
-        StringBuffer sb = new StringBuffer();
-
-        if (isAllSeverities(cppcheckConfig)) {
-            sb.append("With all severity values");
-            return sb.toString();
-        }
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityError()) {
-            sb.append(" and ");
-            sb.append("severity 'error'");
-        }
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
-            sb.append(" and ");
-            sb.append("severity 'warning'");
-        }
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
-            sb.append(" and ");
-            sb.append("severity 'style'");
-        }
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()) {
-            sb.append(" and ");
-            sb.append("severity 'performance'");
-        }
-
-
-        if (cppcheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
-            sb.append(" and ");
-            sb.append("severity 'information'");
-        }
-
-        if (sb.length() != 0)
-            sb.delete(0, 5);
-
-        return sb.toString();
-    }
-
 }

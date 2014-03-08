@@ -4,7 +4,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Actionable;
 import hudson.model.ProminentProjectAction;
-import org.jenkinsci.plugins.cppcheck.CppcheckBuildAction;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -21,7 +21,6 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
         this.project = project;
     }
 
-    @SuppressWarnings("unused")
     public AbstractProject<?, ?> getProject() {
         return project;
     }
@@ -38,16 +37,8 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
 
     protected abstract Integer getLastResultBuild();
 
-    @SuppressWarnings("unused")
-    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
-        CppcheckBuildAction cppcheckBuildAction = lastBuild.getAction(CppcheckBuildAction.class);
-        if (cppcheckBuildAction != null) {
-            cppcheckBuildAction.doGraph(req, rsp);
-        }
-    }
+    public abstract void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException;
 
-    @SuppressWarnings("unused")
     public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException {
         Integer buildNumber = getLastResultBuild();
         if (buildNumber == null) {
@@ -56,5 +47,4 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
             rsp.sendRedirect2("../" + buildNumber + "/" + getUrlName());
         }
     }
-
 }

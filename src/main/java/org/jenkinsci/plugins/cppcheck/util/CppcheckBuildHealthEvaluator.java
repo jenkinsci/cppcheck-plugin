@@ -1,43 +1,44 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.Messages;
-import hudson.model.HealthReport;
-import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 
 /**
  * @author Gregory Boissinot
  */
 public class CppcheckBuildHealthEvaluator {
-
-    public HealthReport evaluatBuildHealth(CppcheckConfig cppcheckConfig, int nbErrorForSeverity) {
-
-        if (cppcheckConfig == null) {
+    public int evaluatBuildHealth(CppcheckConfigSeverityEvaluation severityEvaluation,
+            int nbErrorForSeverity) {
+        if (severityEvaluation == null) {
             // no thresholds => no report
-            return null;
+            return -1;
         }
 
-        if (isHealthyReportEnabled(cppcheckConfig)) {
+        if (isHealthyReportEnabled(severityEvaluation)) {
             int percentage;
+            
+            int healthyNumber = CppcheckMetricUtil.convert(severityEvaluation.getHealthy());
+            int unHealthyNumber = CppcheckMetricUtil.convert(severityEvaluation.getUnHealthy());
 
-            if (nbErrorForSeverity < CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) {
+            if (nbErrorForSeverity < healthyNumber) {
                 percentage = 100;
-            } else if (nbErrorForSeverity > CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy())) {
+            } else if (nbErrorForSeverity > unHealthyNumber) {
                 percentage = 0;
             } else {
-                percentage = 100 - ((nbErrorForSeverity - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())) * 100
-                        / (CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())));
+                percentage = 100 - ((nbErrorForSeverity - healthyNumber) * 100
+                        / (unHealthyNumber - healthyNumber));
             }
 
-            return new HealthReport(percentage, Messages._CppcheckBuildHealthEvaluator_Description(CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)));
+            return percentage;
         }
-        return null;
+        return -1;
     }
 
 
-    private boolean isHealthyReportEnabled(CppcheckConfig cppcheckconfig) {
-        if (CppcheckMetricUtil.isValid(cppcheckconfig.getConfigSeverityEvaluation().getHealthy()) && CppcheckMetricUtil.isValid(cppcheckconfig.getConfigSeverityEvaluation().getUnHealthy())) {
-            int healthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getConfigSeverityEvaluation().getHealthy());
-            int unHealthyNumber = CppcheckMetricUtil.convert(cppcheckconfig.getConfigSeverityEvaluation().getUnHealthy());
+    private boolean isHealthyReportEnabled(CppcheckConfigSeverityEvaluation severityEvaluation) {
+        if (CppcheckMetricUtil.isValid(severityEvaluation.getHealthy())
+                && CppcheckMetricUtil.isValid(severityEvaluation.getUnHealthy())) {
+            int healthyNumber = CppcheckMetricUtil.convert(severityEvaluation.getHealthy());
+            int unHealthyNumber = CppcheckMetricUtil.convert(severityEvaluation.getUnHealthy());
             return unHealthyNumber > healthyNumber;
         }
         return false;

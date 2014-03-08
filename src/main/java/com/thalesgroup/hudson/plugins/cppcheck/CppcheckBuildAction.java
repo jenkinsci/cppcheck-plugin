@@ -146,7 +146,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
      *
      * @return the created object
      */
-    @SuppressWarnings({"unused", "deprecation"})
+    @SuppressWarnings("deprecation")
     private Object readResolve() {
         if (build != null) {
             this.owner = build;
@@ -163,6 +163,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
             newReport.setPerformanceSeverityList(report.getPossibleStyleSeverities());
             newReport.setInformationSeverityList(report.getNoCategorySeverities());
             newReport.setNoCategorySeverityList(new ArrayList<CppcheckFile>());
+            newReport.setPortabilitySeverityList(new ArrayList<CppcheckFile>());
         }
 
         //Result
@@ -185,7 +186,8 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityError(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleError(),
                 cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle(),
-                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(), true);
+                cppcheckConfig.getConfigSeverityEvaluation().isSeverityPossibleStyle(),
+                true, true, true);
         newConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
         org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph configGraph = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph(
                 cppcheckConfig.getConfigGraph().getXSize(),
@@ -195,13 +197,12 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleError(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityStyle(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleStyle(),
-                true);
+                true, true, true);
         newConfig.setConfigGraph(configGraph);
 
 
-        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult, newConfig);
-
+        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult,
+                org.jenkinsci.plugins.cppcheck.CppcheckBuildAction.computeHealthReportPercentage(
+                        newResult, configSeverityEvaluation));
     }
-
-
 }

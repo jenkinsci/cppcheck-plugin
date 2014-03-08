@@ -1,9 +1,15 @@
 <j:jelly xmlns:j="jelly:core"
-         xmlns:t="/lib/hudson">
+    xmlns:d="jelly:define"
+    xmlns:l="/lib/layout"
+    xmlns:t="/lib/hudson"
+    xmlns:f="/lib/form"
+    xmlns:i="jelly:fmt"
+    xmlns:st="jelly:stapler">
+
     <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">
-        ${it.result.summary}
-        <ul>
-            ${it.result.details}
-        </ul>
+        <div><a href="cppcheckResult">${%Cppcheck}</a></div>
+        <j:set var="stat" value="${it.result.statistics}"/>
+        <j:set var="diff" value="${it.result.diff}"/>
+        <st:include page="statistics.jelly" />
     </t:summary>
 </j:jelly>

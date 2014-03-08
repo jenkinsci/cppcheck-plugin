@@ -77,12 +77,10 @@ public class CppcheckConfig implements Serializable {
     private transient String cppcheckReportPattern;
     private transient boolean useWorkspaceAsRootPath;
 
-    @SuppressWarnings("unused")
     private Object readResolve() {
         if (this.cppcheckReportPattern != null) {
             this.pattern = cppcheckReportPattern;
         }
         return this;
     }
-
 }

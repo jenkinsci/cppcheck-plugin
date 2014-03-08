@@ -1,9 +1,11 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.XmlFile;
 import hudson.matrix.MatrixProject;
 import hudson.maven.MavenModuleSet;
 import hudson.model.*;
@@ -12,6 +14,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
@@ -28,11 +31,16 @@ import java.util.Collection;
  * @author Gregory Boissinot
  */
 public class CppcheckPublisher extends Recorder {
+    /**
+     * XML file with source container data. Lazy loading instead of data in build.xml.
+     * 
+     * @since 1.15
+     */
+    public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
 
     private CppcheckConfig cppcheckConfig;
 
     @DataBoundConstructor
-    @SuppressWarnings("unused")
     public CppcheckPublisher(String pattern,
                              boolean ignoreBlankFiles, String threshold,
                              boolean allowNoReport,
@@ -43,13 +51,17 @@ public class CppcheckPublisher extends Recorder {
                              boolean severityStyle,
                              boolean severityPerformance,
                              boolean severityInformation,
+                             boolean severityNoCategory,
+                             boolean severityPortability,
                              int xSize, int ySize,
                              boolean displayAllErrors,
                              boolean displayErrorSeverity,
                              boolean displayWarningSeverity,
                              boolean displayStyleSeverity,
                              boolean displayPerformanceSeverity,
-                             boolean displayInformationSeverity) {
+                             boolean displayInformationSeverity,
+                             boolean displayNoCategorySeverity,
+                             boolean displayPortabilitySeverity) {
 
         cppcheckConfig = new CppcheckConfig();
 
@@ -62,7 +74,9 @@ public class CppcheckPublisher extends Recorder {
                 severityWarning,
                 severityStyle,
                 severityPerformance,
-                severityInformation);
+                severityInformation,
+                severityNoCategory,
+                severityPortability);
         cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
         CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
                 xSize, ySize,
@@ -71,7 +85,9 @@ public class CppcheckPublisher extends Recorder {
                 displayWarningSeverity,
                 displayStyleSeverity,
                 displayPerformanceSeverity,
-                displayInformationSeverity);
+                displayInformationSeverity,
+                displayNoCategorySeverity,
+                displayPortabilitySeverity);
         cppcheckConfig.setConfigGraph(configGraph);
     }
 
@@ -80,14 +96,13 @@ public class CppcheckPublisher extends Recorder {
         this.cppcheckConfig = cppcheckConfig;
     }
 
-    @SuppressWarnings("unused")
     public CppcheckConfig getCppcheckConfig() {
         return cppcheckConfig;
     }
 
     @Override
     public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new CppcheckProjectAction(project);
+        return new CppcheckProjectAction(project, cppcheckConfig.getConfigGraph());
     }
 
     protected boolean canContinue(final Result result) {
@@ -99,12 +114,14 @@ public class CppcheckPublisher extends Recorder {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
+            BuildListener listener) throws InterruptedException, IOException {
 
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
 
-            CppcheckParserResult parser = new CppcheckParserResult(listener, cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
+            CppcheckParserResult parser = new CppcheckParserResult(listener,
+                    cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
                 cppcheckReport = build.getWorkspace().act(parser);
@@ -124,25 +141,35 @@ public class CppcheckPublisher extends Recorder {
                 }
             }
 
-            CppcheckSourceContainer cppcheckSourceContainer = new CppcheckSourceContainer(listener, build.getWorkspace(), build.getModuleRoot(), cppcheckReport.getAllErrors());
+            CppcheckSourceContainer cppcheckSourceContainer
+                    = new CppcheckSourceContainer(listener, build.getWorkspace(),
+                            build.getModuleRoot(), cppcheckReport.getAllErrors());
 
-            CppcheckResult result = new CppcheckResult(cppcheckReport, cppcheckSourceContainer, build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            CppcheckConfigSeverityEvaluation severityEvaluation
+                    = cppcheckConfig.getConfigSeverityEvaluation();
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                    listener, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false),
-                    result.getNumberErrorsAccordingConfiguration(cppcheckConfig, true),
-                    cppcheckConfig);
+                    listener, result.getNumberErrorsAccordingConfiguration(severityEvaluation, false),
+                    result.getNumberErrorsAccordingConfiguration(severityEvaluation, true),
+                    severityEvaluation);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
 
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result,
+                    CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
+
             build.addAction(buildAction);
 
+            XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),
+                    XML_FILE_DETAILS));
+            xmlSourceContainer.write(cppcheckSourceContainer);
 
             if (build.getWorkspace().isRemote()) {
-                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), cppcheckSourceContainer.getInternalMap().values());
+                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(),
+                        cppcheckSourceContainer.getInternalMap().values());
             }
 
             CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
@@ -162,7 +189,8 @@ public class CppcheckPublisher extends Recorder {
      * @throws InterruptedException          if the user cancels the processing
      */
     private void copyFilesFromSlaveToMaster(final File rootDir,
-                                            final VirtualChannel channel, final Collection<CppcheckWorkspaceFile> sourcesFiles)
+            final VirtualChannel channel,
+            final Collection<CppcheckWorkspaceFile> sourcesFiles)
             throws IOException, InterruptedException {
 
         File directory = new File(rootDir, CppcheckWorkspaceFile.WORKSPACE_FILES);
@@ -210,7 +238,7 @@ public class CppcheckPublisher extends Recorder {
 
         @Override
         public String getDisplayName() {
-            return "Publish Cppcheck results";
+            return Messages.cppcheck_PublishResults();
         }
 
         @Override
@@ -222,11 +250,8 @@ public class CppcheckPublisher extends Recorder {
             return "/plugin/cppcheck/";
         }
 
-        @SuppressWarnings("unused")
         public CppcheckConfig getConfig() {
             return new CppcheckConfig();
         }
-
     }
-
 }
