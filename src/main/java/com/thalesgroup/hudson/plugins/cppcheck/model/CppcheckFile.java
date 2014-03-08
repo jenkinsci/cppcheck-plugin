@@ -60,6 +60,15 @@ public class CppcheckFile implements ModelObject, Serializable {
         return lineNumber;
     }
 
+    /**
+     * Returns the line number that should be shown on top of the source code view.
+     *
+     * @return the line number
+     */
+    public int getLinkLineNumber() {
+        return Math.max(1, lineNumber - 10);
+    }
+
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
@@ -92,7 +101,6 @@ public class CppcheckFile implements ModelObject, Serializable {
     }
 
     @Exported
-    @SuppressWarnings("unused")
     public Integer getKey() {
         return key;
     }
