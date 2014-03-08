@@ -10,7 +10,7 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
  * @author Gregory Boissinot
  */
 public class CppcheckBuildResultEvaluator {
-    private Result evaluateBuildResult(
+    public Result evaluateBuildResult(
             final BuildListener listener,
             int errorsCount,
             int newErrorsCount,
