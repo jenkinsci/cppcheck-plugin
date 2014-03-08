@@ -102,7 +102,7 @@ public class CppcheckPublisher extends Recorder {
 
     @Override
     public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new CppcheckProjectAction(project);
+        return new CppcheckProjectAction(project, cppcheckConfig.getConfigGraph());
     }
 
     protected boolean canContinue(final Result result) {
@@ -146,17 +146,21 @@ public class CppcheckPublisher extends Recorder {
                             build.getModuleRoot(), cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            CppcheckConfigSeverityEvaluation severityEvaluation
+                    = cppcheckConfig.getConfigSeverityEvaluation();
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
-                    listener, result.getNumberErrorsAccordingConfiguration(cppcheckConfig, false),
-                    result.getNumberErrorsAccordingConfiguration(cppcheckConfig, true),
-                    cppcheckConfig);
+                    listener, result.getNumberErrorsAccordingConfiguration(severityEvaluation, false),
+                    result.getNumberErrorsAccordingConfiguration(severityEvaluation, true),
+                    severityEvaluation);
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
 
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig);
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result,
+                    CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
+
             build.addAction(buildAction);
 
             XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),

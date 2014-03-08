@@ -23,8 +23,11 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.util;
 
+import org.jenkinsci.plugins.cppcheck.Messages;
+
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckMetricUtil;
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
+
 import hudson.model.HealthReport;
 
 public class CppcheckBuildHealthEvaluator {
@@ -48,7 +51,7 @@ public class CppcheckBuildHealthEvaluator {
                         / (CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()) - CppcheckMetricUtil.convert(cppcheckConfig.getConfigSeverityEvaluation().getHealthy())));
             }
 
-            return new HealthReport(percentage, Messages._CppcheckBuildHealthEvaluator_Description(CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)));
+            return new HealthReport(percentage, Messages.cppcheck_BuildHealthEvaluatorDescription(CppcheckMetricUtil.getMessageSelectedSeverties(cppcheckConfig)));
         }
         return null;
     }

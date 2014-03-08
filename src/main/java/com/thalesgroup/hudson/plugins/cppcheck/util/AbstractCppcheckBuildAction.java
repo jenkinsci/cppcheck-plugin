@@ -24,14 +24,8 @@ package com.thalesgroup.hudson.plugins.cppcheck.util;
 
 import hudson.model.*;
 import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import java.io.IOException;
 
 public abstract class AbstractCppcheckBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
-
-
     protected AbstractBuild<?, ?> owner;
 
     protected AbstractCppcheckBuildAction(AbstractBuild<?, ?> owner) {
@@ -55,7 +49,4 @@ public abstract class AbstractCppcheckBuildAction extends Actionable implements 
     public AbstractBuild<?, ?> getOwner() {
         return owner;
     }
-
-    public abstract void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException;
-
 }

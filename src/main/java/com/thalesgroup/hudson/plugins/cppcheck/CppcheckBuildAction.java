@@ -146,7 +146,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
      *
      * @return the created object
      */
-    @SuppressWarnings({"unused", "deprecation"})
+    @SuppressWarnings("deprecation")
     private Object readResolve() {
         if (build != null) {
             this.owner = build;
@@ -201,9 +201,8 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         newConfig.setConfigGraph(configGraph);
 
 
-        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult, newConfig);
-
+        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult,
+                org.jenkinsci.plugins.cppcheck.CppcheckBuildAction.computeHealthReportPercentage(
+                        newResult, configSeverityEvaluation));
     }
-
-
 }

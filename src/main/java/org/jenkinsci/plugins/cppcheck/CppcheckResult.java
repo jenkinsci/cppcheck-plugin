@@ -9,7 +9,7 @@ import hudson.model.Api;
 import hudson.model.Item;
 
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
+import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -73,7 +73,8 @@ public class CppcheckResult implements Serializable {
      * 
      * @deprecated Use a different constructor instead.
      */
-    public CppcheckResult(CppcheckReport report, CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?, ?> owner) {
+    public CppcheckResult(CppcheckReport report,
+            CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?, ?> owner) {
         this.report = report;
         this.cppcheckSourceContainer = cppcheckSourceContainer;
         this.owner = owner;
@@ -121,7 +122,8 @@ public class CppcheckResult implements Serializable {
      * @return the dynamic result of the analysis (detail page).
      * @throws java.io.IOException if an error occurs
      */
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
+    public Object getDynamic(final String link, final StaplerRequest request,
+            final StaplerResponse response) throws IOException {
 
         if (link.startsWith("source.")) {
 
@@ -130,12 +132,17 @@ public class CppcheckResult implements Serializable {
                 return null;
             }
 
-            Map<Integer, CppcheckWorkspaceFile> agregateMap = getCppcheckSourceContainer().getInternalMap();
+            Map<Integer, CppcheckWorkspaceFile> agregateMap
+                    = getCppcheckSourceContainer().getInternalMap();
+
             if (agregateMap != null) {
-                CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link, "source.")));
+                CppcheckWorkspaceFile vCppcheckWorkspaceFile = agregateMap.get(
+                        Integer.parseInt(StringUtils.substringAfter(link, "source.")));
+
                 if (vCppcheckWorkspaceFile == null) {
                     throw new IllegalArgumentException("Error for retrieving the source file with link:" + link);
                 }
+
                 return new CppcheckSource(owner, vCppcheckWorkspaceFile);
             }
         }
@@ -199,14 +206,16 @@ public class CppcheckResult implements Serializable {
     /**
      * Gets the number of errors according the selected severities form the configuration user object.
      *
-     * @param cppecheckConfig the Cppcheck configuration object
+     * @param severityEvaluation the severity evaluation configuration object
      * @param checkNewError   true, if the request is for the number of new errors
      * @return the number of errors or new errors (if checkNewEroor is set to true) for the current configuration object
      * @throws java.io.IOException if an error occurs
      */
-    public int getNumberErrorsAccordingConfiguration(CppcheckConfig cppecheckConfig, boolean checkNewError) throws IOException {
+    public int getNumberErrorsAccordingConfiguration(
+            CppcheckConfigSeverityEvaluation severityEvaluation,
+            boolean checkNewError) throws IOException {
 
-        if (cppecheckConfig == null) {
+        if (severityEvaluation == null) {
             throw new IOException("[ERROR] - The cppcheck configuration file is missing. Could you save again your job configuration.");
         }
 
@@ -219,7 +228,7 @@ public class CppcheckResult implements Serializable {
                 ? previousResult.getStatistics() : null;
 
         //Error
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityError()) {
+        if (severityEvaluation.isSeverityError()) {
             nbErrors += st.getNumberErrorSeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberErrorSeverity();
@@ -227,7 +236,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //Warnings
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityWarning()) {
+        if (severityEvaluation.isSeverityWarning()) {
             nbErrors += st.getNumberWarningSeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberWarningSeverity();
@@ -235,7 +244,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //Style
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityStyle()) {
+        if (severityEvaluation.isSeverityStyle()) {
             nbErrors += st.getNumberStyleSeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberStyleSeverity();
@@ -243,7 +252,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //Performance
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPerformance()) {
+        if (severityEvaluation.isSeverityPerformance()) {
             nbErrors += st.getNumberPerformanceSeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberPerformanceSeverity();
@@ -251,7 +260,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //Information
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityInformation()) {
+        if (severityEvaluation.isSeverityInformation()) {
             nbErrors += st.getNumberInformationSeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberInformationSeverity();
@@ -259,7 +268,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //NoCategory
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityNoCategory()) {
+        if (severityEvaluation.isSeverityNoCategory()) {
             nbErrors += st.getNumberNoCategorySeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberNoCategorySeverity();
@@ -267,7 +276,7 @@ public class CppcheckResult implements Serializable {
         }
 
         //Portability
-        if (cppecheckConfig.getConfigSeverityEvaluation().isSeverityPortability()) {
+        if (severityEvaluation.isSeverityPortability()) {
             nbErrors += st.getNumberPortabilitySeverity();
             if (previousResult != null) {
                 nbPreviousError += prev.getNumberPortabilitySeverity();
