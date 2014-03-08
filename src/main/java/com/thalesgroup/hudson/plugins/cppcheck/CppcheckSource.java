@@ -229,7 +229,6 @@ public class CppcheckSource implements Serializable {
      *
      * @return the source code content as a String object
      */
-    @SuppressWarnings("unused")
     public String getSourceCode() {
         return sourceCode;
     }
@@ -239,7 +238,6 @@ public class CppcheckSource implements Serializable {
      *
      * @return the workspace file
      */
-    @SuppressWarnings("unused")
     public CppcheckWorkspaceFile getCppcheckWorkspaceFile() {
         return cppcheckWorkspaceFile;
     }

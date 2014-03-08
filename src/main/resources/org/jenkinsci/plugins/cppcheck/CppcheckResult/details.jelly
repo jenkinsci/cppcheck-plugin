@@ -39,7 +39,7 @@
                                 ${cppcheckfile.lineNumber}
                             </j:if>
                             <j:if test="${not elt.isSourceIgnored()}">
-                                <a href="source.${cppcheckfile.key}#${cppcheckfile.lineNumber}">${cppcheckfile.lineNumber}</a>
+                                <a href="source.${cppcheckfile.key}#${cppcheckfile.linkLineNumber}">${cppcheckfile.lineNumber}</a>
                             </j:if>
                         </td>
                         <td class="pane">${cppcheckfile.severity}</td>
