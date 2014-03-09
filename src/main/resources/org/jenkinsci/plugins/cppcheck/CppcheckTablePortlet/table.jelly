@@ -1,0 +1,74 @@
+<j:jelly xmlns:j="jelly:core"
+    xmlns:st="jelly:stapler"
+    xmlns:l="/lib/layout"
+    xmlns:t="/lib/hudson"
+    xmlns:dp="/hudson/plugins/view/dashboard">
+
+    <style type="text/css">
+        .cppcheckTablePortlet .number { text-align: right; }
+    </style>
+
+    <table class="pane sortable cppcheckTablePortlet">
+        <j:set var="numberTotal" value="${0}"/>
+        <j:set var="numberErrorSeverity" value="${0}"/>
+        <j:set var="numberWarningSeverity" value="${0}"/>
+        <j:set var="numberStyleSeverity" value="${0}"/>
+        <j:set var="numberPerformanceSeverity" value="${0}"/>
+        <j:set var="numberPortabilitySeverity" value="${0}"/>
+        <j:set var="numberInformationSeverity" value="${0}"/>
+        <j:set var="numberNoCategorySeverity" value="${0}"/>
+
+        <thead>
+            <tr>
+                <td class="pane-header">${%Job}</td>
+                <td class="pane-header">${%Total}</td>
+                <td class="pane-header">${%Error}</td>
+                <td class="pane-header">${%Warning}</td>
+                <td class="pane-header">${%Style}</td>
+                <td class="pane-header">${%Performance}</td>
+                <td class="pane-header">${%Portability}</td>
+                <td class="pane-header">${%Information}</td>
+                <td class="pane-header">${%No category}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <j:forEach var="job" items="${jobs}">
+                <tr>
+                    <j:set var="stats" value="${it.getStatistics(job)}" />
+
+                    <td class="pane"><dp:jobLink job="${job}" /></td>
+                    <td class="pane number">${stats.numberTotal}</td>
+                    <td class="pane number">${stats.numberErrorSeverity}</td>
+                    <td class="pane number">${stats.numberWarningSeverity}</td>
+                    <td class="pane number">${stats.numberStyleSeverity}</td>
+                    <td class="pane number">${stats.numberPerformanceSeverity}</td>
+                    <td class="pane number">${stats.numberPortabilitySeverity}</td>
+                    <td class="pane number">${stats.numberInformationSeverity}</td>
+                    <td class="pane number">${stats.numberNoCategorySeverity}</td>
+
+                    <j:set var="numberTotal" value="${numberTotal + stats.numberTotal}"/>
+                    <j:set var="numberErrorSeverity" value="${numberErrorSeverity + stats.numberErrorSeverity}"/>
+                    <j:set var="numberWarningSeverity" value="${numberWarningSeverity + stats.numberWarningSeverity}"/>
+                    <j:set var="numberStyleSeverity" value="${numberStyleSeverity + stats.numberStyleSeverity}"/>
+                    <j:set var="numberPerformanceSeverity" value="${numberPerformanceSeverity + stats.numberPerformanceSeverity}"/>
+                    <j:set var="numberPortabilitySeverity" value="${numberPortabilitySeverity + stats.numberPortabilitySeverity}"/>
+                    <j:set var="numberInformationSeverity" value="${numberInformationSeverity + stats.numberInformationSeverity}"/>
+                    <j:set var="numberNoCategorySeverity" value="${numberNoCategorySeverity + stats.numberNoCategorySeverity}"/>
+                </tr>
+            </j:forEach>
+        </tbody>
+        <tfoot>
+            <tr class="sortbottom">
+                <td class="pane-header">${%Total}</td>
+                <td class="pane-header number">${numberTotal}</td>
+                <td class="pane-header number">${numberErrorSeverity}</td>
+                <td class="pane-header number">${numberWarningSeverity}</td>
+                <td class="pane-header number">${numberStyleSeverity}</td>
+                <td class="pane-header number">${numberPerformanceSeverity}</td>
+                <td class="pane-header number">${numberPortabilitySeverity}</td>
+                <td class="pane-header number">${numberInformationSeverity}</td>
+                <td class="pane-header number">${numberNoCategorySeverity}</td>
+            </tr>
+        </tfoot>
+    </table>
+</j:jelly>
