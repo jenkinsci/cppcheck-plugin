@@ -49,6 +49,7 @@
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <ivy.plugin.version>1.19</ivy.plugin.version>
+        <dashboard.view.version>2.0</dashboard.view.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+          <groupId>org.jenkins-ci.plugins</groupId>
+          <artifactId>dashboard-view</artifactId>
+          <version>${dashboard.view.version}</version>
+          <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
