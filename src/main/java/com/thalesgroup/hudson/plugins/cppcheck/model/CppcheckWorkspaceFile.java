@@ -25,11 +25,11 @@ package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.AbstractBuild;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.cppcheck.CppcheckDiffState;
 
 import java.io.File;
 
 public class CppcheckWorkspaceFile {
-
     /**
      * Temporary directory holding the workspace files.
      */
@@ -40,9 +40,17 @@ public class CppcheckWorkspaceFile {
     private CppcheckFile cppcheckFile;
 
     /**
-     * Useful for files that are not found on the buid filestystem
+     * Useful for files that are not found on the build file system
      */
     private boolean sourceIgnored;
+
+    /**
+     * State of compare. It is a runtime parameter, don't store it anywhere
+     * (transient).
+     * 
+     * @since 1.15
+     */
+    private transient CppcheckDiffState diffState = null;
 
     public CppcheckWorkspaceFile(File file) {
         if (file != null)
@@ -103,5 +111,13 @@ public class CppcheckWorkspaceFile {
 
     public void setSourceIgnored(boolean sourceIgnored) {
         this.sourceIgnored = sourceIgnored;
+    }
+
+    public CppcheckDiffState getDiffState() {
+        return diffState;
+    }
+
+    public void setDiffState(CppcheckDiffState diffState) {
+        this.diffState = diffState;
     }
 }

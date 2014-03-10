@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.CppcheckSource;
+import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.XmlFile;
@@ -17,7 +18,12 @@ import org.kohsuke.stapler.export.Exported;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -292,6 +298,104 @@ public class CppcheckResult implements Serializable {
         } else {
             return nbErrors;
         }
+    }
+
+    /**
+     * Compare current and previous source containers. The code first tries to
+     * find all exact matches (file, line, message) and then all approximate
+     * matches (file, message). It is possible the line number will change if
+     * a developer updates the source code somewhere above the issue. Move of
+     * the code to a different file e.g. during refactoring is not considered
+     * and one solved and one new issue will be highlighted in such case.
+     * 
+     * @return the result of the comparison
+     */
+    public Collection<CppcheckWorkspaceFile> diffCurrentAndPrevious() {
+        CppcheckSourceContainer cur = getCppcheckSourceContainer();
+        CppcheckResult prevResult = getPreviousResult();
+        List<CppcheckWorkspaceFile> curValues
+                = new ArrayList<CppcheckWorkspaceFile>(cur.getInternalMap().values());
+
+        if(prevResult == null) {
+            for(CppcheckWorkspaceFile file : curValues) {
+                file.setDiffState(CppcheckDiffState.UNCHANGED);
+            }
+
+            return curValues;
+        }
+
+        CppcheckSourceContainer prev = prevResult.getCppcheckSourceContainer();
+        Collection<CppcheckWorkspaceFile> prevValues = prev.getInternalMap().values();
+
+        // Exact match first
+        for(CppcheckWorkspaceFile curFile : curValues) {
+            CppcheckFile curCppFile = curFile.getCppcheckFile();
+
+            for(CppcheckWorkspaceFile prevFile : prevValues) {
+                CppcheckFile prevCppFile = prevFile.getCppcheckFile();
+
+                if (curCppFile.getLineNumber() == prevCppFile.getLineNumber()
+                        && curCppFile.getFileNameNotNull().equals(prevCppFile.getFileNameNotNull())
+                        && curCppFile.getMessage().equals(prevCppFile.getMessage())) {
+                    curFile.setDiffState(CppcheckDiffState.UNCHANGED);
+                    prevFile.setDiffState(CppcheckDiffState.UNCHANGED);
+                    break;
+                }
+            }
+        }
+
+        // Approximate match of the rest (ignore line numbers)
+        for(CppcheckWorkspaceFile curFile : curValues) {
+            if(curFile.getDiffState() != null) {
+                continue;
+            }
+
+            CppcheckFile curCppFile = curFile.getCppcheckFile();
+
+            for(CppcheckWorkspaceFile prevFile : prevValues) {
+                if(prevFile.getDiffState() != null) {
+                    continue;
+                }
+
+                CppcheckFile prevCppFile = prevFile.getCppcheckFile();
+
+                if (curCppFile.getFileNameNotNull().equals(prevCppFile.getFileNameNotNull())
+                        && curCppFile.getMessage().equals(prevCppFile.getMessage())) {
+                    curFile.setDiffState(CppcheckDiffState.UNCHANGED);
+                    prevFile.setDiffState(CppcheckDiffState.UNCHANGED);
+                    break;
+                }
+            }
+        }
+
+        // Label all new
+        for(CppcheckWorkspaceFile curFile : curValues) {
+            if(curFile.getDiffState() != null) {
+                continue;
+            }
+
+            curFile.setDiffState(CppcheckDiffState.NEW);
+        }
+        
+        // Add and label all solved
+        for(CppcheckWorkspaceFile prevFile : prevValues) {
+            if(prevFile.getDiffState() != null) {
+                continue;
+            }
+
+            prevFile.setDiffState(CppcheckDiffState.SOLVED);
+            prevFile.setSourceIgnored(true);
+            curValues.add(prevFile);
+        }
+
+        // Sort according to the compare flag
+        Collections.sort(curValues, new Comparator<CppcheckWorkspaceFile>() {
+            public int compare(CppcheckWorkspaceFile a, CppcheckWorkspaceFile b) {
+                return a.getDiffState().ordinal() - b.getDiffState().ordinal();
+            }
+        });
+
+        return curValues;
     }
 
     /**
