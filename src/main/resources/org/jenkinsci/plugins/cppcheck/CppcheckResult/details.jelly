@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:g="/jelly/cppcheck">
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
-    <j:set var="cachedContainer" value="${it.cppcheckSourceContainer}"/>
+    <j:set var="cachedContainer" value="${it.diffCurrentAndPrevious()}"/>
 
     <j:if test="${cachedContainer != null}">
 
@@ -10,11 +10,15 @@
         <style type="text/css">
         #cppcheckDetails { width: auto; }
         #cppcheckDetails td { white-space: normal; }
+        #cppcheckDetails .new { background-color: #FFC8C8; }
+        #cppcheckDetails .solved { background-color: #C8FFC8; }
+        #cppcheckDetails .unchanged { }
         </style>
 
         <table class="pane sortable" id="cppcheckDetails">
             <thead>
                 <tr>
+                    <td class="pane-header">${%State}</td>
                     <td class="pane-header">${%File}</td>
                     <td class="pane-header">${%Line}</td>
                     <td class="pane-header">${%Severity}</td>
@@ -23,9 +27,11 @@
                 </tr>
             </thead>
             <tbody>
-                <j:forEach var="elt" items="${cachedContainer.internalMap.values()}">
+                <j:forEach var="elt" items="${cachedContainer}">
                     <j:set var="cppcheckfile" value="${elt.cppcheckFile}"/>
-                    <tr>
+
+                    <tr class="${elt.diffState.css}">
+                        <td class="pane">${elt.diffState.text}</td>
                         <td class="pane">
                             <j:if test="${elt.isSourceIgnored()}">
                                 ${cppcheckfile.fileName}
@@ -36,10 +42,10 @@
                         </td>
                         <td class="pane">
                             <j:if test="${elt.isSourceIgnored()}">
-                                ${cppcheckfile.lineNumber}
+                                ${cppcheckfile.lineNumberString}
                             </j:if>
                             <j:if test="${not elt.isSourceIgnored()}">
-                                <a href="source.${cppcheckfile.key}#${cppcheckfile.linkLineNumber}">${cppcheckfile.lineNumber}</a>
+                                <a href="source.${cppcheckfile.key}#${cppcheckfile.linkLineNumber}">${cppcheckfile.lineNumberString}</a>
                             </j:if>
                         </td>
                         <td class="pane">${cppcheckfile.severity}</td>

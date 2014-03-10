@@ -51,6 +51,15 @@ public class CppcheckFile implements ModelObject, Serializable {
         return fileName;
     }
 
+    /**
+     * Get the filename.
+     * 
+     * @return the filename or empty string if the filename is null
+     */
+    public String getFileNameNotNull() {
+        return (fileName != null) ? fileName : "";
+    }
+
     public void setFileName(String filename) {
         this.fileName = filename;
     }
@@ -58,6 +67,15 @@ public class CppcheckFile implements ModelObject, Serializable {
     @Exported
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    /**
+     * Get line number depending on availability of the file name.
+     * 
+     * @return the line number or empty string if the file name is empty
+     */
+    public String getLineNumberString() {
+        return ("".equals(getFileNameNotNull())) ? "" : String.valueOf(lineNumber);
     }
 
     /**
@@ -112,5 +130,4 @@ public class CppcheckFile implements ModelObject, Serializable {
     public String getDisplayName() {
         return "cppcheckFile";
     }
-
 }
