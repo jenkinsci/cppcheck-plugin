@@ -86,12 +86,13 @@ public class CppcheckSource implements Serializable {
     private void buildFileContent() {
         InputStream is = null;
         try {
-
             File tempFile = new File(cppcheckWorkspaceFile.getTempName(owner));
             if (tempFile.exists()) {
                 is = new FileInputStream(tempFile);
             } else {
-
+                // Reading real workspace file is more incorrect than correct,
+                // but the code is left here for backward compatibility with
+                // plugin version 1.14 and less
                 if (cppcheckWorkspaceFile.getFileName() == null) {
                     throw new IOException("The file doesn't exist.");
                 }

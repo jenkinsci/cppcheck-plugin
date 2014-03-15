@@ -31,9 +31,9 @@ import java.io.File;
 
 public class CppcheckWorkspaceFile {
     /**
-     * Temporary directory holding the workspace files.
+     * Subdirectory of build directory to store the workspace files.
      */
-    public static final String WORKSPACE_FILES = "workspace-files";
+    public static final String DIR_WORKSPACE_FILES = "workspace-files";
 
     private String fileName;
 
@@ -100,7 +100,9 @@ public class CppcheckWorkspaceFile {
 
     public String getTempName(final AbstractBuild<?, ?> owner) {
         if (fileName != null) {
-            return owner.getRootDir().getAbsolutePath() + "/" + WORKSPACE_FILES + "/" + Integer.toHexString(fileName.hashCode()) + ".tmp";
+            return owner.getRootDir().getAbsolutePath() + "/"
+                    + DIR_WORKSPACE_FILES + "/"
+                    + Integer.toHexString(fileName.hashCode()) + ".tmp";
         }
         return StringUtils.EMPTY;
     }
