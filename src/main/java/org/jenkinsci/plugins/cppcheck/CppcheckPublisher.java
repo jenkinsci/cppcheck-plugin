@@ -167,10 +167,8 @@ public class CppcheckPublisher extends Recorder {
                     XML_FILE_DETAILS));
             xmlSourceContainer.write(cppcheckSourceContainer);
 
-            if (build.getWorkspace().isRemote()) {
-                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(),
-                        cppcheckSourceContainer.getInternalMap().values());
-            }
+            copyFilesToBuildDirectory(build.getRootDir(), launcher.getChannel(),
+                    cppcheckSourceContainer.getInternalMap().values());
 
             CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
         }
@@ -179,7 +177,7 @@ public class CppcheckPublisher extends Recorder {
 
 
     /**
-     * Copies all the source files from stave to master for a remote build.
+     * Copies all the source files from the workspace to the build folder.
      *
      * @param rootDir      directory to store the copied files in
      * @param channel      channel to get the files from
@@ -188,21 +186,15 @@ public class CppcheckPublisher extends Recorder {
      * @throws java.io.FileNotFoundException if the files could not be written
      * @throws InterruptedException          if the user cancels the processing
      */
-    private void copyFilesFromSlaveToMaster(final File rootDir,
+    private void copyFilesToBuildDirectory(final File rootDir,
             final VirtualChannel channel,
             final Collection<CppcheckWorkspaceFile> sourcesFiles)
             throws IOException, InterruptedException {
 
-        File directory = new File(rootDir, CppcheckWorkspaceFile.WORKSPACE_FILES);
-        if (!directory.exists()) {
-
-            if (!directory.delete()) {
-                //do nothing
-            }
-
-            if (!directory.mkdir()) {
-                throw new IOException("Can't create directory for remote source files: " + directory.getAbsolutePath());
-            }
+        File directory = new File(rootDir, CppcheckWorkspaceFile.DIR_WORKSPACE_FILES);
+        if (!directory.exists() && !directory.mkdir()) {
+            throw new IOException("Can't create directory for copy of workspace files: "
+                    + directory.getAbsolutePath());
         }
 
         for (CppcheckWorkspaceFile file : sourcesFiles) {
