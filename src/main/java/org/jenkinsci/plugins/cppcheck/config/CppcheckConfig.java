@@ -7,6 +7,8 @@ import java.io.Serializable;
  * @author Gregory Boissinot
  */
 public class CppcheckConfig implements Serializable {
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
     private String pattern;
     private boolean ignoreBlankFiles;

@@ -36,7 +36,7 @@ public class CppcheckParserTest {
                                  int nbSeveritiesError,
                                  int nbSeveritiesNoCategory) throws Exception {
 
-        CppcheckReport cppcheckReport = cppcheckParser.parse(new File(this.getClass().getResource(filename).toURI()));
+        CppcheckReport cppcheckReport = cppcheckParser.parse(new File(CppcheckParserTest.class.getResource(filename).toURI()));
 
         List<CppcheckFile> everyErrors = cppcheckReport.getEverySeverities();
         List<CppcheckFile> possibileErrorSeverities = cppcheckReport.getPossibleErrorSeverities();
