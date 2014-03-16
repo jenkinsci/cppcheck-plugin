@@ -26,7 +26,7 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
     }
 
     public String getIconFileName() {
-        return "/plugin/cppcheck/icons/cppcheck-48.png";
+        return "/plugin/cppcheck/icons/cppcheck-24.png";
     }
 
     public String getSearchUrl() {

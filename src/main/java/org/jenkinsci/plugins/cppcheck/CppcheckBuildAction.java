@@ -103,8 +103,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
         // Backward compatibility with version 1.14 and less
         if (cppcheckConfig != null) {
-            healthReportPercentage = computeHealthReportPercentage(result,
-                    cppcheckConfig.getConfigSeverityEvaluation());
+            healthReportPercentage = 100;
         }
 
         return this;

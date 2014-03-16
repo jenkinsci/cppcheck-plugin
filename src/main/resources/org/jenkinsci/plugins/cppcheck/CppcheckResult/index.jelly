@@ -8,7 +8,7 @@
             <h2>${%Summary}</h2>
             <j:set var="stat" value="${it.statistics}"/>
             <j:set var="diff" value="${it.diff}"/>
-            <st:include page="../CppcheckBuildAction/statistics.jelly"/>
+            <st:include page="/org/jenkinsci/plugins/cppcheck/CppcheckBuildAction/statistics.jelly"/>
 
             <j:if test="${stat.versions != null}">
                 <h2>${%Cppcheck Engine}</h2>

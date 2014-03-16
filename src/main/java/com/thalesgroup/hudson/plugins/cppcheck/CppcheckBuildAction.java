@@ -201,8 +201,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         newConfig.setConfigGraph(configGraph);
 
 
-        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner, newResult,
-                org.jenkinsci.plugins.cppcheck.CppcheckBuildAction.computeHealthReportPercentage(
-                        newResult, configSeverityEvaluation));
+        return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner,
+                newResult, 100);
     }
 }
