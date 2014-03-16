@@ -28,12 +28,13 @@
          xmlns:f="/lib/form" xmlns:i="jelly:fmt">
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
     <l:layout norefresh="true">
-
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
         <l:main-panel>
-            <h1>${%sourcedetail.header(it.cppcheckWorkspaceFile.fileName)}</h1>
+            <h1>${%Cppcheck Results}</h1>
+
+            <h2>${%sourcedetail.header(it.cppcheckWorkspaceFile.fileNameHtmlWrap)}</h2>
 
             ${it.sourceCode}
-
         </l:main-panel>
     </l:layout>
 </j:jelly>

@@ -103,6 +103,18 @@ public class CppcheckWorkspaceFile implements Serializable {
         return fileName;
     }
 
+    /**
+     * Returns the name of this file, allow wrap of long paths in a HTML page.
+     *
+     * @return the name of this file with <wbr /> element after each slash
+     */
+    public final String getFileNameHtmlWrap() {
+        if(fileName == null)
+            return "";
+
+        return fileName.replace("/", "/<wbr />");
+    }
+
     public String getTempName(final AbstractBuild<?, ?> owner) {
         if (fileName != null) {
             return owner.getRootDir().getAbsolutePath() + "/"
