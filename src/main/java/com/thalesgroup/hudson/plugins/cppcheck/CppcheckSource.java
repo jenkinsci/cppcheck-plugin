@@ -242,5 +242,14 @@ public class CppcheckSource implements Serializable {
     public CppcheckWorkspaceFile getCppcheckWorkspaceFile() {
         return cppcheckWorkspaceFile;
     }
+
+    /**
+     * Get the owner build.
+     * 
+     * @return the build
+     */
+    public AbstractBuild<?, ?> getOwner() {
+        return owner;
+    }
 }
 
