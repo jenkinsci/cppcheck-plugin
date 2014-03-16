@@ -24,21 +24,23 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckLogger;
+
 import hudson.FilePath;
 import hudson.model.BuildListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CppcheckSourceContainer {
-
+public class CppcheckSourceContainer implements Serializable {
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
     private Map<Integer, CppcheckWorkspaceFile> internalMap = new HashMap<Integer, CppcheckWorkspaceFile>();
 
     public CppcheckSourceContainer(BuildListener listener, FilePath basedir, List<CppcheckFile> files) throws IOException, InterruptedException {
-
         int key = 1;
         for (CppcheckFile cppcheckFile : files) {
 
@@ -70,7 +72,6 @@ public class CppcheckSourceContainer {
             ++key;
         }
     }
-
 
     public Map<Integer, CppcheckWorkspaceFile> getInternalMap() {
         return internalMap;

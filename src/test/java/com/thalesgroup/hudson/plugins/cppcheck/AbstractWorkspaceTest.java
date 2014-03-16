@@ -43,6 +43,8 @@ public abstract class AbstractWorkspaceTest {
     }
 
     public void deleteWorkspace() throws Exception {
-        workspace.deleteRecursive();
+        if(workspace != null) {
+            workspace.deleteRecursive();
+        }
     }
 }

@@ -70,7 +70,6 @@ public class CppcheckResult implements Serializable {
      *
      * @return the remote API
      */
-    @SuppressWarnings("unused")
     public Api getApi() {
         return new Api(report);
     }
@@ -80,12 +79,10 @@ public class CppcheckResult implements Serializable {
         return report;
     }
 
-    @SuppressWarnings("unused")
     public AbstractBuild<?, ?> getOwner() {
         return owner;
     }
 
-    @SuppressWarnings("unused")
     public CppcheckSourceContainer getCppcheckSourceContainer() {
         return cppcheckSourceContainer;
     }
@@ -99,7 +96,6 @@ public class CppcheckResult implements Serializable {
      * @return the dynamic result of the analysis (detail page).
      * @throws java.io.IOException if an error occurs
      */
-    @SuppressWarnings("unused")
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
 
         if (link.startsWith("source.")) {
@@ -127,7 +123,6 @@ public class CppcheckResult implements Serializable {
      *
      * @return the HTML fragment of the summary Cppcheck report
      */
-    @SuppressWarnings("unused")
     public String getSummary() {
         return CppcheckSummary.createReportSummary(this);
     }
@@ -137,24 +132,8 @@ public class CppcheckResult implements Serializable {
      *
      * @return the HTML fragment of the summary Cppcheck report
      */
-    @SuppressWarnings("unused")
     public String getDetails() {
         return CppcheckSummary.createReportSummaryDetails(this);
-    }
-
-    /**
-     * Gets the previous Cppcheck report for the build result.
-     *
-     * @return the previous Cppcheck report
-     */
-    @SuppressWarnings("unused")
-    private CppcheckReport getPreviousReport() {
-        CppcheckResult previous = this.getPreviousResult();
-        if (previous == null) {
-            return null;
-        } else {
-            return previous.getReport();
-        }
     }
 
     /**

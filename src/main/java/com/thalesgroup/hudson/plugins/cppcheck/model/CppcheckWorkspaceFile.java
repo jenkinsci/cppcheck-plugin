@@ -24,12 +24,17 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.AbstractBuild;
+
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.cppcheck.CppcheckDiffState;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class CppcheckWorkspaceFile {
+public class CppcheckWorkspaceFile implements Serializable {
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Subdirectory of build directory to store the workspace files.
      */

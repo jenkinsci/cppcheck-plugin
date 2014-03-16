@@ -6,6 +6,8 @@ import java.io.Serializable;
  * @author Gregory Boissinot
  */
 public class CppcheckConfigGraph implements Serializable {
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
     public static final int DEFAULT_CHART_WIDTH = 500;
     public static final int DEFAULT_CHART_HEIGHT = 200;

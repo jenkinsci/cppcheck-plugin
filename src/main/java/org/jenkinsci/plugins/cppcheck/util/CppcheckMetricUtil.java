@@ -10,7 +10,7 @@ public class CppcheckMetricUtil {
         if (isValid(threshold)) {
             if (StringUtils.isNotBlank(threshold)) {
                 try {
-                    return Integer.valueOf(threshold);
+                    return Integer.parseInt(threshold);
                 } catch (NumberFormatException exception) {
                     // not valid
                 }
@@ -22,7 +22,7 @@ public class CppcheckMetricUtil {
     public static boolean isValid(final String threshold) {
         if (StringUtils.isNotBlank(threshold)) {
             try {
-                return Integer.valueOf(threshold) >= 0;
+                return Integer.parseInt(threshold) >= 0;
             } catch (NumberFormatException exception) {
                 // not valid
             }
