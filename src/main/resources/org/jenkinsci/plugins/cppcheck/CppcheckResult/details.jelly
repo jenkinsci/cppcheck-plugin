@@ -40,7 +40,7 @@
                                 <a href="source.${cppcheckfile.key}">${cppcheckfile.fileName}</a>
                             </j:if>
                         </td>
-                        <td class="pane">
+                        <td class="pane" data="${cppcheckfile.lineNumber}">
                             <j:if test="${elt.isSourceIgnored()}">
                                 ${cppcheckfile.lineNumberString}
                             </j:if>
