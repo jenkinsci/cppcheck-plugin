@@ -26,6 +26,7 @@ import hudson.model.AbstractBuild;
 import hudson.util.ColorPalette;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -39,10 +40,13 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class CppcheckGraph extends Graph {
-
     private final String yLabel;
 
     private final CategoryDataset categoryDataset;
@@ -50,7 +54,21 @@ public class CppcheckGraph extends Graph {
     public static final int DEFAULT_CHART_WIDTH = 500;
     public static final int DEFAULT_CHART_HEIGHT = 200;
 
-    public CppcheckGraph(AbstractBuild<?, ?> owner, CategoryDataset categoryDataset, String yLabel, int chartWidth, int chartHeight) {
+    private static final Color RED = new Color(0xCC0000);
+    private static final Color BLUE = new Color(0x3465A4);
+    private static final Color GREEN = new Color(0x73D216);
+    private static final Color YELLOW = new Color(0xEDD400);
+    private static final Color BROWN = new Color(0xB87700);
+    private static final Color GRAY = new Color(0x4D4D4D);
+    private static final Color VIOLET = new Color(0xA020F0);
+    private static final Color PINK = new Color(0xFF9780);
+
+    /** Color palette for the lines in the graph. */
+    private static final List<Color> colors = Collections.unmodifiableList(
+            Arrays.asList(RED, BLUE, GREEN, YELLOW, BROWN, GRAY, VIOLET, PINK));
+
+    public CppcheckGraph(AbstractBuild<?, ?> owner, CategoryDataset categoryDataset,
+            String yLabel, int chartWidth, int chartHeight) {
         super(owner.getTimestamp(), chartWidth, chartHeight);
         this.yLabel = yLabel;
         this.categoryDataset = categoryDataset;
@@ -103,11 +121,25 @@ public class CppcheckGraph extends Graph {
 
         final LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
         renderer.setBaseStroke(new BasicStroke(2.0f));
-        ColorPalette.apply(renderer);
+        applyColorPalette(renderer);
 
         // crop extra space around the graph
         plot.setInsets(new RectangleInsets(5.0, 0, 0, 5.0));
 
         return chart;
+    }
+
+    /**
+     * Apply color palette to the lines in the graph.
+     * 
+     * @param renderer the graph renderer
+     * @see ColorPalette#apply(LineAndShapeRenderer)
+     */
+    private void applyColorPalette(LineAndShapeRenderer renderer) {
+        int n = 0;
+
+        for (Color c : colors) {
+            renderer.setSeriesPaint(n++, c);
+        }
     }
 }
