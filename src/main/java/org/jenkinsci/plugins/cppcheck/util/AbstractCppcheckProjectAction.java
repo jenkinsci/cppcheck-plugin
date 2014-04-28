@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.cppcheck.util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Actionable;
-import hudson.model.ProminentProjectAction;
+import hudson.model.Action;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * @author Gregory Boissinot
  */
-public abstract class AbstractCppcheckProjectAction extends Actionable implements ProminentProjectAction {
+public abstract class AbstractCppcheckProjectAction extends Actionable implements Action {
 
     protected final AbstractProject<?, ?> project;
 
@@ -26,7 +26,7 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
     }
 
     public String getIconFileName() {
-        return "/plugin/cppcheck/icons/cppcheck-48.png";
+        return "/plugin/cppcheck/icons/cppcheck-24.png";
     }
 
     public String getSearchUrl() {

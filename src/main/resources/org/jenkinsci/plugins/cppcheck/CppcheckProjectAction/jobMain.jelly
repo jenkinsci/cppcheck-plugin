@@ -1,0 +1,15 @@
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson" xmlns:st="jelly:stapler">
+    <table style="margin-left:1em;">
+        <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">
+            <div><a href="${it.urlName}">${it.displayName}</a></div>
+
+            <j:set var="lastBuildAction" value="${it.lastFinishedBuildAction}"/>
+            
+            <j:if test="${lastBuildAction != null}">
+                <j:set var="stat" value="${lastBuildAction.result.statistics}"/>
+                <j:set var="diff" value="${lastBuildAction.result.diff}"/>
+                <st:include page="/org/jenkinsci/plugins/cppcheck/CppcheckBuildAction/statistics.jelly"/>
+            </j:if>
+        </t:summary>
+    </table>
+</j:jelly>

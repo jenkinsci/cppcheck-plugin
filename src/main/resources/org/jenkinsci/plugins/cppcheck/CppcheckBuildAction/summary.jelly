@@ -7,7 +7,7 @@
     xmlns:st="jelly:stapler">
 
     <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">
-        <div><a href="cppcheckResult">${%Cppcheck}</a></div>
+        <div><a href="${it.urlName}">${it.displayName}</a></div>
         <j:set var="stat" value="${it.result.statistics}"/>
         <j:set var="diff" value="${it.result.diff}"/>
         <st:include page="statistics.jelly" />
