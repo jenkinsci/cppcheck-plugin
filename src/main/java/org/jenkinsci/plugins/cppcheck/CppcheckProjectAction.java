@@ -43,6 +43,16 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         return lastBuild;
     }
 
+    /**
+     * Get build action of the last finished build.
+     * 
+     * @return the build action or null
+     */
+    public CppcheckBuildAction getLastFinishedBuildAction() {
+        AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
+        return (lastBuild != null) ? lastBuild.getAction(CppcheckBuildAction.class) : null;
+    }
+
     public final boolean isDisplayGraph() {
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
