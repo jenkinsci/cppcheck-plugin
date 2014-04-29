@@ -1,0 +1,58 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+    <l:layout norefresh="true">
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
+
+        <l:main-panel>
+            <style type="text/css">
+            .cppcheck { padding: 1em; margin: 1em 0em 1em 0em; border: 1px solid silver; }
+            .newCppcheck { background-color: #FFC8C8; }
+            .solvedCppcheck { background-color: #C8FFC8; }
+            .unchangedCppcheck { }
+
+            .cppcheck h2 { margin-top: 0; }
+            .cppcheck code { display: block; margin: 1em 0em 1em 0em; }
+            .cppcheck .line { white-space: pre-wrap; }
+            .cppcheck .lineNumber { color: gray; }
+            .cppcheck .highlighted { line-height: 2.1em; background-color: #FCAF3E; font-weight: bold; }
+            </style>
+
+            <h1>${%Cppcheck Results}</h1>
+
+            <j:forEach var="file" items="${it.files}">
+                <div class="cppcheck ${file.diffState.css}Cppcheck">
+                    <h2>${file.cppcheckFile.messageHtml}</h2>
+
+                    <j:if test="${file.cppcheckFile.fileName != null}">
+                        <j:if test="${file.sourceIgnored}">
+                            <div>
+                                ${%Location:}
+                                ${file.cppcheckFile.fileName}:${file.cppcheckFile.lineNumber}
+                            </div>
+                        </j:if>
+                        <j:if test="${not file.sourceIgnored}">
+                            <div>
+                                ${%Location:}
+                                <a href="../source.${file.cppcheckFile.key}#${file.cppcheckFile.linkLineNumber}">
+                                    ${file.cppcheckFile.fileName}:${file.cppcheckFile.lineNumber}
+                                </a>
+                            </div>
+                        </j:if>
+                    </j:if>
+
+                    <div>${%State:} ${file.diffState.text}</div>
+                    <div>${%Severity:} ${file.cppcheckFile.severity}</div>
+                    <div>${%Type:} ${file.cppcheckFile.cppCheckId}</div>
+                    
+                    <j:if test="${not file.sourceIgnored}">
+                        <code>
+                            ${it.getSourceCode(file)}
+                        </code>
+                    </j:if>
+                </div>
+            </j:forEach>
+
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

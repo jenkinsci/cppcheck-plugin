@@ -33,14 +33,20 @@ public class CppcheckResult implements Serializable {
     private static final long serialVersionUID = 2L;
 
     /**
-     * The Cppcheck report. Backward compatibility with version 1.14 and less.
+     * The Cppcheck report.
+     * 
+     * @deprecated Only for backward compatibility with version 1.14 and less.
      */
+    @Deprecated
     private transient CppcheckReport report;
 
     /**
-     * The Cppcheck container with all source files. Backward compatibility
-     * with version 1.14 and less.
+     * The Cppcheck container with all source files.
+     * 
+     * @deprecated Only for backward compatibility with version 1.14 and less.
+     * @see #lazyLoadSourceContainer()
      */
+    @Deprecated
     private transient CppcheckSourceContainer cppcheckSourceContainer;
 
     /**
@@ -130,9 +136,18 @@ public class CppcheckResult implements Serializable {
      */
     public Object getDynamic(final String link, final StaplerRequest request,
             final StaplerResponse response) throws IOException {
+        if (link.equals("source.all")) {
+            if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
+                response.sendRedirect2("nosourcepermission");
+                return null;
+            }
 
-        if (link.startsWith("source.")) {
+            Collection<CppcheckWorkspaceFile> files = diffCurrentAndPrevious();
+            int before = parseIntWithDefault(request.getParameter("before"), 5);
+            int after = parseIntWithDefault(request.getParameter("after"), 5);
 
+            return new CppcheckSourceAll(owner, files, before, after);
+        } else if (link.startsWith("source.")) {
             if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
                 response.sendRedirect2("nosourcepermission");
                 return null;
@@ -153,6 +168,24 @@ public class CppcheckResult implements Serializable {
             }
         }
         return null;
+    }
+
+    /**
+     * Parse integer.
+     * 
+     * @param str
+     *            the input string
+     * @param defaultValue
+     *            the default value returned on error
+     * @return the parsed value or default value on error
+     * @see Integer#parseInt(String)
+     */
+    private int parseIntWithDefault(String str, int defaultValue) {
+        try {
+            return Integer.parseInt(str);
+        } catch(NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     /**

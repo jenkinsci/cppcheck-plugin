@@ -32,7 +32,7 @@
         <l:main-panel>
             <h1>${%Cppcheck Results}</h1>
 
-            <h2>${%sourcedetail.header(it.cppcheckWorkspaceFile.fileNameHtmlWrap)}</h2>
+            <h2>${%sourcedetail.header(it.cppcheckWorkspaceFile.cppcheckFile.fileName)}</h2>
 
             ${it.sourceCode}
         </l:main-panel>

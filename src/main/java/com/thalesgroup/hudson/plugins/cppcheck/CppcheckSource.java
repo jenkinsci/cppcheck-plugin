@@ -150,7 +150,7 @@ public class CppcheckSource implements Serializable {
         output.append("\">\n");
 
         output.append("<div tooltip=\"");
-        outputEscaped(output, cppcheckFile.getCppCheckId() + ":" + cppcheckFile.getMessage());
+        outputEscaped(output, cppcheckFile.getCppCheckId() + ": " + cppcheckFile.getMessage());
         output.append("\" nodismiss=\"\">\n");
         output.append("<code><b>\n");
 
