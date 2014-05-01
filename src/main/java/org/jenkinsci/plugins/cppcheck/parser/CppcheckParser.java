@@ -53,9 +53,12 @@ public class CppcheckParser implements Serializable {
                 com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
                 report = getReportVersion1(results);
             } catch (JAXBException jxe1) {
-                throw new IOException(jxe1);
-            }
+                // Since Java 1.6
+                // throw new IOException(jxe1);
 
+                // Legacy constructor for compatibility with Java 1.5
+                throw (IOException) new IOException(jxe1.toString()).initCause(jxe1);
+            }
         }
         return report;
     }
