@@ -34,7 +34,7 @@ public class CppcheckUtil {
      * @param cppecheckConfig
      * @param result
      * @param checkNewError
-     * @return
+     * @return number of errors
      */
     public static int getNumberErrors(CppcheckConfig cppecheckConfig, CppcheckResult result, boolean checkNewError) {
 
