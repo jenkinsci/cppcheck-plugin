@@ -25,6 +25,7 @@
                 <td class="pane-header">${%Line}</td>
                 <td class="pane-header">${%Severity}</td>
                 <td class="pane-header">${%Type}</td>
+                <td class="pane-header">${%Inconclusive}</td>
                 <td class="pane-header">${%Message}</td>
             </tr>
         </thead>
@@ -52,6 +53,7 @@
                     </td>
                     <td class="pane">${cppcheckFile.severity}</td>
                     <td class="pane">${cppcheckFile.cppCheckId}</td>
+                    <td class="pane">${cppcheckFile.inconclusive}</td>
                     <td class="pane">${cppcheckFile.messageHtml}</td>
                 </tr>
             </j:forEach>
