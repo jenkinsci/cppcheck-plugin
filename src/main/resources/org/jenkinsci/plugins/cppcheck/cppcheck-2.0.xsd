@@ -19,6 +19,7 @@
             <xs:attribute name="id" type="xs:string" use="required"/>
             <xs:attribute name="severity" type="xs:string" use="required"/>
             <xs:attribute name="msg" type="xs:string" use="required"/>
+            <xs:attribute name="verbose" type="xs:string" use="optional"/>
             <xs:attribute name="inconclusive" type="xs:boolean" use="optional"/>
         </xs:complexType>
     </xs:element>

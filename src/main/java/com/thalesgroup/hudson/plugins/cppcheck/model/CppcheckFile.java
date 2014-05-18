@@ -34,7 +34,7 @@ import java.io.Serializable;
 @ExportedBean(defaultVisibility = 999)
 public class CppcheckFile implements ModelObject, Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     private Integer key;
 
@@ -48,8 +48,11 @@ public class CppcheckFile implements ModelObject, Serializable {
 
     private String message;
 
+    /** Verbose message, optional. */
+    private String verbose = null;
+    
     /** The issue may be false positive. */
-    private boolean inconclusive;
+    private boolean inconclusive = false;
 
     @Exported
     public String getFileName() {
@@ -134,6 +137,19 @@ public class CppcheckFile implements ModelObject, Serializable {
 
     public void setKey(Integer key) {
         this.key = key;
+    }
+
+    @Exported
+    public String getVerbose() {
+        return verbose;
+    }
+    
+    public String getVerboseHtml() {
+        return StringEscapeUtils.escapeHtml(verbose);
+    }
+
+    public void setVerbose(String verbose) {
+        this.verbose = verbose;
     }
 
     @Exported

@@ -18,6 +18,7 @@
             .cppcheck .lineNumber { color: gray; }
             .cppcheck .highlighted { line-height: 2.1em; background-color: #FCAF3E; font-weight: bold; }
             .cppcheck .header { font-weight: bold; }
+            .cppcheck .verbose { white-space: pre-wrap; }
             </style>
 
             <h1>${%Cppcheck Results}</h1>
@@ -27,7 +28,7 @@
                 <j:if test="${file.cppcheckFile.inconclusive}">
                     <j:set var="inconclusiveCss" value="inconclusiveCppcheck"/>
                 </j:if>
-                
+
                 <div class="cppcheck ${file.diffState.css}Cppcheck ${inconclusiveCss}">
                     <h2>${file.cppcheckFile.messageHtml}</h2>
 
@@ -51,11 +52,15 @@
                     <div><span class="header">${%State:}&amp;nbsp;</span>${file.diffState.text}</div>
                     <div><span class="header">${%Severity:}&amp;nbsp;</span>${file.cppcheckFile.severity}</div>
                     <div><span class="header">${%Type:}&amp;nbsp;</span>${file.cppcheckFile.cppCheckId}</div>
-                    
+
                     <j:if test="${file.cppcheckFile.inconclusive}">
                         <div><span class="header">${%Inconclusive:}&amp;nbsp;</span>${file.cppcheckFile.inconclusive}</div>
                     </j:if>
-                    
+
+                    <j:if test="${file.cppcheckFile.verbose != null}">
+                        <p class="verbose">${file.cppcheckFile.verboseHtml}</p>
+                    </j:if>
+
                     <j:if test="${not file.sourceIgnored}">
                         <code>
                             ${it.getSourceCode(file)}
