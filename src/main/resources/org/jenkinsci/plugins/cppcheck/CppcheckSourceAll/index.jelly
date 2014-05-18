@@ -10,6 +10,7 @@
             .newCppcheck { background-color: #FFC8C8; }
             .solvedCppcheck { background-color: #C8FFC8; }
             .unchangedCppcheck { }
+            .inconclusiveCppcheck { color: #555555; }
 
             .cppcheck h2 { margin-top: 0; }
             .cppcheck code { display: block; margin: 1em 0em 1em 0em; }
@@ -22,7 +23,12 @@
             <h1>${%Cppcheck Results}</h1>
 
             <j:forEach var="file" items="${it.files}">
-                <div class="cppcheck ${file.diffState.css}Cppcheck">
+                <j:set var="inconclusiveCss" value=""/>
+                <j:if test="${file.cppcheckFile.inconclusive}">
+                    <j:set var="inconclusiveCss" value="inconclusiveCppcheck"/>
+                </j:if>
+                
+                <div class="cppcheck ${file.diffState.css}Cppcheck ${inconclusiveCss}">
                     <h2>${file.cppcheckFile.messageHtml}</h2>
 
                     <j:if test="${file.cppcheckFile.fileName != null}">
