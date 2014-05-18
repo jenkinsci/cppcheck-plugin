@@ -163,7 +163,7 @@ public class CppcheckSource implements Serializable {
             outputEscaped(output, "</p>");
         }
 
-        output.append("\">\n");
+        output.append("\" nodismiss=\"\">\n");
         output.append("<code><b>\n");
 
         //The current line error
