@@ -150,8 +150,20 @@ public class CppcheckSource implements Serializable {
         output.append("\">\n");
 
         output.append("<div tooltip=\"");
-        outputEscaped(output, cppcheckFile.getCppCheckId() + ": " + cppcheckFile.getMessage());
-        output.append("\" nodismiss=\"\">\n");
+
+        outputEscaped(output, "<h3>");
+        outputEscaped(output, cppcheckFile.getCppCheckId());
+        output.append(": ");
+        outputEscaped(output, cppcheckFile.getMessage());
+        outputEscaped(output, "</h3>");
+
+        if(cppcheckFile.getVerbose() != null) {
+            outputEscaped(output, "<p style=\"white-space: pre-wrap;\">");
+            outputEscaped(output, cppcheckFile.getVerbose());
+            outputEscaped(output, "</p>");
+        }
+
+        output.append("\">\n");
         output.append("<code><b>\n");
 
         //The current line error
