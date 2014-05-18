@@ -143,7 +143,8 @@ public class CppcheckParser implements Serializable {
                 cppcheckFile.setCppCheckId(error.getId());
                 cppcheckFile.setSeverity(error.getSeverity());
                 cppcheckFile.setMessage(error.getMsg());
-                cppcheckFile.setInconclusive(Boolean.parseBoolean(error.getInconclusive()));
+                cppcheckFile.setInconclusive((error.getInconclusive() != null)
+                        ? error.getInconclusive() : false);
 
                 if ("warning".equals(cppcheckFile.getSeverity())) {
                     warningSeverityList.add(cppcheckFile);
