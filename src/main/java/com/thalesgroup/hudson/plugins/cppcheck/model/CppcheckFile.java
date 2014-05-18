@@ -34,7 +34,7 @@ import java.io.Serializable;
 @ExportedBean(defaultVisibility = 999)
 public class CppcheckFile implements ModelObject, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private Integer key;
 
@@ -47,6 +47,9 @@ public class CppcheckFile implements ModelObject, Serializable {
     private String cppCheckId;
 
     private String message;
+
+    /** The issue may be false positive. */
+    private boolean inconclusive;
 
     @Exported
     public String getFileName() {
@@ -131,6 +134,15 @@ public class CppcheckFile implements ModelObject, Serializable {
 
     public void setKey(Integer key) {
         this.key = key;
+    }
+
+    @Exported
+    public boolean isInconclusive() {
+        return inconclusive;
+    }
+
+    public void setInconclusive(boolean inconclusive) {
+        this.inconclusive = inconclusive;
     }
 
     public String getDisplayName() {

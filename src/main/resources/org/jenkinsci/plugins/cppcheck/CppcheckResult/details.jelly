@@ -11,6 +11,7 @@
     #cppcheckDetails .new { background-color: #FFC8C8; }
     #cppcheckDetails .solved { background-color: #C8FFC8; }
     #cppcheckDetails .unchanged { }
+    #cppcheckDetails .inconclusive { color: #555555; }
     </style>
     
     <p><a href="source.all?before=5&amp;after=5">
@@ -25,14 +26,20 @@
                 <td class="pane-header">${%Line}</td>
                 <td class="pane-header">${%Severity}</td>
                 <td class="pane-header">${%Type}</td>
+                <td class="pane-header">${%Inconclusive}</td>
                 <td class="pane-header">${%Message}</td>
             </tr>
         </thead>
         <tbody>
             <j:forEach var="elt" items="${cachedContainer}">
                 <j:set var="cppcheckFile" value="${elt.cppcheckFile}"/>
+                
+                <j:set var="inconclusiveCss" value=""/>
+                <j:if test="${cppcheckFile.inconclusive}">
+                    <j:set var="inconclusiveCss" value="inconclusive"/>
+                </j:if>
 
-                <tr class="${elt.diffState.css}">
+                <tr class="${elt.diffState.css} ${inconclusiveCss}">
                     <td class="pane">${elt.diffState.text}</td>
                     <td class="pane">
                         <j:if test="${elt.isSourceIgnored()}">
@@ -52,6 +59,7 @@
                     </td>
                     <td class="pane">${cppcheckFile.severity}</td>
                     <td class="pane">${cppcheckFile.cppCheckId}</td>
+                    <td class="pane">${cppcheckFile.inconclusive}</td>
                     <td class="pane">${cppcheckFile.messageHtml}</td>
                 </tr>
             </j:forEach>

@@ -10,30 +10,37 @@
             .newCppcheck { background-color: #FFC8C8; }
             .solvedCppcheck { background-color: #C8FFC8; }
             .unchangedCppcheck { }
+            .inconclusiveCppcheck { color: #555555; }
 
             .cppcheck h2 { margin-top: 0; }
             .cppcheck code { display: block; margin: 1em 0em 1em 0em; }
             .cppcheck .line { white-space: pre-wrap; }
             .cppcheck .lineNumber { color: gray; }
             .cppcheck .highlighted { line-height: 2.1em; background-color: #FCAF3E; font-weight: bold; }
+            .cppcheck .header { font-weight: bold; }
             </style>
 
             <h1>${%Cppcheck Results}</h1>
 
             <j:forEach var="file" items="${it.files}">
-                <div class="cppcheck ${file.diffState.css}Cppcheck">
+                <j:set var="inconclusiveCss" value=""/>
+                <j:if test="${file.cppcheckFile.inconclusive}">
+                    <j:set var="inconclusiveCss" value="inconclusiveCppcheck"/>
+                </j:if>
+                
+                <div class="cppcheck ${file.diffState.css}Cppcheck ${inconclusiveCss}">
                     <h2>${file.cppcheckFile.messageHtml}</h2>
 
                     <j:if test="${file.cppcheckFile.fileName != null}">
                         <j:if test="${file.sourceIgnored}">
                             <div>
-                                ${%Location:}
+                                <span class="header">${%Location:}&amp;nbsp;</span>
                                 ${file.cppcheckFile.fileName}:${file.cppcheckFile.lineNumber}
                             </div>
                         </j:if>
                         <j:if test="${not file.sourceIgnored}">
                             <div>
-                                ${%Location:}
+                                <span class="header">${%Location:}&amp;nbsp;</span>
                                 <a href="../source.${file.cppcheckFile.key}#${file.cppcheckFile.linkLineNumber}">
                                     ${file.cppcheckFile.fileName}:${file.cppcheckFile.lineNumber}
                                 </a>
@@ -41,9 +48,13 @@
                         </j:if>
                     </j:if>
 
-                    <div>${%State:} ${file.diffState.text}</div>
-                    <div>${%Severity:} ${file.cppcheckFile.severity}</div>
-                    <div>${%Type:} ${file.cppcheckFile.cppCheckId}</div>
+                    <div><span class="header">${%State:}&amp;nbsp;</span>${file.diffState.text}</div>
+                    <div><span class="header">${%Severity:}&amp;nbsp;</span>${file.cppcheckFile.severity}</div>
+                    <div><span class="header">${%Type:}&amp;nbsp;</span>${file.cppcheckFile.cppCheckId}</div>
+                    
+                    <j:if test="${file.cppcheckFile.inconclusive}">
+                        <div><span class="header">${%Inconclusive:}&amp;nbsp;</span>${file.cppcheckFile.inconclusive}</div>
+                    </j:if>
                     
                     <j:if test="${not file.sourceIgnored}">
                         <code>
