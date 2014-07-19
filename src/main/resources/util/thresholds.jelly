@@ -127,104 +127,98 @@
 
     </f:entry>
 
+    <f:entry title="${%graph.configuration}" description="${%graph.description}">
 
-    <f:advanced>
+        <table>
+            <tr>
+                <td>
+                    <label for="configGraph.xSize">${%Chart Width}</label>
+                    <f:textbox name="${id}.config.configGraph.xSize" value="${config.configGraph.xSize}"
+                               id="configGraph.xSize"/>
+                </td>
+                <td>
+                    <label for="configGraph.xSize">${%Chart Height}</label>
+                    <f:textbox name="${id}.config.configGraph.ySize" value="${config.configGraph.ySize}"
+                               id="configGraph.ySize"/>
+                </td>
+                <td colspan="2">
+                    <st:nbsp/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayAllErrors"
+                                checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayAllErrors">${%Display all errors}</label>
+                    <st:nbsp/>
+                </td>
 
-        <f:entry title="${%graph.configuration}" description="${%graph.description}">
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayErrorSeverity"
+                                checked="${config.configGraph.displayErrorSeverity}"
+                                id="configGraph.displayErrorSeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayErrorSeverity">${%Display errors}</label>
+                    <st:nbsp/>
+                </td>
 
-            <table>
-                <tr>
-                    <td>
-                        <label for="configGraph.xSize">${%Chart Width}</label>
-                        <f:textbox name="${id}.config.configGraph.xSize" value="${config.configGraph.xSize}"
-                                   id="configGraph.xSize"/>
-                    </td>
-                    <td>
-                        <label for="configGraph.xSize">${%Chart Height}</label>
-                        <f:textbox name="${id}.config.configGraph.ySize" value="${config.configGraph.ySize}"
-                                   id="configGraph.ySize"/>
-                    </td>
-                    <td colspan="2">
-                        <st:nbsp/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayAllErrors"
-                                    checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayAllErrors">${%Display all errors}</label>
-                        <st:nbsp/>
-                    </td>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayWarningSeverity"
+                                checked="${config.configGraph.displayWarningSeverity}"
+                                id="configGrah.displayWarningSeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayWarningSeverity">${%Display warnings}</label>
+                    <st:nbsp/>
+                </td>
 
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayErrorSeverity"
-                                    checked="${config.configGraph.displayErrorSeverity}"
-                                    id="configGraph.displayErrorSeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayErrorSeverity">${%Display errors}</label>
-                        <st:nbsp/>
-                    </td>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayStyleSeverity"
+                                checked="${config.configGraph.displayStyleSeverity}"
+                                id="configGraph.displayStyleSeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayStyleSeverity">${%Display style}</label>
+                    <st:nbsp/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayPerformanceSeverity"
+                                checked="${config.configGraph.displayPerformanceSeverity}"
+                                id="configGraph.displayPerformanceSeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayPerformanceSeverity">${%Display performance}</label>
+                    <st:nbsp/>
+                </td>
 
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayWarningSeverity"
-                                    checked="${config.configGraph.displayWarningSeverity}"
-                                    id="configGrah.displayWarningSeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayWarningSeverity">${%Display warnings}</label>
-                        <st:nbsp/>
-                    </td>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayPortabilitySeverity"
+                                checked="${config.configGraph.displayPortabilitySeverity}"
+                                id="configGraph.displayPortabilitySeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayPortabilitySeverity">${%Display portability}</label>
+                    <st:nbsp/>
+                </td>
 
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayStyleSeverity"
-                                    checked="${config.configGraph.displayStyleSeverity}"
-                                    id="configGraph.displayStyleSeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayStyleSeverity">${%Display style}</label>
-                        <st:nbsp/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayPerformanceSeverity"
-                                    checked="${config.configGraph.displayPerformanceSeverity}"
-                                    id="configGraph.displayPerformanceSeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayPerformanceSeverity">${%Display performance}</label>
-                        <st:nbsp/>
-                    </td>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayInformationSeverity"
+                                checked="${config.configGraph.displayInformationSeverity}"
+                                id="configGraph.displayInformationSeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayInformationSeverity">${%Display information}</label>
+                    <st:nbsp/>
+                </td>
 
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayPortabilitySeverity"
-                                    checked="${config.configGraph.displayPortabilitySeverity}"
-                                    id="configGraph.displayPortabilitySeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayPortabilitySeverity">${%Display portability}</label>
-                        <st:nbsp/>
-                    </td>
+                <td>
+                    <f:checkbox name="${id}.config.configGraph.displayNoCategorySeverity"
+                                checked="${config.configGraph.displayNoCategorySeverity}"
+                                id="configGraph.displayNoCategorySeverity"/>
+                    <st:nbsp/>
+                    <label for="configGraph.displayNoCategorySeverity">${%Display no category}</label>
+                    <st:nbsp/>
+                </td>
+            </tr>
+        </table>
 
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayInformationSeverity"
-                                    checked="${config.configGraph.displayInformationSeverity}"
-                                    id="configGraph.displayInformationSeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayInformationSeverity">${%Display information}</label>
-                        <st:nbsp/>
-                    </td>
-
-                    <td>
-                        <f:checkbox name="${id}.config.configGraph.displayNoCategorySeverity"
-                                    checked="${config.configGraph.displayNoCategorySeverity}"
-                                    id="configGraph.displayNoCategorySeverity"/>
-                        <st:nbsp/>
-                        <label for="configGraph.displayNoCategorySeverity">${%Display no category}</label>
-                        <st:nbsp/>
-                    </td>
-                </tr>
-            </table>
-
-        </f:entry>
-
-    </f:advanced>
-
+    </f:entry>
 </j:jelly>
