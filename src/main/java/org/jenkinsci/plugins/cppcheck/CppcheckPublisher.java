@@ -6,8 +6,6 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.XmlFile;
-import hudson.matrix.MatrixProject;
-import hudson.maven.MavenModuleSet;
 import hudson.model.*;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
@@ -217,15 +215,7 @@ public class CppcheckPublisher extends Recorder {
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            boolean isIvyProject = false;
-            if (Hudson.getInstance().getPlugin("ivy") != null) {
-                isIvyProject = hudson.ivy.AbstractIvyProject.class.isAssignableFrom(jobType);
-            }
-
-            return FreeStyleProject.class.isAssignableFrom(jobType)
-                    || MavenModuleSet.class.isAssignableFrom(jobType)
-                    || MatrixProject.class.isAssignableFrom(jobType)
-                    || isIvyProject;
+            return true;
         }
 
         @Override
