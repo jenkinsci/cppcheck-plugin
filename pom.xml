@@ -36,8 +36,8 @@
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/cppcheck-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/cppcheck-plugin.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,16 +49,10 @@
         <java2html.version>5.0</java2html.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
-        <ivy.plugin.version>1.19</ivy.plugin.version>
         <dashboard.view.version>2.0</dashboard.view.version>
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>maven-plugin</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -97,13 +91,6 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>ivy</artifactId>
-            <version>${ivy.plugin.version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
