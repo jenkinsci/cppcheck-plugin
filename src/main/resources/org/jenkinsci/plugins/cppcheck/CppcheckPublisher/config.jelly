@@ -5,8 +5,7 @@
         <j:set var="config" value="${descriptor.config}"/>
     </j:if>
 
-    <f:entry title="${%Cppcheck report XMLs}"
-             description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
+    <f:entry title="${%Cppcheck report XMLs}" field="pattern">
         <f:textbox name="cppcheck.pattern" value="${config.pattern}"/>
     </f:entry>
 

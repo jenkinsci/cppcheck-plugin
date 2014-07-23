@@ -12,29 +12,31 @@
     </j:if>
 
 
-    <f:entry title="${%Build status}" description="${%description.status}">
+    <f:entry title="${%Build status thresholds}" field="thresholds">
         <table>
             <thead>
                 <tr>
-                    <td></td>
                     <td width="80">
-                        <img src="${rootURL}/images/16x16/health-80plus.gif" alt="100%"
+                        <img src="${rootURL}/images/16x16/health-80plus.gif" alt="${%Health 100%}"
                              title="${%description.healthy}"/>
                     </td>
                     <td width="80">
-                        <img src="${rootURL}/images/16x16/health-00to19.gif" alt="0%"
+                        <img src="${rootURL}/images/16x16/health-00to19.gif" alt="${%Health 0%}"
                              title="${%description.unhealthy}"/>
                     </td>
                     <td width="80">
-                        <img src="${rootURL}/images/16x16/yellow.gif" alt="100%" title="${%description.threshold}"/>
+                        <img src="${rootURL}/images/16x16/yellow.gif" alt="100%"
+                             title="${%description.threshold}"/>
                         ${%Total}
                     </td>
                     <td width="80">
-                        <img src="${rootURL}/images/16x16/yellow.gif" alt="100%" title="${%description.newThreshold}"/>
+                        <img src="${rootURL}/images/16x16/yellow.gif" alt="100%"
+                             title="${%description.newThreshold}"/>
                         ${%New}
                     </td>
                     <td width="80">
-                        <img src="${rootURL}/images/16x16/red.gif" alt="100%" title="${%description.failureThreshold}"/>
+                        <img src="${rootURL}/images/16x16/red.gif" alt="100%"
+                             title="${%description.failureThreshold}"/>
                         ${%Total}
                     </td>
                     <td width="80">
@@ -46,7 +48,6 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="vertical-align:middle">${%Thresholds:}</td>
                     <td>
                         <f:textbox name="cppcheck.config.configSeverityEvaluation.healthy"
                                    value="${config.configSeverityEvaluation.healthy}"/>
@@ -77,22 +78,25 @@
     </f:entry>
 
 
-    <f:entry title="${%severity.evaluation}" description="${%description.limit}">
+    <f:entry title="${%severity.evaluation}" field="severity">
 
         <f:checkbox name="${id}.config.configSeverityEvaluation.severityError"
-                    checked="${config.configSeverityEvaluation.severityError}" id="thresholdLimit.severityError"/>
+                    checked="${config.configSeverityEvaluation.severityError}"
+                    id="thresholdLimit.severityError"/>
         <st:nbsp/>
         <label for="thresholdLimit.severityError">${%Error}</label>
         <st:nbsp/>
 
         <f:checkbox name="${id}.config.configSeverityEvaluation.severityWarning"
-                    checked="${config.configSeverityEvaluation.severityWarning}" id="thresholdLimit.severityWarning"/>
+                    checked="${config.configSeverityEvaluation.severityWarning}"
+                    id="thresholdLimit.severityWarning"/>
         <st:nbsp/>
         <label for="thresholdLimit.severityWarning">${%Warning}</label>
         <st:nbsp/>
 
         <f:checkbox name="${id}.config.configSeverityEvaluation.severityStyle"
-                    checked="${config.configSeverityEvaluation.severityStyle}" id="thresholdLimit.severityStyle"/>
+                    checked="${config.configSeverityEvaluation.severityStyle}"
+                    id="thresholdLimit.severityStyle"/>
         <st:nbsp/>
         <label for="thresholdLimit.severityStyle">${%Style}</label>
         <st:nbsp/>
@@ -127,18 +131,20 @@
 
     </f:entry>
 
-    <f:entry title="${%graph.configuration}" description="${%graph.description}">
+    <f:entry title="${%graph.configuration}">
 
         <table>
             <tr>
                 <td>
                     <label for="configGraph.xSize">${%Chart Width}</label>
-                    <f:textbox name="${id}.config.configGraph.xSize" value="${config.configGraph.xSize}"
+                    <f:textbox name="${id}.config.configGraph.xSize"
+                               value="${config.configGraph.xSize}"
                                id="configGraph.xSize"/>
                 </td>
                 <td>
                     <label for="configGraph.xSize">${%Chart Height}</label>
-                    <f:textbox name="${id}.config.configGraph.ySize" value="${config.configGraph.ySize}"
+                    <f:textbox name="${id}.config.configGraph.ySize"
+                               value="${config.configGraph.ySize}"
                                id="configGraph.ySize"/>
                 </td>
                 <td colspan="2">
@@ -148,7 +154,8 @@
             <tr>
                 <td>
                     <f:checkbox name="${id}.config.configGraph.displayAllErrors"
-                                checked="${config.configGraph.displayAllErrors}" id="configGraph.displayAllErrors"/>
+                                checked="${config.configGraph.displayAllErrors}"
+                                id="configGraph.displayAllErrors"/>
                     <st:nbsp/>
                     <label for="configGraph.displayAllErrors">${%Display all errors}</label>
                     <st:nbsp/>
