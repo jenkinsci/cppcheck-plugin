@@ -157,7 +157,7 @@
                                 checked="${config.configGraph.displayAllErrors}"
                                 id="configGraph.displayAllErrors"/>
                     <st:nbsp/>
-                    <label for="configGraph.displayAllErrors">${%Display all errors}</label>
+                    <label for="configGraph.displayAllErrors">${%Display sum of all issues}</label>
                     <st:nbsp/>
                 </td>
 
