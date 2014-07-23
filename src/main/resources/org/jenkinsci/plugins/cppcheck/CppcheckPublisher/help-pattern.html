@@ -1,0 +1,12 @@
+<p style="margin-top: 0px;">Cppcheck must be executed to generate XML reports for this plugin to function.
+<a href="http://ant.apache.org/manual/Types/fileset.html">Fileset
+'includes'</a> setting specifies the generated Cppcheck XML report files,
+such as '**/cppcheck-result-*.xml'. Base directory of the fileset is relative
+to the workspace root directory.</p>
+
+<p>If no value is set, then the default '**/cppcheck-result.xml' will be used.
+Be sure to never include any non-report files into this pattern.</p>
+
+<p>The plugin is able to work with both XML formats produced by Cppcheck,
+but always prefer to use the newer version 2. Cppcheck doesn't report some
+issues with the legacy format.</p>
