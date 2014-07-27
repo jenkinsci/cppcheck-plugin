@@ -18,13 +18,7 @@ import org.kohsuke.stapler.export.Exported;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Gregory Boissinot
@@ -142,7 +136,8 @@ public class CppcheckResult implements Serializable {
                 return null;
             }
 
-            Collection<CppcheckWorkspaceFile> files = diffCurrentAndPrevious();
+            Set<CppcheckDiffState> filter = parseStatesFilter(request.getParameter("states"));
+            Collection<CppcheckWorkspaceFile> files = diffCurrentAndPrevious(filter);
             int before = parseIntWithDefault(request.getParameter("before"), 5);
             int after = parseIntWithDefault(request.getParameter("after"), 5);
 
@@ -168,6 +163,31 @@ public class CppcheckResult implements Serializable {
             }
         }
         return null;
+    }
+
+    /**
+     * Parse list of states.
+     *
+     * @param states
+     *            comma separated list of states (will be transformed to uppercase)
+     * @return the parsed value or null if input is null
+     */
+    private Set<CppcheckDiffState> parseStatesFilter(String states) {
+        if (states == null) {
+            return null;
+        }
+
+        Set<CppcheckDiffState> result = new HashSet<CppcheckDiffState>();
+
+        for (String state: states.toUpperCase().split(",")) {
+            try {
+                result.add(CppcheckDiffState.valueOf(state));
+            } catch (IllegalArgumentException e) {
+                // Ignore, input was broken
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -340,10 +360,13 @@ public class CppcheckResult implements Serializable {
      * a developer updates the source code somewhere above the issue. Move of
      * the code to a different file e.g. during refactoring is not considered
      * and one solved and one new issue will be highlighted in such case.
-     * 
+     *
+     * @param filter
+     *            put only issues of these types to the output, null for all
      * @return the result of the comparison
      */
-    public Collection<CppcheckWorkspaceFile> diffCurrentAndPrevious() {
+    public Collection<CppcheckWorkspaceFile> diffCurrentAndPrevious(
+            Set<CppcheckDiffState> filter) {
         CppcheckSourceContainer cur = getCppcheckSourceContainer();
         CppcheckResult prevResult = getPreviousResult();
         List<CppcheckWorkspaceFile> curValues
@@ -354,7 +377,7 @@ public class CppcheckResult implements Serializable {
                 file.setDiffState(CppcheckDiffState.UNCHANGED);
             }
 
-            return curValues;
+            return filterDiffOutput(curValues, filter);
         }
 
         CppcheckSourceContainer prev = prevResult.getCppcheckSourceContainer();
@@ -428,7 +451,33 @@ public class CppcheckResult implements Serializable {
             }
         });
 
-        return curValues;
+        return filterDiffOutput(curValues, filter);
+    }
+
+    /**
+     * Filter result of comparison.
+     *
+     * @param files
+     *            input issues
+     * @param filter
+     *            put only issues of these types to the output, null for all
+     * @return
+     */
+    private Collection<CppcheckWorkspaceFile> filterDiffOutput(List<CppcheckWorkspaceFile> files,
+                                                               Set<CppcheckDiffState> filter) {
+        if (filter == null) {
+            return files;
+        }
+
+        Collection<CppcheckWorkspaceFile> result = new ArrayList<CppcheckWorkspaceFile>();
+
+        for (CppcheckWorkspaceFile file: files) {
+            if (filter.contains(file.getDiffState())) {
+                result.add(file);
+            }
+        }
+
+        return result;
     }
 
     /**

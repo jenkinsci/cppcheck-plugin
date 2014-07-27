@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:g="/jelly/cppcheck">
     <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
 
-    <j:set var="cachedContainer" value="${it.diffCurrentAndPrevious()}"/>
+    <j:set var="cachedContainer" value="${it.diffCurrentAndPrevious(null)}"/>
 
     <h2>${%Details}</h2>
 
@@ -13,10 +13,15 @@
     #cppcheckDetails .unchanged { }
     #cppcheckDetails .inconclusive { color: #555555; }
     </style>
-    
-    <p><a href="source.all?before=5&amp;after=5">
-        ${%Show all violations highlighted on a single page.}
-    </a></p>
+
+    <p>Show issues highlighted on a single page</p>
+    <ul>
+        <li><a href="source.all?before=5&amp;after=5">${%all}</a></li>
+        <li><a href="source.all?before=5&amp;after=5&amp;states=new,solved">${%new and solved}</a></li>
+        <li><a href="source.all?before=5&amp;after=5&amp;states=new">${%new}</a></li>
+        <li><a href="source.all?before=5&amp;after=5&amp;states=solved">${%solved}</a></li>
+        <li><a href="source.all?before=5&amp;after=5&amp;states=unchanged">${%unchanged}</a></li>
+    </ul>
 
     <table class="pane sortable" id="cppcheckDetails">
         <thead>
