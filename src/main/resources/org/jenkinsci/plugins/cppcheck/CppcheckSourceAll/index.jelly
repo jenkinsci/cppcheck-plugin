@@ -23,6 +23,10 @@
 
             <h1>${%Cppcheck Results}</h1>
 
+            <j:if test="${it.files.isEmpty()}">
+                <p>${%The result set is empty.}</p>
+            </j:if>
+
             <j:forEach var="file" items="${it.files}">
                 <j:set var="inconclusiveCss" value=""/>
                 <j:if test="${file.cppcheckFile.inconclusive}">

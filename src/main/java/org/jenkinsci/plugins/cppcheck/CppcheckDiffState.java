@@ -3,10 +3,10 @@ package org.jenkinsci.plugins.cppcheck;
 /**
  * Status of comparison of two reports.
  * 
- * Implementation note: The declaration order of the constants is significant,
- * it's used in sorting.
+ * Implementation note: The upper case of the constants and declaration order
+ * are significant, the second one is used in sorting.
  * 
- * @see CppcheckResult#diffCurrentAndPrevious()
+ * @see CppcheckResult#diffCurrentAndPrevious(java.util.Set)
  * @author Michal Turek
  */
 public enum CppcheckDiffState {
