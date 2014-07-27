@@ -461,7 +461,7 @@ public class CppcheckResult implements Serializable {
      *            input issues
      * @param filter
      *            put only issues of these types to the output, null for all
-     * @return
+     * @return filtered input
      */
     private Collection<CppcheckWorkspaceFile> filterDiffOutput(List<CppcheckWorkspaceFile> files,
                                                                Set<CppcheckDiffState> filter) {
