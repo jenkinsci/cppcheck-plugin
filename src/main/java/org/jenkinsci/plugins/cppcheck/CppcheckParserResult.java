@@ -63,7 +63,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
             CppcheckLogger.log(listener, "Processing " + cppcheckReportFiles.length + " files with the pattern '" + cppcheckReportPattern + "'.");
 
             for (String cppchecReportkFileName : cppcheckReportFiles) {
-                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppchecReportkFileName));
+                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppchecReportkFileName), listener);
                 mergeReport(cppcheckReportResult, cppcheckReport);
             }
         } catch (Exception e) {
