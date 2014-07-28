@@ -1,9 +1,11 @@
 package org.jenkinsci.plugins.cppcheck.parser;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import hudson.model.BuildListener;
 import org.jenkinsci.plugins.cppcheck.CppcheckReport;
 import org.jenkinsci.plugins.cppcheck.model.Errors;
 import org.jenkinsci.plugins.cppcheck.model.Results;
+import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -22,7 +24,7 @@ public class CppcheckParser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public CppcheckReport parse(final File file) throws IOException {
+    public CppcheckReport parse(final File file, BuildListener listener) throws IOException {
 
         if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");
@@ -52,6 +54,11 @@ public class CppcheckParser implements Serializable {
                 Unmarshaller unmarshaller = jc.get().createUnmarshaller();
                 com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
                 report = getReportVersion1(results);
+
+                CppcheckLogger.log(listener, "WARNING: Legacy format of report file detected, "
+                        + "please consider to pass additional argument '--xml-version=2' to Cppcheck. "
+                        + "It often detects and reports more issues with the new format, "
+                        + "so its usage is highly recommended.");
             } catch (JAXBException jxe1) {
                 // Since Java 1.6
                 // throw new IOException(jxe1);
