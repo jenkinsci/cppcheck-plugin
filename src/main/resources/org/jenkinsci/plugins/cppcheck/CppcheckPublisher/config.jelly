@@ -19,6 +19,11 @@
         <label>${%Do not fail the build if the Cppcheck report is not found}</label>
     </f:entry>
 
+    <f:entry field="stableBuild">
+        <f:checkbox name="cppcheck.stableBuild" checked="${config.stableBuild}"/>
+        <label>${%Compare the Cppcheck report to the last stable build's Cppcheck report}</label>
+    </f:entry>
+
     <f:advanced>
         <u:thresholds id="cppcheck"/>
     </f:advanced>

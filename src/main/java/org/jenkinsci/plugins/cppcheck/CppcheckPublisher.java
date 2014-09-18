@@ -42,6 +42,7 @@ public class CppcheckPublisher extends Recorder {
     public CppcheckPublisher(String pattern,
                              boolean ignoreBlankFiles, String threshold,
                              boolean allowNoReport,
+                             boolean stableBuild,
                              String newThreshold, String failureThreshold,
                              String newFailureThreshold, String healthy, String unHealthy,
                              boolean severityError,
@@ -66,6 +67,7 @@ public class CppcheckPublisher extends Recorder {
         cppcheckConfig.setPattern(pattern);
         cppcheckConfig.setAllowNoReport(allowNoReport);
         cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
+        cppcheckConfig.setStableBuild(stableBuild);
         CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
                 severityError,
@@ -143,7 +145,8 @@ public class CppcheckPublisher extends Recorder {
                     = new CppcheckSourceContainer(listener, build.getWorkspace(),
                             build.getModuleRoot(), cppcheckReport.getAllErrors());
 
-            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build, 
+            		cppcheckConfig.getStableBuild());
             CppcheckConfigSeverityEvaluation severityEvaluation
                     = cppcheckConfig.getConfigSeverityEvaluation();
 

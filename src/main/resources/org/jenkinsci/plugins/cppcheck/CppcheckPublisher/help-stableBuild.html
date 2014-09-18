@@ -1,0 +1,12 @@
+<p style="margin-top: 0px;">By default, Cppcheck compares the report warnings 
+and errors to that of the last build, which could be a build that was deemed 
+unstable or that failed.  To compare the results of this build against the last 
+"stable" build instead, check this option.</p>
+
+<p>Note: When comparing against unstable builds, your builds could be marked as 
+stable even when new errors or warnings have been introduced, because the delta 
+between the last unstable build and current build could be zero.  If the 
+unstable build introduced a new error but resolve an error, then the total 
+error count will still be within the permitted threshold. Another build with 
+the same results will be marked as stable, allowing the new error to go 
+unnoticed.  Selecting this option will ensure all errors are accounted for.</p>
