@@ -142,12 +142,19 @@
                                id="configGraph.xSize"/>
                 </td>
                 <td>
-                    <label for="configGraph.xSize">${%Chart Height}</label>
+                    <label for="configGraph.ySize">${%Chart Height}</label>
                     <f:textbox name="${id}.config.configGraph.ySize"
                                value="${config.configGraph.ySize}"
                                id="configGraph.ySize"/>
                 </td>
-                <td colspan="2">
+                <td>
+                    <label for="configGraph.numBuildsInGraph"
+                           title="${%description.numBuildsInGraph}">${%Builds in graph}</label>
+                    <f:textbox name="${id}.config.configGraph.numBuildsInGraph"
+                               value="${config.configGraph.numBuildsInGraph}"
+                               id="configGraph.numBuildsInGraph"/>
+                </td>
+                <td colspan="1">
                     <st:nbsp/>
                 </td>
             </tr>
@@ -173,7 +180,7 @@
                 <td>
                     <f:checkbox name="${id}.config.configGraph.displayWarningSeverity"
                                 checked="${config.configGraph.displayWarningSeverity}"
-                                id="configGrah.displayWarningSeverity"/>
+                                id="configGraph.displayWarningSeverity"/>
                     <st:nbsp/>
                     <label for="configGraph.displayWarningSeverity">${%Display warnings}</label>
                     <st:nbsp/>

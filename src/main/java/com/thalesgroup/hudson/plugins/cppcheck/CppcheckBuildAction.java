@@ -192,6 +192,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph configGraph = new org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph(
                 cppcheckConfig.getConfigGraph().getXSize(),
                 cppcheckConfig.getConfigGraph().getYSize(),
+                0,
                 cppcheckConfig.getConfigGraph().isDiplayAllError(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityError(),
                 cppcheckConfig.getConfigGraph().isDisplaySeverityPossibleError(),

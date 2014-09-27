@@ -127,7 +127,13 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         AbstractBuild<?,?> lastBuild = getLastFinishedBuild();
         CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
 
-        for (CppcheckBuildAction a = lastAction; a != null; a = a.getPreviousResult()) {
+        int numBuilds = 0;
+
+        // numBuildsInGraph <= 1 means unlimited
+        for (CppcheckBuildAction a = lastAction;
+             a != null && (configGraph.getNumBuildsInGraph() <= 1 || numBuilds < configGraph.getNumBuildsInGraph());
+             a = a.getPreviousResult(), ++numBuilds) {
+
             ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.getOwner());
             CppcheckStatistics statistics = a.getResult().getStatistics();
 
