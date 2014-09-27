@@ -44,9 +44,9 @@
                     <j:set var="inconclusiveCss" value="inconclusive"/>
                 </j:if>
 
-                <tr class="${elt.diffState.css} ${inconclusiveCss}">
-                    <td class="pane">${elt.diffState.text}</td>
-                    <td class="pane">
+                <tr>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">${elt.diffState.text}</td>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">
                         <j:if test="${elt.isSourceIgnored()}">
                             ${cppcheckFile.fileName}
                         </j:if>
@@ -54,7 +54,7 @@
                             <a href="source.${cppcheckFile.key}">${cppcheckFile.fileName}</a>
                         </j:if>
                     </td>
-                    <td class="pane" data="${cppcheckFile.lineNumber}">
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}" data="${cppcheckFile.lineNumber}">
                         <j:if test="${elt.isSourceIgnored()}">
                             ${cppcheckFile.lineNumberString}
                         </j:if>
@@ -62,10 +62,10 @@
                             <a href="source.${cppcheckFile.key}#${cppcheckFile.linkLineNumber}">${cppcheckFile.lineNumberString}</a>
                         </j:if>
                     </td>
-                    <td class="pane">${cppcheckFile.severity}</td>
-                    <td class="pane">${cppcheckFile.cppCheckId}</td>
-                    <td class="pane">${cppcheckFile.inconclusive}</td>
-                    <td class="pane">${cppcheckFile.messageHtml}</td>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">${cppcheckFile.severity}</td>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">${cppcheckFile.cppCheckId}</td>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">${cppcheckFile.inconclusive}</td>
+                    <td class="pane ${elt.diffState.css} ${inconclusiveCss}">${cppcheckFile.messageHtml}</td>
                 </tr>
             </j:forEach>
         </tbody>
