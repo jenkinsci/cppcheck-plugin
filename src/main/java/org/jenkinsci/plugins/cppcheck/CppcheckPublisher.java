@@ -52,6 +52,7 @@ public class CppcheckPublisher extends Recorder {
                              boolean severityNoCategory,
                              boolean severityPortability,
                              int xSize, int ySize,
+                             int numBuildsInGraph,
                              boolean displayAllErrors,
                              boolean displayErrorSeverity,
                              boolean displayWarningSeverity,
@@ -77,7 +78,7 @@ public class CppcheckPublisher extends Recorder {
                 severityPortability);
         cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
         CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
-                xSize, ySize,
+                xSize, ySize, numBuildsInGraph,
                 displayAllErrors,
                 displayErrorSeverity,
                 displayWarningSeverity,

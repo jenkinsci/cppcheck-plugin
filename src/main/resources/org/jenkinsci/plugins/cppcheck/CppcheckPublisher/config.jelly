@@ -10,13 +10,15 @@
     </f:entry>
 
     <f:entry>
-        <f:checkbox name="cppcheck.ignoreBlankFiles" checked="${config.ignoreBlankFiles}"/>
-        <label>${%Ignore blank files}</label>
+        <f:checkbox name="cppcheck.ignoreBlankFiles" checked="${config.ignoreBlankFiles}"
+                    id="cppcheck.ignoreBlankFiles"/>
+        <label for="cppcheck.ignoreBlankFiles">${%Ignore blank files}</label>
     </f:entry>
 
     <f:entry>
-        <f:checkbox name="cppcheck.allowNoReport" checked="${config.allowNoReport}"/>
-        <label>${%Do not fail the build if the Cppcheck report is not found}</label>
+        <f:checkbox name="cppcheck.allowNoReport" checked="${config.allowNoReport}"
+                    id="cppcheck.allowNoReport"/>
+        <label for="cppcheck.allowNoReport">${%Do not fail the build if the Cppcheck report is not found}</label>
     </f:entry>
 
     <f:advanced>
