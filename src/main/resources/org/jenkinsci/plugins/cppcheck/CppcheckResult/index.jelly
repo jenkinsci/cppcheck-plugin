@@ -1,5 +1,5 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-    <l:layout norefresh="true">
+    <l:layout norefresh="true" title="${%Cppcheck Results}">
         <st:include it="${it.owner}" page="sidepanel.jelly"/>
         <l:main-panel>
 
