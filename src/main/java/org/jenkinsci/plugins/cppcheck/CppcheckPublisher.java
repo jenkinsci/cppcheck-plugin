@@ -2,6 +2,7 @@ package org.jenkinsci.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -118,9 +119,13 @@ public class CppcheckPublisher extends Recorder {
 
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
+            
+            EnvVars env = build.getEnvironment(listener);
+            String expandedPattern = env.expand(cppcheckConfig.getPattern());
+            
 
             CppcheckParserResult parser = new CppcheckParserResult(listener,
-                    cppcheckConfig.getPattern(), cppcheckConfig.isIgnoreBlankFiles());
+            		expandedPattern, cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport;
             try {
                 cppcheckReport = build.getWorkspace().act(parser);
