@@ -62,12 +62,27 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
             CppcheckLogger.log(listener, "Processing " + cppcheckReportFiles.length + " files with the pattern '" + cppcheckReportPattern + "'.");
 
-            for (String cppchecReportkFileName : cppcheckReportFiles) {
-                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppchecReportkFileName), listener);
+            for (String cppcheckReportFileName : cppcheckReportFiles) {
+                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppcheckReportFileName), listener);
                 mergeReport(cppcheckReportResult, cppcheckReport);
+
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getErrorSeverityList().size() + " Error severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getWarningSeverityList().size() + " Warning severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getStyleSeverityList().size() + " Style severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getPerformanceSeverityList().size() + " Performance severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getInformationSeverityList().size() + " Information severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getNoCategorySeverityList().size() + " No Category severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getPortabilitySeverityList().size() + " Portability severities");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getAllErrors().size() + " All Errors");
+                CppcheckLogger.log(listener, "Merged " + cppcheckReportResult.getVersions().size() + " Versions");
             }
         } catch (Exception e) {
             CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getMessage());
+            StackTraceElement[] elements = e.getStackTrace();
+
+            for (StackTraceElement element : elements) {
+            	CppcheckLogger.log(listener, element.toString());
+            }
             return null;
         }
 
