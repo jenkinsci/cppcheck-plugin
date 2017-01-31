@@ -3,7 +3,7 @@
 
   <%@attribute name="id" required="true" %>
 -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
 
     <j:set var="config" value="${instance.cppcheckConfig}"/>

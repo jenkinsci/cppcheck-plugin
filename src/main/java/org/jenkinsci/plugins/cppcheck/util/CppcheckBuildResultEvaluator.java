@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
 
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.model.Result;
 
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
@@ -11,7 +11,7 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
  */
 public class CppcheckBuildResultEvaluator {
     public Result evaluateBuildResult(
-            final BuildListener listener,
+            final TaskListener listener,
             int errorsCount,
             int newErrorsCount,
             CppcheckConfigSeverityEvaluation severityEvaluation) {

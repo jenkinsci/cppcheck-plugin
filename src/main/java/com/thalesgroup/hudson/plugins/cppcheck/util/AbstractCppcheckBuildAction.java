@@ -26,14 +26,14 @@ import hudson.model.*;
 import org.kohsuke.stapler.StaplerProxy;
 
 public abstract class AbstractCppcheckBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
-    protected AbstractBuild<?, ?> owner;
+    protected Run<?, ?> owner;
 
-    protected AbstractCppcheckBuildAction(AbstractBuild<?, ?> owner) {
+    protected AbstractCppcheckBuildAction(Run<?, ?> owner) {
         this.owner = owner;
     }
 
     public <T extends AbstractCppcheckBuildAction> T getPreviousResult() {
-        AbstractBuild<?, ?> b = owner;
+    	Run<?, ?> b = owner;
         while (true) {
             b = b.getPreviousBuild();
             if (b == null)
@@ -46,7 +46,7 @@ public abstract class AbstractCppcheckBuildAction extends Actionable implements 
         }
     }
 
-    public AbstractBuild<?, ?> getOwner() {
+    public Run<?, ?> getOwner() {
         return owner;
     }
 }

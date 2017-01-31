@@ -25,6 +25,8 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.StackedAreaRenderer2;
+
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 
 /**
@@ -65,5 +67,32 @@ public class CppcheckAreaRenderer extends StackedAreaRenderer2 {
      */
     private NumberOnlyBuildLabel getLabel(final CategoryDataset dataset, final int column) {
         return (NumberOnlyBuildLabel) dataset.getColumnKey(column);
+    }
+    
+    /**
+     * Checks this instance for equality with an arbitrary object.
+     *
+     * @param obj  the object (<code>null</code> not permitted).
+     *
+     * @return A boolean.
+     */
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof CppcheckAreaRenderer)) {
+            return false;
+        }
+        CppcheckAreaRenderer that = (CppcheckAreaRenderer) obj;
+
+        if (this.url != that.url) {
+            return false;
+        }
+        return super.equals(obj);
+    }
+    
+    
+    public int hashCode() {
+    	return this.url.hashCode();
     }
 }

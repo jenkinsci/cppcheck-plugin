@@ -1,12 +1,15 @@
 package org.jenkinsci.plugins.cppcheck;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
@@ -22,7 +25,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
  */
 public class CppcheckSourceAll {
     /** The related build. */
-    private final AbstractBuild<?, ?> owner;
+    private final Run<?, ?> owner;
 
     /** The files to show. */
     private final Collection<CppcheckWorkspaceFile> files;
@@ -45,7 +48,7 @@ public class CppcheckSourceAll {
      * @param linesAfter
      *            number of lines to show after the highlighted line
      */
-    public CppcheckSourceAll(AbstractBuild<?, ?> owner,
+    public CppcheckSourceAll(Run<?, ?> owner,
             Collection<CppcheckWorkspaceFile> files, int linesBefore,
             int linesAfter) {
         this.owner = owner;
@@ -54,7 +57,7 @@ public class CppcheckSourceAll {
         this.linesAfter = linesAfter;
     }
 
-    public AbstractBuild<?, ?> getOwner() {
+    public Run<?, ?> getOwner() {
         return owner;
     }
 
@@ -87,7 +90,7 @@ public class CppcheckSourceAll {
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new FileReader(tempFile));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(tempFile), StandardCharsets.UTF_8));//new FileReader(tempFile));
             return getRelatedLines(reader, file.getCppcheckFile()
                     .getLineNumber());
         } catch (FileNotFoundException e) {

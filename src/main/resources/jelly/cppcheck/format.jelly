@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml">
     <x:element name="format">
         <x:attribute name="value"></x:attribute>

@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.cppcheck.parser;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.cppcheck.CppcheckReport;
 import org.jenkinsci.plugins.cppcheck.model.Errors;
 import org.jenkinsci.plugins.cppcheck.model.Results;
@@ -24,7 +24,7 @@ public class CppcheckParser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public CppcheckReport parse(final File file, BuildListener listener) throws IOException {
+    public CppcheckReport parse(final File file, TaskListener listener) throws IOException {
 
         if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");

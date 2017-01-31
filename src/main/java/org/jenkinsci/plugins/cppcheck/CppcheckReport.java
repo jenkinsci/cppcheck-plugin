@@ -17,6 +17,7 @@ import java.util.Set;
 public class CppcheckReport implements Serializable {
 
     private String version;
+    private static final long serialVersionUID = 1;
 
     private transient List<CppcheckFile> allErrors = new ArrayList<CppcheckFile>();
     private transient Set<String> versions = new HashSet<String>();

@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
 import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 import java.io.Serializable;
 
@@ -21,4 +22,7 @@ public class CppcheckLogger implements Serializable {
         listener.getLogger().println("[Cppcheck] " + message);
     }
 
+    public static void log(TaskListener listener, final String message) {
+        listener.getLogger().println("[Cppcheck] " + message);
+    }
 }
