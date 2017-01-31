@@ -3,7 +3,6 @@ package org.jenkinsci.plugins.cppcheck;
 import java.io.IOException;
 import java.util.Calendar;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 import hudson.model.Result;
 import hudson.util.ChartUtil;
@@ -53,9 +52,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         return (lastBuild != null) ? lastBuild.getAction(CppcheckBuildAction.class) : null;
     }
 
-    public final boolean isDisplayGraph() {
-//    	return true;
-    	
+    public final boolean isDisplayGraph() {   	
         //Latest
         Run<?, ?> b = getLastFinishedBuild();
         if (b == null) {

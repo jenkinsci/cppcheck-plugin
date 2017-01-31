@@ -79,9 +79,9 @@ public class CppcheckResult implements Serializable {
         return report;
     }
 
-//    public AbstractBuild<?, ?> getOwner() {
-//        return owner;
-//    }
+    public AbstractBuild<?, ?> getOwner() {
+        return owner;
+    }
 
     public CppcheckSourceContainer getCppcheckSourceContainer() {
         return cppcheckSourceContainer;

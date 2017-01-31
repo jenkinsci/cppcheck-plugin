@@ -105,11 +105,6 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
         return cppcheckConfig;
     }
 
-//    @Override
-//    public Action getProjectAction(AbstractProject<?, ?> project) {
-//        return new CppcheckProjectAction(project, cppcheckConfig.getConfigGraph());
-//    }
-
     protected boolean canContinue(final Result result) {
         return result != Result.ABORTED && result != Result.FAILURE;
     }
@@ -117,15 +112,6 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
     }
-
-    // implements SimpleBuildStep
-    
-//    @Override
-//    public boolean perform(Run<?, ?> build, Launcher launcher,
-//            BuildListener listener) throws InterruptedException, IOException {
-//
-//    	return performI(build, build.getWorkspace(), launcher, listener);
-//    }
 
     @Override
     public void perform(@Nonnull Run<?,?> build, @Nonnull FilePath workspace, @Nonnull Launcher launcher,
