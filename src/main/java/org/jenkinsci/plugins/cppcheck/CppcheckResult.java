@@ -46,7 +46,7 @@ public class CppcheckResult implements Serializable {
     /**
      * The build owner.
      */
-    private transient Run<?, ?> owner; // TODO should the transient modified be removed?
+    private Run<?, ?> owner;
 
     /**
      * The Cppcheck report statistics.
@@ -229,6 +229,9 @@ public class CppcheckResult implements Serializable {
      * @return the previous Cppcheck Build Action
      */
     private CppcheckBuildAction getPreviousAction() {
+    	if(owner == null)
+    		return null;
+    	
         Run<?, ?> previousBuild = owner.getPreviousBuild();
         if (previousBuild != null) {
             return previousBuild.getAction(CppcheckBuildAction.class);
@@ -511,10 +514,18 @@ public class CppcheckResult implements Serializable {
         }
 
         try {
-            XmlFile xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
-                    CppcheckPublisher.XML_FILE_DETAILS));
+        	
+        	if(owner != null) {       		
+        		XmlFile xmlSourceContainer = null;
+            	xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
+                        CppcheckPublisher.XML_FILE_DETAILS));
 
-            return (CppcheckSourceContainer) xmlSourceContainer.read();
+                return (CppcheckSourceContainer) xmlSourceContainer.read();
+        	}
+        	else {
+        		throw new IOException("lazyLoad: Attemped without owner");
+        	}
+
         } catch (IOException e) {
             return new CppcheckSourceContainer(new HashMap<Integer,
                     CppcheckWorkspaceFile>());

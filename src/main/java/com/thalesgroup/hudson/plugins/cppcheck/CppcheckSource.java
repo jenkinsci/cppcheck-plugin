@@ -57,7 +57,7 @@ public class CppcheckSource implements Serializable {
     /**
      * The current build as owner of this object.
      */
-    private transient final Run<?, ?> owner; // TODO should the transient modified be removed?
+    private final Run<?, ?> owner;
 
     /**
      * The cppcheck source file in the workspace to be shown.

@@ -57,7 +57,7 @@ public class CppcheckResult implements Serializable {
     /**
      * The build owner
      */
-    private transient AbstractBuild<?, ?> owner; // TODO should the transient modified be removed?
+    private AbstractBuild<?, ?> owner;
 
     public CppcheckResult(CppcheckReport report, CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?, ?> owner) {
         this.report = report;
