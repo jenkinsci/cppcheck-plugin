@@ -149,7 +149,7 @@ public class CppcheckPublisher extends Recorder {
                     = new CppcheckSourceContainer(listener, build.getWorkspace(),
                             build.getModuleRoot(), cppcheckReport.getAllErrors());
 
-            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build, cppcheckSourceContainer);
             CppcheckConfigSeverityEvaluation severityEvaluation
                     = cppcheckConfig.getConfigSeverityEvaluation();
 

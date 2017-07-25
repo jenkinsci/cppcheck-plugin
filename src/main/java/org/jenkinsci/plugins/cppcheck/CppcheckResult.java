@@ -25,6 +25,8 @@ import java.util.*;
  */
 public class CppcheckResult implements Serializable {
     private static final long serialVersionUID = 2L;
+    
+    private int newFailures = 0;
 
     /**
      * The Cppcheck report.
@@ -68,6 +70,26 @@ public class CppcheckResult implements Serializable {
     public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner) {
         this.statistics = statistics;
         this.owner = owner;
+    }
+    
+    /**
+     * Alternate Constructor.
+     * 
+     * @param statistics
+     *            the Cppcheck report statistics
+     * @param owner
+     *            the build owner
+     *            
+     * @param CppcheckSourcesContainer
+     * 			  Container for check results
+     * 
+     * Added to enable "new errors" to work off all new errors instead of the sum. 
+     */
+    
+    public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner, CppcheckSourceContainer cppcheckSourceContainer) {
+        this.statistics = statistics;
+        this.owner = owner;
+        this.cppcheckSourceContainer = cppcheckSourceContainer;
     }
     
     /**
@@ -344,8 +366,9 @@ public class CppcheckResult implements Serializable {
 
         if (checkNewError) {
             if (previousResult != null) {
-                return nbErrors - nbPreviousError;
-            } else {
+            	diffCurrentAndPrevious(null);
+            	return this.newFailures; 
+            	} else {
                 return 0;
             }
         } else {
@@ -367,6 +390,7 @@ public class CppcheckResult implements Serializable {
      */
     public Collection<CppcheckWorkspaceFile> diffCurrentAndPrevious(
             Set<CppcheckDiffState> filter) {
+    	this.newFailures = 0; 
         CppcheckSourceContainer cur = getCppcheckSourceContainer();
         CppcheckResult prevResult = getPreviousResult();
         List<CppcheckWorkspaceFile> curValues
@@ -429,6 +453,7 @@ public class CppcheckResult implements Serializable {
             if(curFile.getDiffState() != null) {
                 continue;
             }
+            this.newFailures += 1; 
 
             curFile.setDiffState(CppcheckDiffState.NEW);
         }
