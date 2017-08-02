@@ -24,6 +24,7 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -40,11 +41,43 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
      * 
      * @since 1.15
      */
-    public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
+    public static String XML_FILE_DETAILS = "cppcheck_details.xml";
 
-    private CppcheckConfig cppcheckConfig;   
-   
+    private CppcheckConfig cppcheckConfig;
+
+    public static String pattern;
+    public static boolean ignoreBlankFiles;
+    public static String threshold;
+    public static boolean allowNoReport;
+    public static String newThreshold;
+    public static String failureThreshold;
+    public static String newFailureThreshold;
+    public static String healthy;
+    public static String unHealthy;
+    public static boolean severityError;
+    public static boolean severityWarning;
+    public static boolean severityStyle;
+    public static boolean severityPerformance;
+    public static boolean severityInformation;
+    public static boolean severityNoCategory;
+    public static boolean severityPortability;
+    public static int xSize;
+    public static int ySize;
+    public static int numBuildsInGraph;
+    public static boolean displayAllErrors;
+    public static boolean displayErrorSeverity;
+    public static boolean displayWarningSeverity;
+    public static boolean displayStyleSeverity;
+    public static boolean displayPerformanceSeverity;
+    public static boolean displayInformationSeverity;
+    public static boolean displayNoCategorySeverity;
+    public static boolean displayPortabilitySeverity;
+
+
     @DataBoundConstructor
+    public CppcheckPublisher() {this("", false, "", false, "", "", "", "", "", true, true, true, true, true, true, true, 500, 200, 0, true, false, false, false, false, false, false, false);}
+
+    @Deprecated
     public CppcheckPublisher(String pattern,
                              boolean ignoreBlankFiles, String threshold,
                              boolean allowNoReport,
@@ -67,6 +100,34 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                              boolean displayInformationSeverity,
                              boolean displayNoCategorySeverity,
                              boolean displayPortabilitySeverity) {
+
+        this.pattern = pattern;
+        this.ignoreBlankFiles = ignoreBlankFiles;
+        this.threshold = threshold;
+        this.allowNoReport = allowNoReport;
+        this.newThreshold = newThreshold;
+        this.failureThreshold = failureThreshold;
+        this.newFailureThreshold = newFailureThreshold;
+        this.healthy = healthy;
+        this.unHealthy = unHealthy;
+        this.severityError = severityError;
+        this.severityWarning = severityWarning;
+        this.severityStyle = severityStyle;
+        this.severityPerformance = severityPerformance;
+        this.severityInformation = severityInformation;
+        this.severityNoCategory = severityNoCategory;
+        this.severityPortability = severityPortability;
+        this.xSize = xSize;
+        this.ySize = ySize;
+        this.numBuildsInGraph = numBuildsInGraph;
+        this.displayAllErrors = displayAllErrors;
+        this.displayErrorSeverity = displayErrorSeverity;
+        this.displayWarningSeverity = displayWarningSeverity;
+        this.displayStyleSeverity = displayStyleSeverity;
+        this.displayPerformanceSeverity = displayPerformanceSeverity;
+        this.displayInformationSeverity = displayInformationSeverity;
+        this.displayNoCategorySeverity = displayNoCategorySeverity;
+        this.displayPortabilitySeverity = displayPortabilitySeverity;
 
         cppcheckConfig = new CppcheckConfig();
 
@@ -95,6 +156,183 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 displayPortabilitySeverity);
         cppcheckConfig.setConfigGraph(configGraph);
     }
+
+    @DataBoundSetter
+    public void setpattern(String pattern) {
+        this.pattern = pattern;
+    }
+    public String getpattern() {
+        return pattern;
+    }
+    @DataBoundSetter
+    public void setnewThreshold(String newThreshold) {
+        this.newThreshold = newThreshold;
+    }
+    public String getnewThreshold() {
+        return newThreshold;
+    }
+    @DataBoundSetter
+    public void setfailureThreshold(String failureThreshold) {
+        this.failureThreshold = failureThreshold;
+    }
+    public String getfailureThreshold() {
+        return failureThreshold;
+    }
+    @DataBoundSetter
+    public void setnewFailureThreshold(String newFailureThreshold) {
+        this.newFailureThreshold = newFailureThreshold;
+    }
+    public String getnewFailureThreshold() {
+        return newFailureThreshold;
+    }
+    @DataBoundSetter
+    public void sethealthy(String healthy) {
+        this.healthy = healthy;
+    }
+    public String gethealthy() {
+        return healthy;
+    }
+    @DataBoundSetter
+    public void setunHealthy(String unHealthy) {
+        this.unHealthy = unHealthy;
+    }
+    public String getunHealthy() {
+        return unHealthy;
+    }
+    @DataBoundSetter
+    public void setignoreBlankFiles(boolean ignoreBlankFiles) {
+        this.ignoreBlankFiles = ignoreBlankFiles;
+    }
+    public boolean getignoreBlankFiles() {
+        return ignoreBlankFiles;
+    }
+    @DataBoundSetter
+    public void setallowNoReport(boolean allowNoReport) {
+        this.allowNoReport = allowNoReport;
+    }
+    public boolean getallowNoReport() {
+        return allowNoReport;
+    }
+    @DataBoundSetter
+    public void setseverityError(boolean severityError) {
+        this.severityError = severityError;
+    }
+    public boolean getseverityError() {
+        return severityError;
+    }
+    @DataBoundSetter
+    public void setseverityWarning(boolean severityWarning) {
+        this.severityWarning = severityWarning;
+    }
+    public boolean getseverityWarning() {
+        return severityWarning;
+    }
+    @DataBoundSetter
+    public void setseverityStyle(boolean severityStyle) {
+        this.severityStyle = severityStyle;
+    }
+    public boolean getseverityStyle() {
+        return severityStyle;
+    }
+    @DataBoundSetter
+    public void setseverityPerformance(boolean severityPerformance) {
+        this.severityPerformance = severityPerformance;
+    }
+    public boolean getseverityPerformance() {
+        return severityPerformance;
+    }
+    @DataBoundSetter
+    public void setseverityInformation(boolean severityInformation) {
+        this.severityInformation = severityInformation;
+    }
+    public boolean getseverityInformation() {
+        return severityInformation;
+    }
+    @DataBoundSetter
+    public void setseverityNoCategory(boolean severityNoCategory) {
+        this.severityNoCategory = severityNoCategory;
+    }
+    public boolean getseverityNoCategory() {
+        return severityNoCategory;
+    }
+    @DataBoundSetter
+    public void setseverityPortability(boolean severityPortability) {
+        this.severityPortability = severityPortability;
+    }
+    public boolean getseverityPortability() {
+        return severityPortability;
+    }
+    @DataBoundSetter
+    public void setdisplayAllErrors(boolean displayAllErrors) {
+        this.displayAllErrors = displayAllErrors;
+    }
+    public boolean getdisplayAllErrors() {
+        return displayAllErrors;
+    }
+    @DataBoundSetter
+    public void setdisplayErrorSeverity(boolean displayErrorSeverity) {
+        this.displayErrorSeverity = displayErrorSeverity;
+    }
+    public boolean getdisplayErrorSeverity() {
+        return displayErrorSeverity;
+    }
+    @DataBoundSetter
+    public void setdisplayWarningSeverity(boolean displayWarningSeverity) {
+        this.displayWarningSeverity = displayWarningSeverity;
+    }
+    public boolean getdisplayWarningSeverity() {
+        return displayWarningSeverity;
+    }
+    @DataBoundSetter
+    public void setdisplayStyleSeverity(boolean displayStyleSeverity) {
+        this.displayStyleSeverity = displayStyleSeverity;
+    }
+    public boolean getdisplayStyleSeverity() {
+        return displayStyleSeverity;
+    }
+    @DataBoundSetter
+    public void setdisplayPerformanceSeverity(boolean displayPerformanceSeverity) {
+        this.displayPerformanceSeverity = displayPerformanceSeverity;
+    }
+    public boolean getdisplayPerformanceSeverity() {
+        return displayPerformanceSeverity;
+    }
+    @DataBoundSetter
+    public void setdisplayNoCategorySeverity(boolean displayNoCategorySeverity) {
+        this.displayNoCategorySeverity = displayNoCategorySeverity;
+    }
+    public boolean getdisplayNoCategorySeverity() {
+        return displayNoCategorySeverity;
+    }
+    @DataBoundSetter
+    public void setdisplayPortabilitySeverity(boolean displayPortabilitySeverity) {
+        this.displayPortabilitySeverity = displayPortabilitySeverity;
+    }
+    public boolean getdisplayPortabilitySeverity() {
+        return displayPortabilitySeverity;
+    }
+    @DataBoundSetter
+    public void setxSize(int xSize) {
+        this.xSize = xSize;
+    }
+    public int getxSize() {
+        return xSize;
+    }
+    @DataBoundSetter
+    public void setySize(int ySize) {
+        this.ySize = ySize;
+    }
+    public int getySize() {
+        return ySize;
+    }
+    @DataBoundSetter
+    public void setnumBuildsInGraph(int numBuildsInGraph) {
+        this.numBuildsInGraph = numBuildsInGraph;
+    }
+    public int getnumBuildsInGraph() {
+        return numBuildsInGraph;
+    }
+
 
 
     public CppcheckPublisher(CppcheckConfig cppcheckConfig) {
