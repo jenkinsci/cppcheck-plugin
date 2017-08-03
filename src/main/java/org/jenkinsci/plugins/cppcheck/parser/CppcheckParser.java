@@ -150,7 +150,8 @@ public class CppcheckParser implements Serializable {
                 cppcheckFile.setCppCheckId(error.getId());
                 cppcheckFile.setSeverity(error.getSeverity());
                 cppcheckFile.setMessage(error.getMsg());
-                cppcheckFile.setInconclusive(error.isInconclusive());
+                cppcheckFile.setInconclusive((error.isInconclusive() != null)
+                        ? error.isInconclusive() : false);
 
                 // msg and verbose items have often the same text in XML report,
                 // there is no need to store duplications
