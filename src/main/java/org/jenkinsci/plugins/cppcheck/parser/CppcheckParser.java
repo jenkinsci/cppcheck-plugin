@@ -45,7 +45,7 @@ public class CppcheckParser implements Serializable {
             Unmarshaller unmarshaller = jc.get().createUnmarshaller();
             org.jenkinsci.plugins.cppcheck.model.Results results = (org.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
             if (results.getCppcheck() == null) {
-                throw new JAXBException("Test with versio 1");
+                throw new JAXBException("Test with version 1");
             }
             report = getReportVersion2(results);
         } catch (JAXBException jxe) {
@@ -150,7 +150,8 @@ public class CppcheckParser implements Serializable {
                 cppcheckFile.setCppCheckId(error.getId());
                 cppcheckFile.setSeverity(error.getSeverity());
                 cppcheckFile.setMessage(error.getMsg());
-                cppcheckFile.setInconclusive(error.isInconclusive());
+                cppcheckFile.setInconclusive((error.isInconclusive() != null)
+                        ? error.isInconclusive() : false);
 
                 // msg and verbose items have often the same text in XML report,
                 // there is no need to store duplications

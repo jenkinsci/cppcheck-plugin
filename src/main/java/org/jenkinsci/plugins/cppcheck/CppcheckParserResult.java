@@ -10,6 +10,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.FileSelector;
+import org.jenkinsci.plugins.cppcheck.model.Cppcheck;
 import org.jenkinsci.plugins.cppcheck.parser.CppcheckParser;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.jenkinsci.remoting.RoleChecker;
@@ -30,16 +31,16 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
     private final boolean ignoreBlankFiles;
 
-    public static final String DELAULT_REPORT_MAVEN = "**/cppcheck-result.xml";
+    public static final String DEFAULT_REPORT_MAVEN = "**/cppcheck-result.xml";
 
     public CppcheckParserResult(final TaskListener listener, String cppcheckReportPattern, boolean ignoreBlankFiles) {
 
         if (cppcheckReportPattern == null) {
-            cppcheckReportPattern = DELAULT_REPORT_MAVEN;
+            cppcheckReportPattern = DEFAULT_REPORT_MAVEN;
         }
 
         if (cppcheckReportPattern.trim().length() == 0) {
-            cppcheckReportPattern = DELAULT_REPORT_MAVEN;
+            cppcheckReportPattern = DEFAULT_REPORT_MAVEN;
         }
 
         this.listener = listener;
@@ -64,12 +65,14 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
             CppcheckLogger.log(listener, "Processing " + cppcheckReportFiles.length + " files with the pattern '" + cppcheckReportPattern + "'.");
 
-            for (String cppchecReportkFileName : cppcheckReportFiles) {
-                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppchecReportkFileName), listener);
+            for (String cppcheckReportFileName : cppcheckReportFiles) {
+                CppcheckReport cppcheckReport = new CppcheckParser().parse(new File(basedir, cppcheckReportFileName), listener);
                 mergeReport(cppcheckReportResult, cppcheckReport);
             }
         } catch (Exception e) {
+            String stack_trace = org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(e);
             CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getMessage());
+            CppcheckLogger.log(listener, stack_trace);
             return null;
         }
 
