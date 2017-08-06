@@ -54,6 +54,13 @@ public class CppcheckResult implements Serializable {
      * @since 1.15
      */
     private CppcheckStatistics statistics;
+    
+    /**
+     * Use stable builds only.
+     * 
+     * @since 1.20
+     */
+    private boolean stableBuild;
 
     /**
      * Constructor.
@@ -68,6 +75,25 @@ public class CppcheckResult implements Serializable {
     public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner) {
         this.statistics = statistics;
         this.owner = owner;
+        this.stableBuild = false;
+    }
+    
+    /**
+     * Constructor.
+     * 
+     * @param statistics
+     *            the Cppcheck report statistics
+     * @param owner
+     *            the build owner
+     * @param stableBuild
+     * 	          use only stable builds for deltas
+     * 
+     * @since 1.15
+     */
+    public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner, boolean stableBuild) {
+        this.statistics = statistics;
+        this.owner = owner;
+        this.stableBuild = stableBuild;
     }
     
     /**
@@ -230,6 +256,14 @@ public class CppcheckResult implements Serializable {
      */
     private CppcheckBuildAction getPreviousAction() {
         AbstractBuild<?, ?> previousBuild = owner.getPreviousBuild();
+        
+        if (this.stableBuild) {
+        	// Iterate the build chain and find the last successful build.
+        	while (null != previousBuild && previousBuild.getResult().isWorseThan(hudson.model.Result.SUCCESS)) {
+        		previousBuild = previousBuild.getPreviousBuild();
+        	}
+        }
+        
         if (previousBuild != null) {
             return previousBuild.getAction(CppcheckBuildAction.class);
         }
