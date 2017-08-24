@@ -30,7 +30,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.model.HealthReport;
 import hudson.util.ChartUtil;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
@@ -52,7 +52,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
     private CppcheckResult result;
     private CppcheckConfig cppcheckConfig;
 
-    public CppcheckBuildAction(AbstractBuild<?, ?> owner, CppcheckResult result, CppcheckConfig cppcheckConfig) {
+    public CppcheckBuildAction(Run<?, ?> owner, CppcheckResult result, CppcheckConfig cppcheckConfig) {
         super(owner);
         this.result = result;
         this.cppcheckConfig = cppcheckConfig;
@@ -78,7 +78,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         return this.result;
     }
 
-    AbstractBuild<?, ?> getBuild() {
+    Run<?, ?> getBuild() {
         return this.owner;
     }
 
@@ -139,7 +139,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
     // Backward compatibility. Do not remove.
     // CPPCHECK:OFF
     @Deprecated
-    private transient AbstractBuild<?, ?> build;
+    private transient Run<?, ?> build;
 
     /**
      * Initializes members that were not present in previous versions of this plug-in.
@@ -203,6 +203,6 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
 
         return new org.jenkinsci.plugins.cppcheck.CppcheckBuildAction(owner,
-                newResult, 100);
+                newResult, newConfig, 100);
     }
 }

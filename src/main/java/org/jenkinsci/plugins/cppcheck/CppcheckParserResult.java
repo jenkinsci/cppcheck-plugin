@@ -3,14 +3,16 @@ package org.jenkinsci.plugins.cppcheck;
 
 import hudson.FilePath;
 import hudson.Util;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
+import jenkins.security.Roles;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.jenkinsci.plugins.cppcheck.parser.CppcheckParser;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
+import org.jenkinsci.remoting.RoleChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
     private static final long serialVersionUID = 1L;
 
-    private final BuildListener listener;
+    private final TaskListener listener;
 
     private final String cppcheckReportPattern;
 
@@ -30,7 +32,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
     public static final String DELAULT_REPORT_MAVEN = "**/cppcheck-result.xml";
 
-    public CppcheckParserResult(final BuildListener listener, String cppcheckReportPattern, boolean ignoreBlankFiles) {
+    public CppcheckParserResult(final TaskListener listener, String cppcheckReportPattern, boolean ignoreBlankFiles) {
 
         if (cppcheckReportPattern == null) {
             cppcheckReportPattern = DELAULT_REPORT_MAVEN;
@@ -108,5 +110,9 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
 
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
+    }
+    
+    public void checkRoles(RoleChecker checker) throws SecurityException {
+        checker.check(this, Roles.SLAVE);
     }
 }

@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.cppcheck.parser;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.cppcheck.CppcheckReport;
 import org.jenkinsci.plugins.cppcheck.model.Errors;
 import org.jenkinsci.plugins.cppcheck.model.Results;
@@ -24,7 +24,7 @@ public class CppcheckParser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public CppcheckReport parse(final File file, BuildListener listener) throws IOException {
+    public CppcheckReport parse(final File file, TaskListener listener) throws IOException {
 
         if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");
@@ -150,8 +150,8 @@ public class CppcheckParser implements Serializable {
                 cppcheckFile.setCppCheckId(error.getId());
                 cppcheckFile.setSeverity(error.getSeverity());
                 cppcheckFile.setMessage(error.getMsg());
-                cppcheckFile.setInconclusive((error.isInconclusive() != null)
-                        ? error.isInconclusive() : false);
+                cppcheckFile.setInconclusive((error.getInconclusive() != null)
+                        ? error.getInconclusive() : false);
 
                 // msg and verbose items have often the same text in XML report,
                 // there is no need to store duplications
