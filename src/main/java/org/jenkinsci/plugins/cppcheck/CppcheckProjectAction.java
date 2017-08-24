@@ -3,8 +3,7 @@ package org.jenkinsci.plugins.cppcheck;
 import java.io.IOException;
 import java.util.Calendar;
 
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.Run;
 import hudson.model.Result;
 import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
@@ -28,14 +27,14 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         return getUrlName();
     }
 
-    public CppcheckProjectAction(final AbstractProject<?, ?> project,
+    public CppcheckProjectAction(final Run<?, ?> run,
     		CppcheckConfigGraph configGraph) {
-        super(project);
+        super(run);
         this.configGraph = configGraph;
     }
 
-    public AbstractBuild<?, ?> getLastFinishedBuild() {
-        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
+    public Run<?, ?> getLastFinishedBuild() {
+        Run<?, ?> lastBuild = run.getPreviousBuild();
         while (lastBuild != null && (lastBuild.isBuilding()
                 || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
             lastBuild = lastBuild.getPreviousBuild();
@@ -49,13 +48,13 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
      * @return the build action or null
      */
     public CppcheckBuildAction getLastFinishedBuildAction() {
-        AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
+    	Run<?, ?> lastBuild = getLastFinishedBuild();
         return (lastBuild != null) ? lastBuild.getAction(CppcheckBuildAction.class) : null;
     }
 
-    public final boolean isDisplayGraph() {
+    public final boolean isDisplayGraph() {   	
         //Latest
-        AbstractBuild<?, ?> b = getLastFinishedBuild();
+        Run<?, ?> b = getLastFinishedBuild();
         if (b == null) {
             return false;
         }
@@ -83,7 +82,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     public Integer getLastResultBuild() {
-        for (AbstractBuild<?, ?> b = project.getLastBuild(); b != null; b = b.getPreviousBuiltBuild()) {
+        for (Run<?, ?> b = run.getPreviousBuild(); b != null; b = b.getPreviousBuiltBuild()) {
             CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
             if (r != null)
                 return b.getNumber();
@@ -106,7 +105,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
             return;
         }
 
-        AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
+    	Run<?, ?> lastBuild = getLastFinishedBuild();
         Calendar timestamp = lastBuild.getTimestamp();
 
         if (req.checkIfModified(timestamp, rsp)) {
@@ -124,7 +123,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb
                 = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
-        AbstractBuild<?,?> lastBuild = getLastFinishedBuild();
+        Run<?,?> lastBuild = getLastFinishedBuild();
         CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
 
         int numBuilds = 0;

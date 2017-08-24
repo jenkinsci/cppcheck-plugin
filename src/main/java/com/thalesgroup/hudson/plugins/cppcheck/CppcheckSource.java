@@ -29,13 +29,14 @@ import de.java2html.converter.JavaSource2HTMLConverter;
 import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 
 public class CppcheckSource implements Serializable {
@@ -55,7 +56,7 @@ public class CppcheckSource implements Serializable {
     /**
      * The current build as owner of this object.
      */
-    private final AbstractBuild<?, ?> owner;
+    private transient final Run<?, ?> owner;
 
     /**
      * The cppcheck source file in the workspace to be shown.
@@ -73,7 +74,7 @@ public class CppcheckSource implements Serializable {
      * @param owner                 the current build as owner of this object
      * @param cppcheckWorkspaceFile the abstract workspace file
      */
-    public CppcheckSource(final AbstractBuild<?, ?> owner, CppcheckWorkspaceFile cppcheckWorkspaceFile) {
+    public CppcheckSource(final Run<?, ?> owner, CppcheckWorkspaceFile cppcheckWorkspaceFile) {
         this.owner = owner;
         this.cppcheckWorkspaceFile = cppcheckWorkspaceFile;
         buildFileContent();
@@ -106,7 +107,7 @@ public class CppcheckSource implements Serializable {
 
             splitSourceFile(highlightSource(is));
         } catch (IOException exception) {
-            sourceCode = "Can't read file: " + exception.getLocalizedMessage();
+            sourceCode = "Can't read file : " + exception.getLocalizedMessage();
         } catch (RuntimeException re) {
             sourceCode = "Problem for display the source code content: " + re.getLocalizedMessage();
         } finally {
@@ -226,7 +227,7 @@ public class CppcheckSource implements Serializable {
      */
     public final String highlightSource(final InputStream file) throws IOException {
 
-        JavaSource source = new JavaSourceParser().parse(new InputStreamReader(file));
+        JavaSource source = new JavaSourceParser().parse(new InputStreamReader(file, StandardCharsets.UTF_8));
         JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter();
         StringWriter writer = new StringWriter();
         JavaSourceConversionOptions options = JavaSourceConversionOptions.getDefault();
@@ -260,7 +261,7 @@ public class CppcheckSource implements Serializable {
      * 
      * @return the build
      */
-    public AbstractBuild<?, ?> getOwner() {
+    public Run<?, ?> getOwner() {
         return owner;
     }
 }

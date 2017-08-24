@@ -5,7 +5,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.XmlFile;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.model.Api;
 import hudson.model.Item;
 
@@ -46,7 +46,7 @@ public class CppcheckResult implements Serializable {
     /**
      * The build owner.
      */
-    private AbstractBuild<?, ?> owner;
+    private transient Run<?, ?> owner;
 
     /**
      * The Cppcheck report statistics.
@@ -65,7 +65,7 @@ public class CppcheckResult implements Serializable {
      * 
      * @since 1.15
      */
-    public CppcheckResult(CppcheckStatistics statistics, AbstractBuild<?, ?> owner) {
+    public CppcheckResult(CppcheckStatistics statistics, Run<?, ?> owner) {
         this.statistics = statistics;
         this.owner = owner;
     }
@@ -73,14 +73,14 @@ public class CppcheckResult implements Serializable {
     /**
      * Constructor. Only for backward compatibility with previous versions.
      * 
-     * @param report CPPCheck report
-     * @param cppcheckSourceContainer The Cppcheck container with all source files.
-     * @param owner the build owner
+     * @param report
+     * @param cppcheckSourceContainer
+     * @param owner
      * 
      * @deprecated Use a different constructor instead.
      */
     public CppcheckResult(CppcheckReport report,
-            CppcheckSourceContainer cppcheckSourceContainer, AbstractBuild<?, ?> owner) {
+            CppcheckSourceContainer cppcheckSourceContainer, Run<?, ?> owner) {
         this.report = report;
         this.cppcheckSourceContainer = cppcheckSourceContainer;
         this.owner = owner;
@@ -111,7 +111,7 @@ public class CppcheckResult implements Serializable {
         return statistics;
     }
 
-    public AbstractBuild<?, ?> getOwner() {
+    public Run<?, ?> getOwner() {
         return owner;
     }
 
@@ -131,7 +131,7 @@ public class CppcheckResult implements Serializable {
     public Object getDynamic(final String link, final StaplerRequest request,
             final StaplerResponse response) throws IOException {
         if (link.equals("source.all")) {
-            if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
+            if (!owner.getParent().getACL().hasPermission(Item.WORKSPACE)) {
                 response.sendRedirect2("nosourcepermission");
                 return null;
             }
@@ -143,7 +143,7 @@ public class CppcheckResult implements Serializable {
 
             return new CppcheckSourceAll(owner, files, before, after);
         } else if (link.startsWith("source.")) {
-            if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
+            if (!owner.getParent().getACL().hasPermission(Item.WORKSPACE)) {
                 response.sendRedirect2("nosourcepermission");
                 return null;
             }
@@ -229,7 +229,10 @@ public class CppcheckResult implements Serializable {
      * @return the previous Cppcheck Build Action
      */
     private CppcheckBuildAction getPreviousAction() {
-        AbstractBuild<?, ?> previousBuild = owner.getPreviousBuild();
+    	if(owner == null)
+    		return null;
+    	
+        Run<?, ?> previousBuild = owner.getPreviousBuild();
         if (previousBuild != null) {
             return previousBuild.getAction(CppcheckBuildAction.class);
         }
@@ -510,10 +513,16 @@ public class CppcheckResult implements Serializable {
             return cppcheckSourceContainer;
         }
 
-        XmlFile xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
-                CppcheckPublisher.XML_FILE_DETAILS));
         try {
-            return (CppcheckSourceContainer) xmlSourceContainer.read();
+        	if(owner != null) {       		
+        		XmlFile xmlSourceContainer = null;
+            	xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
+                        CppcheckPublisher.XML_FILE_DETAILS));
+
+                return (CppcheckSourceContainer) xmlSourceContainer.read();
+        	}
+        	else 
+        		throw new IOException("lazyLoad: Attemped without owner");
         } catch (IOException e) {
             return new CppcheckSourceContainer(new HashMap<Integer,
                     CppcheckWorkspaceFile>());

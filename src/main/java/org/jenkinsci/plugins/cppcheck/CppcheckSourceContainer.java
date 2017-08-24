@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.cppcheck;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import hudson.FilePath;
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class CppcheckSourceContainer {
         this.internalMap = internalMap;
     }
 
-    public CppcheckSourceContainer(BuildListener listener,
+    public CppcheckSourceContainer(TaskListener listener,
                                    FilePath workspace,
                                    FilePath scmRootDir,
                                    List<CppcheckFile> files) throws IOException, InterruptedException {
@@ -38,7 +38,7 @@ public class CppcheckSourceContainer {
         }
     }
 
-    private CppcheckWorkspaceFile getCppcheckWorkspaceFile(BuildListener listener,
+    private CppcheckWorkspaceFile getCppcheckWorkspaceFile(TaskListener listener,
                                                            FilePath workspace,
                                                            FilePath scmRootDir,
                                                            CppcheckFile cppcheckFile) throws IOException, InterruptedException {
@@ -82,5 +82,4 @@ public class CppcheckSourceContainer {
     public Map<Integer, CppcheckWorkspaceFile> getInternalMap() {
         return internalMap;
     }
-
 }

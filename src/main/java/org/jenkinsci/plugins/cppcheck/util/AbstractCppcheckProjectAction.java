@@ -1,8 +1,7 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
 import hudson.model.Actionable;
+import hudson.model.Run;
 import hudson.model.Action;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -15,14 +14,14 @@ import java.io.IOException;
  */
 public abstract class AbstractCppcheckProjectAction extends Actionable implements Action {
 
-    protected final AbstractProject<?, ?> project;
+    protected final Run<?, ?> run;
 
-    public AbstractCppcheckProjectAction(AbstractProject<?, ?> project) {
-        this.project = project;
+    public AbstractCppcheckProjectAction(Run<?, ?> run) {
+        this.run = run;
     }
 
-    public AbstractProject<?, ?> getProject() {
-        return project;
+    public Run<?, ?> getRun() {
+        return run;
     }
 
     public String getIconFileName() {
@@ -33,7 +32,7 @@ public abstract class AbstractCppcheckProjectAction extends Actionable implement
         return getUrlName();
     }
 
-    protected abstract AbstractBuild<?, ?> getLastFinishedBuild();
+    protected abstract Run<?, ?> getLastFinishedBuild();
 
     protected abstract Integer getLastResultBuild();
 

@@ -2,10 +2,15 @@ package org.jenkinsci.plugins.cppcheck;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
+import jenkins.tasks.SimpleBuildStep;
+import hudson.model.Action;
 import hudson.model.HealthReport;
 
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
@@ -15,12 +20,13 @@ import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 /**
  * @author Gregory Boissinot
  */
-public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
+public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements SimpleBuildStep.LastBuildAction {
 
     public static final String URL_NAME = "cppcheckResult";
 
     private CppcheckResult result;
 
+    private List<CppcheckProjectAction> projectActions;
     /** 
      * The health report percentage.
      * 
@@ -28,11 +34,15 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
      */
     private int healthReportPercentage;
 
-    public CppcheckBuildAction(AbstractBuild<?, ?> owner, CppcheckResult result,
+    public CppcheckBuildAction(Run<?, ?> owner, CppcheckResult result, CppcheckConfig config,
             int healthReportPercentage) {
         super(owner);
         this.result = result;
         this.healthReportPercentage = healthReportPercentage;
+        
+        List<CppcheckProjectAction> projectActions = new ArrayList<CppcheckProjectAction>();
+        projectActions.add(new CppcheckProjectAction(owner, config.getConfigGraph()));
+        this.projectActions = projectActions;
     }
 
     public String getIconFileName() {
@@ -55,7 +65,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         return this.result;
     }
 
-    AbstractBuild<?, ?> getBuild() {
+    Run<?, ?> getBuild() {
         return this.owner;
     }
 
@@ -85,7 +95,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
 
     // Backward compatibility
     @Deprecated
-    private transient AbstractBuild<?, ?> build;
+    private transient Run<?, ?> build;
 
     /** Backward compatibility with version 1.14 and less. */
     @Deprecated
@@ -107,5 +117,10 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction {
         }
 
         return this;
+    }
+    
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+    	return this.projectActions;
     }
 }

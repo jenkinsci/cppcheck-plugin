@@ -14,13 +14,19 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
+import jenkins.tasks.SimpleBuildStep;
+
+import org.jenkinsci.plugins.cppcheck.CppcheckResult;
+import org.jenkinsci.plugins.cppcheck.CppcheckBuildAction;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigGraph;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildResultEvaluator;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.jenkinsci.Symbol;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,7 +35,7 @@ import java.util.Collection;
 /**
  * @author Gregory Boissinot
  */
-public class CppcheckPublisher extends Recorder {
+public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     /**
      * XML file with source container data. Lazy loading instead of data in build.xml.
      * 
@@ -37,7 +43,9 @@ public class CppcheckPublisher extends Recorder {
      */
     public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
 
-    private CppcheckConfig cppcheckConfig;
+    private CppcheckConfig cppcheckConfig;   
+    private CppcheckConfigSeverityEvaluation configSeverityEvaluation;
+    private CppcheckConfigGraph configGraph;    
 
     @DataBoundConstructor
     public CppcheckPublisher(String pattern,
@@ -68,7 +76,7 @@ public class CppcheckPublisher extends Recorder {
         cppcheckConfig.setPattern(pattern);
         cppcheckConfig.setAllowNoReport(allowNoReport);
         cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
-        CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
+        configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
                 severityError,
                 severityWarning,
@@ -78,7 +86,7 @@ public class CppcheckPublisher extends Recorder {
                 severityNoCategory,
                 severityPortability);
         cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
-        CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
+        configGraph = new CppcheckConfigGraph(
                 xSize, ySize, numBuildsInGraph,
                 displayAllErrors,
                 displayErrorSeverity,
@@ -100,11 +108,6 @@ public class CppcheckPublisher extends Recorder {
         return cppcheckConfig;
     }
 
-    @Override
-    public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new CppcheckProjectAction(project, cppcheckConfig.getConfigGraph());
-    }
-
     protected boolean canContinue(final Result result) {
         return result != Result.ABORTED && result != Result.FAILURE;
     }
@@ -112,6 +115,77 @@ public class CppcheckPublisher extends Recorder {
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
     }
+
+    @Override
+    public void perform(@Nonnull Run<?,?> build, @Nonnull FilePath workspace, @Nonnull Launcher launcher,
+            @Nonnull TaskListener listener) throws InterruptedException, IOException {
+    	
+    	System.out.println("perform...");
+    	
+            if (this.canContinue(build.getResult())) {
+                CppcheckLogger.log(listener, "ccc Starting the cppcheck analysis.");
+                
+                EnvVars env = build.getEnvironment(listener);
+                String expandedPattern = env.expand(cppcheckConfig.getPattern());
+                
+
+                CppcheckParserResult parser = new CppcheckParserResult(listener,
+                		expandedPattern, cppcheckConfig.isIgnoreBlankFiles());
+                CppcheckReport cppcheckReport;
+                try {
+                    cppcheckReport = workspace.act(parser);
+                    
+                } catch (Exception e) {
+                    CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
+                    build.setResult(Result.FAILURE);
+                    return;
+                }
+
+                if (cppcheckReport == null) {
+                    // Check if we're configured to allow not having a report
+                    if (cppcheckConfig.getAllowNoReport()) {
+                        return;
+                    } else {
+                        build.setResult(Result.FAILURE);
+                        return;
+                    }
+                }
+
+                CppcheckSourceContainer cppcheckSourceContainer
+                        = new CppcheckSourceContainer(listener, workspace,
+                                workspace, cppcheckReport.getAllErrors());
+
+                CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+                CppcheckConfigSeverityEvaluation severityEvaluation
+                        = cppcheckConfig.getConfigSeverityEvaluation();
+
+                Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
+                        listener, result.getNumberErrorsAccordingConfiguration(severityEvaluation, false),
+                        result.getNumberErrorsAccordingConfiguration(severityEvaluation, true),
+                        severityEvaluation);
+
+                if (buildResult != Result.SUCCESS) {
+                    build.setResult(buildResult);
+                }
+
+                CppcheckLogger.log(listener, "Starting buildaction.");
+                
+                CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig,
+                        CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
+
+                build.addAction(buildAction);
+
+                XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),
+                        XML_FILE_DETAILS));
+                xmlSourceContainer.write(cppcheckSourceContainer);
+
+                copyFilesToBuildDirectory(build.getRootDir(), launcher.getChannel(),
+                        cppcheckSourceContainer.getInternalMap().values());
+
+                CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
+            }
+            return;
+        }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
@@ -126,9 +200,14 @@ public class CppcheckPublisher extends Recorder {
 
             CppcheckParserResult parser = new CppcheckParserResult(listener,
             		expandedPattern, cppcheckConfig.isIgnoreBlankFiles());
-            CppcheckReport cppcheckReport;
+            CppcheckReport cppcheckReport = null;
             try {
-                cppcheckReport = build.getWorkspace().act(parser);
+            	FilePath oWorkspacePath = build.getWorkspace(); 
+            	
+            	if( oWorkspacePath != null) {            		
+            		cppcheckReport = oWorkspacePath.act(parser);
+            	}
+            		
             } catch (Exception e) {
                 CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
                 build.setResult(Result.FAILURE);
@@ -162,7 +241,7 @@ public class CppcheckPublisher extends Recorder {
                 build.setResult(buildResult);
             }
 
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result,
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig,
                     CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
 
             build.addAction(buildAction);
@@ -178,7 +257,6 @@ public class CppcheckPublisher extends Recorder {
         }
         return true;
     }
-
 
     /**
      * Copies all the source files from the workspace to the build folder.
@@ -213,6 +291,7 @@ public class CppcheckPublisher extends Recorder {
     }
 
     @Extension
+    @Symbol("CppcheckPublisher")
     public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
 
         public CppcheckDescriptor() {
@@ -242,4 +321,113 @@ public class CppcheckPublisher extends Recorder {
             return new CppcheckConfig();
         }
     }
+    
+    //getters of the data variables
+    public String getPattern(){
+        return cppcheckConfig.getPattern();
+     }
+     
+     public boolean isIgnoreBlankFiles(){
+        return cppcheckConfig.isIgnoreBlankFiles();
+     }
+     
+     public String getThreshold(){
+        return configSeverityEvaluation.getThreshold();
+     }
+     
+     public boolean isAllowNoReport(){
+        return cppcheckConfig.getAllowNoReport();
+     }
+     
+     public String getNewThreshold(){
+        return configSeverityEvaluation.getNewThreshold();
+     }
+     
+     public String getFailureThreshold(){
+        return configSeverityEvaluation.getFailureThreshold();
+     }
+     
+     public String getNewFailureThreshold(){
+        return configSeverityEvaluation.getNewFailureThreshold();
+     }
+     
+     public String getHealthy(){
+        return configSeverityEvaluation.getHealthy();
+     }
+     
+     public String getUnHealthy(){
+        return configSeverityEvaluation.getUnHealthy();
+     }
+     
+     public boolean isSeverityError(){
+        return configSeverityEvaluation.isSeverityError();
+     }
+     
+     public boolean isSeverityWarning(){
+        return configSeverityEvaluation.isSeverityWarning();
+     }
+     
+     public boolean isSeverityStyle(){
+        return configSeverityEvaluation.isSeverityStyle();
+     }
+     
+     public boolean isSeverityPerformance(){
+        return configSeverityEvaluation.isSeverityPerformance();
+     }
+     
+     public boolean isSeverityInformation(){
+        return configSeverityEvaluation.isSeverityInformation();
+     }
+     
+     public boolean isSeverityNoCategory(){
+        return configSeverityEvaluation.isSeverityNoCategory();
+     }
+     
+     public boolean isSeverityPortability(){
+        return configSeverityEvaluation.isSeverityPortability();
+     }
+     
+     public int getXSize(){
+        return configGraph.getXSize();
+     }
+     
+     public int getYSize(){
+        return configGraph.getYSize();
+     }
+     
+     public int getNumBuildsInGraph(){
+        return configGraph.getNumBuildsInGraph();
+     }
+     
+     public boolean isDisplayAllErrors(){
+        return configGraph.isDisplayAllErrors();
+     }
+     
+     public boolean isDisplayErrorSeverity(){
+        return configGraph.isDisplayErrorSeverity();
+     }
+     
+     public boolean isDisplayWarningSeverity(){
+        return configGraph.isDisplayWarningSeverity();
+     }
+     
+     public boolean isDisplayStyleSeverity(){
+        return configGraph.isDisplayStyleSeverity();
+     }
+     
+     public boolean isDisplayPerformanceSeverity(){
+        return configGraph.isDisplayPerformanceSeverity();
+     }
+     
+     public boolean isDisplayInformationSeverity(){
+        return configGraph.isDisplayInformationSeverity();
+     }
+     
+     public boolean isDisplayNoCategorySeverity(){
+        return configGraph.isDisplayNoCategorySeverity();
+     }
+     
+     public boolean isDisplayPortabilitySeverity(){
+        return configGraph.isDisplayPortabilitySeverity();
+     }
 }
