@@ -43,9 +43,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
      */
     public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
 
-    private CppcheckConfig cppcheckConfig;   
-    private CppcheckConfigSeverityEvaluation configSeverityEvaluation;
-    private CppcheckConfigGraph configGraph;    
+    private CppcheckConfig cppcheckConfig;
 
     @DataBoundConstructor
     public CppcheckPublisher(String pattern,
@@ -76,7 +74,9 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
         cppcheckConfig.setPattern(pattern);
         cppcheckConfig.setAllowNoReport(allowNoReport);
         cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
-        configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
+        
+        cppcheckConfig.setConfigSeverityEvaluation(
+        	new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
                 severityError,
                 severityWarning,
@@ -84,9 +84,9 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 severityPerformance,
                 severityInformation,
                 severityNoCategory,
-                severityPortability);
-        cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
-        configGraph = new CppcheckConfigGraph(
+                severityPortability));
+        
+        cppcheckConfig.setConfigGraph( new CppcheckConfigGraph(
                 xSize, ySize, numBuildsInGraph,
                 displayAllErrors,
                 displayErrorSeverity,
@@ -95,8 +95,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 displayPerformanceSeverity,
                 displayInformationSeverity,
                 displayNoCategorySeverity,
-                displayPortabilitySeverity);
-        cppcheckConfig.setConfigGraph(configGraph);
+                displayPortabilitySeverity));
     }
 
 
@@ -331,103 +330,103 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
         return cppcheckConfig.isIgnoreBlankFiles();
      }
      
-     public String getThreshold(){
-        return configSeverityEvaluation.getThreshold();
-     }
-     
      public boolean isAllowNoReport(){
-        return cppcheckConfig.getAllowNoReport();
+         return cppcheckConfig.getAllowNoReport();
+      }
+
+     public String getThreshold(){
+        return cppcheckConfig.getConfigSeverityEvaluation().getThreshold();
      }
      
      public String getNewThreshold(){
-        return configSeverityEvaluation.getNewThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold();
      }
      
      public String getFailureThreshold(){
-        return configSeverityEvaluation.getFailureThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold();
      }
      
      public String getNewFailureThreshold(){
-        return configSeverityEvaluation.getNewFailureThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold();
      }
      
      public String getHealthy(){
-        return configSeverityEvaluation.getHealthy();
+        return cppcheckConfig.getConfigSeverityEvaluation().getHealthy();
      }
      
      public String getUnHealthy(){
-        return configSeverityEvaluation.getUnHealthy();
+        return cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy();
      }
      
      public boolean isSeverityError(){
-        return configSeverityEvaluation.isSeverityError();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityError();
      }
      
      public boolean isSeverityWarning(){
-        return configSeverityEvaluation.isSeverityWarning();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityWarning();
      }
      
      public boolean isSeverityStyle(){
-        return configSeverityEvaluation.isSeverityStyle();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityStyle();
      }
      
      public boolean isSeverityPerformance(){
-        return configSeverityEvaluation.isSeverityPerformance();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityPerformance();
      }
      
      public boolean isSeverityInformation(){
-        return configSeverityEvaluation.isSeverityInformation();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityInformation();
      }
      
      public boolean isSeverityNoCategory(){
-        return configSeverityEvaluation.isSeverityNoCategory();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityNoCategory();
      }
      
      public boolean isSeverityPortability(){
-        return configSeverityEvaluation.isSeverityPortability();
+        return cppcheckConfig.getConfigSeverityEvaluation().isSeverityPortability();
      }
      
      public int getXSize(){
-        return configGraph.getXSize();
+        return cppcheckConfig.getConfigGraph().getXSize();
      }
      
      public int getYSize(){
-        return configGraph.getYSize();
+        return cppcheckConfig.getConfigGraph().getYSize();
      }
      
      public int getNumBuildsInGraph(){
-        return configGraph.getNumBuildsInGraph();
+        return cppcheckConfig.getConfigGraph().getNumBuildsInGraph();
      }
      
      public boolean isDisplayAllErrors(){
-        return configGraph.isDisplayAllErrors();
+        return cppcheckConfig.getConfigGraph().isDisplayAllErrors();
      }
      
      public boolean isDisplayErrorSeverity(){
-        return configGraph.isDisplayErrorSeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayErrorSeverity();
      }
      
      public boolean isDisplayWarningSeverity(){
-        return configGraph.isDisplayWarningSeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayWarningSeverity();
      }
      
      public boolean isDisplayStyleSeverity(){
-        return configGraph.isDisplayStyleSeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayStyleSeverity();
      }
      
      public boolean isDisplayPerformanceSeverity(){
-        return configGraph.isDisplayPerformanceSeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayPerformanceSeverity();
      }
      
      public boolean isDisplayInformationSeverity(){
-        return configGraph.isDisplayInformationSeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayInformationSeverity();
      }
      
      public boolean isDisplayNoCategorySeverity(){
-        return configGraph.isDisplayNoCategorySeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayNoCategorySeverity();
      }
      
      public boolean isDisplayPortabilitySeverity(){
-        return configGraph.isDisplayPortabilitySeverity();
+        return cppcheckConfig.getConfigGraph().isDisplayPortabilitySeverity();
      }
 }
