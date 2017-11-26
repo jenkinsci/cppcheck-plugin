@@ -29,10 +29,12 @@ import hudson.FilePath;
 import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
+import jenkins.security.Roles;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.FileSelector;
+import org.jenkinsci.remoting.RoleChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -124,5 +126,9 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
     public String getCppcheckReportPattern() {
         return cppcheckReportPattern;
     }
-
+    
+    @Override
+    public void checkRoles(RoleChecker checker) throws SecurityException {
+        checker.check(this, Roles.SLAVE);
+    }
 }

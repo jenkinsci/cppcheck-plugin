@@ -24,6 +24,7 @@
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.cppcheck.CppcheckDiffState;
@@ -103,9 +104,9 @@ public class CppcheckWorkspaceFile implements Serializable {
         return fileName;
     }
 
-    public String getTempName(final AbstractBuild<?, ?> owner) {
+    public String getTempName(final Run<?, ?> owner) {
         if (fileName != null) {
-            return owner.getRootDir().getAbsolutePath() + "/"
+            return owner.getParent().getRootDir().getAbsolutePath() + "/"
                     + DIR_WORKSPACE_FILES + "/"
                     + Integer.toHexString(fileName.hashCode()) + ".tmp";
         }

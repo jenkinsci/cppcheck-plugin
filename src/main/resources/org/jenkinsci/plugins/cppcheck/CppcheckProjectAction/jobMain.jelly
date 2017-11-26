@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson" xmlns:st="jelly:stapler">
     <table style="margin-left:1em;">
         <t:summary icon="/plugin/cppcheck/icons/cppcheck-48.png">

@@ -1,5 +1,6 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-    <l:layout title="${%No Cppcheck data}">
+    <l:layout title="${%No Cppcheck data}" norefresh="true">
         <st:include it="${it.project}" page="sidepanel.jelly"/>
         <l:main-panel>
             <h1>${%No valid Cppcheck data available}</h1>

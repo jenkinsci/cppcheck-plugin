@@ -22,7 +22,7 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.cppcheck.graph;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.util.ColorPalette;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
@@ -67,7 +67,7 @@ public class CppcheckGraph extends Graph {
     private static final List<Color> colors = Collections.unmodifiableList(
             Arrays.asList(RED, BLUE, GREEN, YELLOW, BROWN, GRAY, VIOLET, PINK));
 
-    public CppcheckGraph(AbstractBuild<?, ?> owner, CategoryDataset categoryDataset,
+    public CppcheckGraph(Run<?, ?> owner, CategoryDataset categoryDataset,
             String yLabel, int chartWidth, int chartHeight) {
         super(owner.getTimestamp(), chartWidth, chartHeight);
         this.yLabel = yLabel;
