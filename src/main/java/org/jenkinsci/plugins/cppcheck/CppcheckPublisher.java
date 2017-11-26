@@ -348,7 +348,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.BUILD;
+        return BuildStepMonitor.NONE;
     }
 
     @Override
