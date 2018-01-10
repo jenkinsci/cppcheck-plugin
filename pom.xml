@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.33</version>
+        <version>2.16</version>
     </parent>
 
     <artifactId>cppcheck</artifactId>
@@ -51,8 +51,8 @@
         <jaxb.impl.version>2.2.1.1</jaxb.impl.version>
         <jaxb2.maven.plugin.version>2.1</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
-        <junit.version>4.12</junit.version>
-        <mockito.version>1.9.5</mockito.version>
+        <junit.version>4.8.2</junit.version>
+        <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
 	<jenkins.version>2.30</jenkins.version>
     </properties>
