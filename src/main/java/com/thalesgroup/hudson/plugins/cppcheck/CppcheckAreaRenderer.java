@@ -26,7 +26,6 @@ package com.thalesgroup.hudson.plugins.cppcheck;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.StackedAreaRenderer2;
 
-import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 
 /**

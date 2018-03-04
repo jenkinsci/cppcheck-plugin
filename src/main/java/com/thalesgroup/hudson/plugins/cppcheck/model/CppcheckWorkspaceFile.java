@@ -23,7 +23,6 @@
 
 package com.thalesgroup.hudson.plugins.cppcheck.model;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Run;
 
 import org.apache.commons.lang.StringUtils;

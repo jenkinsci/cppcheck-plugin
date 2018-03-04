@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Actionable;
 import hudson.model.Run;
 import hudson.model.Action;
