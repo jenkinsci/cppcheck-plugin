@@ -82,5 +82,4 @@ public class CppcheckSourceContainer {
     public Map<Integer, CppcheckWorkspaceFile> getInternalMap() {
         return internalMap;
     }
-
 }

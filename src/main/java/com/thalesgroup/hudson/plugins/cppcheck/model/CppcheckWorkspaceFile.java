@@ -28,6 +28,8 @@ import hudson.model.Run;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.cppcheck.CppcheckDiffState;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.io.Serializable;
 
@@ -57,6 +59,7 @@ public class CppcheckWorkspaceFile implements Serializable {
      */
     private transient CppcheckDiffState diffState = null;
 
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH")
     public CppcheckWorkspaceFile(File file) {
         if (file != null)
             this.fileName = file.getAbsolutePath().replace('\\', '/');

@@ -33,8 +33,10 @@ public class CppcheckConfigGraph implements Serializable {
             boolean displayStyleSeverity, boolean displayPerformanceSeverity,
             boolean displayInformationSeverity, boolean displayNoCategorySeverity,
             boolean displayPortabilitySeverity) {
-        this.xSize = xSize;
-        this.ySize = ySize;
+    	if ( xSize > 0 && ySize > 0) {
+    		this.xSize = xSize;
+    		this.ySize = ySize;
+    	}
         this.numBuildsInGraph = numBuildsInGraph;
         this.displayAllErrors = displayAllErrors;
         this.displayErrorSeverity = displayErrorSeverity;

@@ -108,7 +108,7 @@ public class CppcheckSource implements Serializable {
 
             splitSourceFile(highlightSource(is));
         } catch (IOException exception) {
-            sourceCode = "Can't read file: " + exception.getLocalizedMessage();
+            sourceCode = "Can't read file : " + exception.getLocalizedMessage();
         } catch (RuntimeException re) {
             sourceCode = "Problem for display the source code content: " + re.getLocalizedMessage();
         } finally {

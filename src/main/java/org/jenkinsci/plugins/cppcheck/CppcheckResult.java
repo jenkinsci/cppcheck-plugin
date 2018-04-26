@@ -73,9 +73,9 @@ public class CppcheckResult implements Serializable {
     /**
      * Constructor. Only for backward compatibility with previous versions.
      * 
-     * @param report CPPCheck report
-     * @param cppcheckSourceContainer The Cppcheck container with all source files.
-     * @param owner the build owner
+     * @param report
+     * @param cppcheckSourceContainer
+     * @param owner
      * 
      * @deprecated Use a different constructor instead.
      */
