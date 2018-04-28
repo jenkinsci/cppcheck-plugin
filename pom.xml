@@ -49,12 +49,12 @@
         <maven.compiler.target>1.6</maven.compiler.target>
         <jaxb.api.version>2.2.1</jaxb.api.version>
         <jaxb.impl.version>2.2.1.1</jaxb.impl.version>
-        <jaxb2.maven.plugin.version>1.3</jaxb2.maven.plugin.version>
+        <jaxb2.maven.plugin.version>2.3</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
-	<jenkins.version>2.30</jenkins.version>
+	    <jenkins.version>2.30</jenkins.version>
     </properties>
 
     <repositories>
@@ -163,15 +163,6 @@
 	                </excludes>
     	        </configuration>
         	</plugin>
-            <plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-surefire-plugin</artifactId>
-    	        <configuration>
-        	        <excludes>
-            	        <exclude>InjectedTest.java</exclude>
-                	</excludes>
-	            </configuration>
-    	    </plugin>
   		</plugins>
      </pluginManagement>
         <plugins>
@@ -185,11 +176,9 @@
                         <id>generatedCppcheck1</id>
                         <configuration>
                             <packageName>com.thalesgroup.jenkinsci.plugins.cppcheck.model</packageName>
-                            <schemaDirectory>${basedir}/src/main/resources/com/thalesgroup/hudson/plugins/cppcheck</schemaDirectory>
-                            <schemaFiles>cppcheck-1.0.xsd</schemaFiles>
-                            <staleFile>${project.build.directory}/generated-sources/jaxb/cppcheck1/.staleFlag.
-                            </staleFile>
-                            <clearOutputDir>false</clearOutputDir>
+                            <sources>
+                                <source>${basedir}/src/main/resources/com/thalesgroup/hudson/plugins/cppcheck/cppcheck-1.0.xsd</source>
+                            </sources>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -199,10 +188,9 @@
                         <id>generatedCppcheck2</id>
                         <configuration>
                             <packageName>org.jenkinsci.plugins.cppcheck.model</packageName>
-                            <schemaDirectory>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck</schemaDirectory>
-                            <schemaFiles>cppcheck-2.0.xsd</schemaFiles>
-                            <staleFile>${project.build.directory}/generated-sources/jaxb/cppcheck2/.staleFlag.
-                            </staleFile>
+                            <sources>
+                                <source>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck/cppcheck-2.0.xsd</source>
+                            </sources>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                         <goals>
@@ -210,16 +198,16 @@
                         </goals>
                     </execution>
                 </executions>
-	</plugin>
-	<plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-javadoc-plugin</artifactId>
-	    <!--<version>2.10.4</version>-->
-	    <configuration>
-                <!--Exclude packages:-->
-	        <excludePackageNames>org.jenkinsci.plugins.cppcheck.model:com.thalesgroup.jenkinsci.plugins.cppcheck.model</excludePackageNames>
-	    </configuration>																													     
-	</plugin>
+            </plugin>
+	        <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-javadoc-plugin</artifactId>
+	            <!--<version>2.10.4</version>-->
+	            <configuration>
+                    <!--Exclude packages:-->
+	                <excludePackageNames>org.jenkinsci.plugins.cppcheck.model:com.thalesgroup.jenkinsci.plugins.cppcheck.model</excludePackageNames>
+                </configuration>
+	        </plugin>
         </plugins>
     </build>
 

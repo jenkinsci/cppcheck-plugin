@@ -224,7 +224,7 @@ public class CppcheckSource implements Serializable {
      *
      * @param file the source file to highlight
      * @return the source as an HTML string
-     * @throws IOException
+	 * @throws IOException if cannot read source or cannot write highlighted source
      */
     public final String highlightSource(final InputStream file) throws IOException {
 
