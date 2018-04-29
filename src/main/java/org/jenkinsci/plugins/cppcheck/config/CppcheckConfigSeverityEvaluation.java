@@ -59,54 +59,81 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
         this.severityPortability = severityPortability;
     }
 
+    public void setThreshold(String threshold) {
+        this.threshold = threshold;
+    }
     public String getThreshold() {
         return threshold;
     }
-
+    public void setNewThreshold(String newThreshold) {
+       this.newThreshold = newThreshold;
+    }
     public String getNewThreshold() {
         return newThreshold;
     }
-
+    public void setFailureThreshold(String failureThreshold) {
+       this.failureThreshold = failureThreshold;
+    }
     public String getFailureThreshold() {
         return failureThreshold;
     }
-
+    public void setNewFailureThreshold(String newFailureThreshold) {
+       this.newFailureThreshold = newFailureThreshold;
+    }
     public String getNewFailureThreshold() {
         return newFailureThreshold;
     }
-
+    public void setHealthy(String healthy) {
+       this.healthy = healthy;
+    }
     public String getHealthy() {
         return healthy;
     }
-
+    public void setUnHealthy(String unHealthy) {
+       this.unHealthy = unHealthy;
+    }
     public String getUnHealthy() {
         return unHealthy;
     }
-
+    public void setSeverityError(boolean severityError) {
+       this.severityError = severityError;
+    }
     public boolean isSeverityError() {
         return severityError;
     }
-
+    public void setSeverityWarning(boolean severityWarning) {
+       this.severityWarning = severityWarning;
+    }
     public boolean isSeverityWarning() {
         return severityWarning;
     }
-
+    public void setSeverityStyle(boolean severityStyle) {
+       this.severityStyle = severityStyle;
+    }
     public boolean isSeverityStyle() {
         return severityStyle;
     }
-
+    public void setSeverityPerformance(boolean severityPerformance) {
+       this.severityPerformance = severityPerformance;
+    }
     public boolean isSeverityPerformance() {
         return severityPerformance;
     }
-
+    public void setSeverityInformation(boolean severityInformation) {
+       this.severityInformation = severityInformation;
+    }
     public boolean isSeverityInformation() {
         return severityInformation;
     }
-
+    public void setSeverityNoCategory(boolean severityNoCategory) {
+       this.severityNoCategory = severityNoCategory;
+    }
     public boolean isSeverityNoCategory() {
         return severityNoCategory;
     }
-
+    public void setSeverityPortability(boolean severityPortability) {
+       this.severityPortability = severityPortability;
+    }
     public boolean isSeverityPortability() {
         return severityPortability;
     }
