@@ -10,7 +10,7 @@ public class CppcheckConfig implements Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    private String pattern;
+    private String pattern = "";
     private boolean ignoreBlankFiles = false;
     private boolean allowNoReport = false;
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();

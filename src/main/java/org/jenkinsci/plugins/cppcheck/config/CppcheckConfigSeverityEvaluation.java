@@ -9,17 +9,17 @@ public class CppcheckConfigSeverityEvaluation implements Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    private String threshold;
+    private String threshold = "";
 
-    private String newThreshold;
+    private String newThreshold = "";
 
-    private String failureThreshold;
+    private String failureThreshold = "";
 
-    private String newFailureThreshold;
+    private String newFailureThreshold = "";
 
-    private String healthy;
+    private String healthy = "";
 
-    private String unHealthy;
+    private String unHealthy = "";
 
     private boolean severityError = true;
 
