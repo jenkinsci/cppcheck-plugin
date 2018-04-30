@@ -505,6 +505,12 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     @Symbol("cppcheckPublisher")
     public static final class CppcheckDescriptor extends BuildStepDescriptor<Publisher> {
 
+        public CppcheckDescriptor() {
+            super(CppcheckPublisher.class);
+            load();
+        }
+
+        @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }

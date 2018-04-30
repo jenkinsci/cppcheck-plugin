@@ -33,7 +33,7 @@ public class CppcheckUtil {
      *
      * @param cppecheckConfig configuration of CppCheck run
      * @param result results of the CPPCheck runs
-     * @param checkNewError is the number of errors is increasing
+     * @param checkNewError check if the number of errors is increasing
      * @return number of errors
      */
     public static int getNumberErrors(CppcheckConfig cppecheckConfig, CppcheckResult result, boolean checkNewError) {
