@@ -524,6 +524,11 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
         public final String getHelpFile() {
             return "/plugin/cppcheck/help.html";
         }
+
+        // default config for pipeline syntax generator
+        public CppcheckConfig getConfig() {
+            return new CppcheckConfig();
+        }
     }
 
     // getters aliases for boolean
