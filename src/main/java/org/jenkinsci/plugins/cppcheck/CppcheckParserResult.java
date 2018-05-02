@@ -10,7 +10,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.FileSelector;
-import org.jenkinsci.plugins.cppcheck.model.Cppcheck;
+import org.jenkinsci.plugins.cppcheck.model.v2.Cppcheck;
 import org.jenkinsci.plugins.cppcheck.parser.CppcheckParser;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.jenkinsci.remoting.RoleChecker;

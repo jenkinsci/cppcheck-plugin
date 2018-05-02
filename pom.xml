@@ -175,9 +175,9 @@
                     <execution>
                         <id>generatedCppcheck1</id>
                         <configuration>
-                            <packageName>com.thalesgroup.jenkinsci.plugins.cppcheck.model</packageName>
+                            <packageName>org.jenkinsci.plugins.cppcheck.model.v1</packageName>
                             <sources>
-                                <source>${basedir}/src/main/resources/com/thalesgroup/hudson/plugins/cppcheck/cppcheck-1.0.xsd</source>
+                                <source>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck/cppcheck-1.0.xsd</source>
                             </sources>
                         </configuration>
                         <goals>
@@ -187,7 +187,7 @@
                     <execution>
                         <id>generatedCppcheck2</id>
                         <configuration>
-                            <packageName>org.jenkinsci.plugins.cppcheck.model</packageName>
+                            <packageName>org.jenkinsci.plugins.cppcheck.model.v2</packageName>
                             <sources>
                                 <source>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck/cppcheck-2.0.xsd</source>
                             </sources>
@@ -205,7 +205,7 @@
 	            <!--<version>2.10.4</version>-->
 	            <configuration>
                     <!--Exclude packages:-->
-	                <excludePackageNames>org.jenkinsci.plugins.cppcheck.model:com.thalesgroup.jenkinsci.plugins.cppcheck.model</excludePackageNames>
+	                <excludePackageNames>org.jenkinsci.plugins.cppcheck.model.v1:org.jenkinsci.plugins.cppcheck.model.v2</excludePackageNames>
                 </configuration>
 	        </plugin>
         </plugins>

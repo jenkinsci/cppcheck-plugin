@@ -15,7 +15,7 @@ import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.EnvVars;
 import hudson.Extension;

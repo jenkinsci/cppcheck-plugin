@@ -1,10 +1,10 @@
 package org.jenkinsci.plugins.cppcheck.parser;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckFile;
 import hudson.model.TaskListener;
 import org.jenkinsci.plugins.cppcheck.CppcheckReport;
-import org.jenkinsci.plugins.cppcheck.model.Errors;
-import org.jenkinsci.plugins.cppcheck.model.Results;
+import org.jenkinsci.plugins.cppcheck.model.v2.Errors;
+import org.jenkinsci.plugins.cppcheck.model.v2.Results;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
 import javax.xml.bind.JAXBContext;
@@ -38,21 +38,22 @@ public class CppcheckParser implements Serializable {
         AtomicReference<JAXBContext> jc = new AtomicReference<JAXBContext>();
         try {
             jc.set(JAXBContext.newInstance(
-                    org.jenkinsci.plugins.cppcheck.model.Error.class,
-                    org.jenkinsci.plugins.cppcheck.model.Errors.class,
-                    org.jenkinsci.plugins.cppcheck.model.Cppcheck.class,
-                    org.jenkinsci.plugins.cppcheck.model.Results.class));
+                    org.jenkinsci.plugins.cppcheck.model.v2.Error.class,
+                    org.jenkinsci.plugins.cppcheck.model.v2.Errors.class,
+                    org.jenkinsci.plugins.cppcheck.model.v2.Cppcheck.class,
+                    org.jenkinsci.plugins.cppcheck.model.v2.Results.class));
             Unmarshaller unmarshaller = jc.get().createUnmarshaller();
-            org.jenkinsci.plugins.cppcheck.model.Results results = (org.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
+            org.jenkinsci.plugins.cppcheck.model.v2.Results results = (org.jenkinsci.plugins.cppcheck.model.v2.Results) unmarshaller.unmarshal(file);
             if (results.getCppcheck() == null) {
                 throw new JAXBException("Test with version 1");
             }
             report = getReportVersion2(results);
         } catch (JAXBException jxe) {
             try {
-                jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class));
+                jc.set(JAXBContext.newInstance(org.jenkinsci.plugins.cppcheck.model.v1.Error.class,
+                                               org.jenkinsci.plugins.cppcheck.model.v1.Results.class));
                 Unmarshaller unmarshaller = jc.get().createUnmarshaller();
-                com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
+                org.jenkinsci.plugins.cppcheck.model.v1.Results results = (org.jenkinsci.plugins.cppcheck.model.v1.Results) unmarshaller.unmarshal(file);
                 report = getReportVersion1(results);
 
                 CppcheckLogger.log(listener, "WARNING: Legacy format of report file detected, "
@@ -70,7 +71,7 @@ public class CppcheckParser implements Serializable {
         return report;
     }
 
-    private CppcheckReport getReportVersion1(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results) {
+    private CppcheckReport getReportVersion1(org.jenkinsci.plugins.cppcheck.model.v1.Results results) {
 
         CppcheckReport cppCheckReport = new CppcheckReport();
         List<CppcheckFile> allErrors = new ArrayList<CppcheckFile>();
@@ -84,7 +85,7 @@ public class CppcheckParser implements Serializable {
 
         CppcheckFile cppcheckFile;
         for (int i = 0; i < results.getError().size(); i++) {
-            com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error error = results.getError().get(i);
+            org.jenkinsci.plugins.cppcheck.model.v1.Error error = results.getError().get(i);
             cppcheckFile = new CppcheckFile();
 
             cppcheckFile.setFileName(error.getFile());
@@ -144,7 +145,7 @@ public class CppcheckParser implements Serializable {
 
         if (errors != null) {
             for (int i = 0; i < errors.getError().size(); i++) {
-                org.jenkinsci.plugins.cppcheck.model.Error error = errors.getError().get(i);
+                org.jenkinsci.plugins.cppcheck.model.v2.Error error = errors.getError().get(i);
                 cppcheckFile = new CppcheckFile();
 
                 cppcheckFile.setCppCheckId(error.getId());
@@ -178,7 +179,7 @@ public class CppcheckParser implements Serializable {
                 allErrors.add(cppcheckFile);
 
                 //FileName and Line
-                org.jenkinsci.plugins.cppcheck.model.Error.Location location = error.getLocation();
+                org.jenkinsci.plugins.cppcheck.model.v2.Error.Location location = error.getLocation();
                 if (location != null) {
                     cppcheckFile.setFileName(location.getFile());
                     String lineAtr;

@@ -14,7 +14,7 @@ import org.jenkinsci.plugins.cppcheck.util.AbstractCppcheckProjectAction;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
+import org.jenkinsci.plugins.cppcheck.graph.CppcheckGraph;
 
 /**
  * @author Gregory Boissinot

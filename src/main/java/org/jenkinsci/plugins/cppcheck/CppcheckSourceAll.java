@@ -12,7 +12,7 @@ import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.model.Run;
 
