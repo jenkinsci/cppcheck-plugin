@@ -51,8 +51,8 @@ public class CppcheckBuildHealthEvaluatorTest {
         when(cppcheckConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(cppcheckConfig.getConfigSeverityEvaluation().getHealthy()).thenReturn(String.valueOf(healthy));
         when(cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy()).thenReturn(String.valueOf(unHealthy));
-        HealthReport healthReport = cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig, errorsForSevrity);
-        return healthReport.getScore();
+        int healthReport = cppcheckBuildHealthEvaluator.evaluatBuildHealth(cppcheckConfig.getConfigSeverityEvaluation(), errorsForSevrity);
+        return healthReport;
     }
 
     @Test

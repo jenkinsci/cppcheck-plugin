@@ -24,7 +24,7 @@
 package org.jenkinsci.plugins.cppcheck;
 
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.model.BuildListener;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -40,8 +40,8 @@ import static org.mockito.Mockito.when;
 public class CppcheckResultTest {
 
     private BuildListener listener;
-    private AbstractBuild owner;
-    private CppcheckReport report;
+    private Run owner;
+    private CppcheckStatistics report;
 
     @Before
     public void setUp() throws Exception {
@@ -50,8 +50,8 @@ public class CppcheckResultTest {
         listener = mock(BuildListener.class);
         when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream()));
 
-        owner = mock(AbstractBuild.class);
-        report = mock(CppcheckReport.class);
+        owner = mock(Run.class);
+        report = mock(CppcheckStatistics.class);
 
     }
 
@@ -60,16 +60,16 @@ public class CppcheckResultTest {
 
         if (hasPreviousResult) {
             //Previous Report
-            CppcheckReport previousReport = mock(CppcheckReport.class);
-            when(previousReport.getNumberTotal()).thenReturn(nbPreviousReportError);
+            CppcheckStatistics previousReport = mock(CppcheckStatistics.class);
+            when(previousReport.getNumberErrorSeverity()).thenReturn(nbPreviousReportError);
 
             // Previous Result and associate previous report
             CppcheckResult previousCppcheckResult = mock(CppcheckResult.class);
-            when(previousCppcheckResult.getReport()).thenReturn(previousReport);
+            when(previousCppcheckResult.getStatistics()).thenReturn(previousReport);
 
             //Previous build and bind with the current build
-            AbstractBuild previousBuild = mock(AbstractBuild.class);
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(previousBuild, previousCppcheckResult, mock(CppcheckConfig.class));
+            Run previousBuild = mock(Run.class);
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(previousBuild, previousCppcheckResult, mock(CppcheckConfig.class), 0);
             when(previousBuild.getAction(CppcheckBuildAction.class)).thenReturn(buildAction);
             when(owner.getPreviousBuild()).thenReturn(previousBuild);
         } else {
@@ -77,10 +77,12 @@ public class CppcheckResultTest {
         }
 
         //New report
-        when(report.getNumberTotal()).thenReturn(nbReportError);
+        when(report.getNumberErrorSeverity()).thenReturn(nbReportError);
 
-        CppcheckResult cppcheckResult = new CppcheckResult(report, null, owner);
-        return cppcheckResult.getNumberNewErrorsFromPreviousBuild();
+        CppcheckResult cppcheckResult = new CppcheckResult(report, owner);
+        int nbNewErrors = cppcheckResult.getDiff().getNumberErrorSeverity();
+		if(nbNewErrors<0){nbNewErrors=0;}
+		return nbNewErrors;
     }
 
     @Test

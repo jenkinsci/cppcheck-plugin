@@ -26,20 +26,30 @@ package org.jenkinsci.plugins.cppcheck;
 
 import org.jenkinsci.plugins.cppcheck.model.CppcheckFile;
 import org.jenkinsci.plugins.cppcheck.parser.CppcheckParser;
+import hudson.model.BuildListener;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CppcheckParserV1Test {
 
-
+    hudson.model.TaskListener listener = mock(hudson.model.TaskListener.class);
     CppcheckParser cppcheckParser;
 
     @Before
     public void setUp() throws Exception {
+        //initialize the logger
+        listener = mock(BuildListener.class);
+        when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream()));
+
         cppcheckParser = new CppcheckParser();
     }
 
@@ -47,7 +57,7 @@ public class CppcheckParserV1Test {
     @Test
     public void nullFile() throws Exception {
         try {
-            cppcheckParser.parse(null);
+            cppcheckParser.parse(null, listener);
             Assert.fail("null parameter is not allowed.");
         } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
@@ -57,7 +67,7 @@ public class CppcheckParserV1Test {
     @Test
     public void nonExistFile() throws Exception {
         try {
-            cppcheckParser.parse(new File("nonExistFile"));
+            cppcheckParser.parse(new File("nonExistFile"), listener);
             Assert.fail("A valid file is mandatory.");
         } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
@@ -67,58 +77,63 @@ public class CppcheckParserV1Test {
 
     @Test
     public void testcppcheck1() throws Exception {
-        processCheckstyle("version1/testcppcheck1.xml", 12, 2, 0, 2, 8, 0);
+        processCheckstyle("version1/testcppcheck1.xml", 12, 8, 2, 2, 8, 0, 0);
     }
 
     @Test
     public void testcppcheck2() throws Exception {
-        processCheckstyle("version1/testcppcheck2.xml", 18, 4, 0, 0, 14, 0);
+        processCheckstyle("version1/testcppcheck2.xml", 18, 14, 4, 0, 0, 0, 0);
     }
 
     @Test
     public void testcppcheckPart1() throws Exception {
-        processCheckstyle("version1/testcppcheck-part1.xml", 3, 0, 0, 1, 2, 0);
+        processCheckstyle("version1/testcppcheck-part1.xml", 3, 2, 0, 1, 0, 0, 0);
     }
 
     @Test
     public void testcppcheckPart2() throws Exception {
-        processCheckstyle("version1/testcppcheck-part2.xml", 4, 2, 0, 1, 1, 0);
+        processCheckstyle("version1/testcppcheck-part2.xml", 4, 3, 0, 1, 0, 0, 0);
 
     }
 
     private void processCheckstyle(String filename,
-                                   int nbErrors,
-                                   int nbSeveritiesPossibleError,
-                                   int nbSeveritiesPossibleStyle,
-                                   int nbStyleErrors,
-                                   int nbSeveritiesError,
-                                   int nbSeveritiesNoCategory) throws Exception {
+                                 int nbAllErrors,
+                                 int nbError,
+                                 int nbWarning,
+                                 int nbStyle,
+                                 int nbPerformance,
+                                 int nbInformation,
+                                 int nbNoCategory) throws Exception {
 
-        CppcheckReport cppcheckReport = cppcheckParser.parse(new File(CppcheckParserTest.class.getResource(filename).toURI()));
+        CppcheckReport cppcheckReport = cppcheckParser.parse(new File(CppcheckParserV1Test.class.getResource(filename).toURI()), listener);
 
-        List<CppcheckFile> everyErrors = cppcheckReport.getEverySeverities();
-        List<CppcheckFile> possibileErrorSeverities = cppcheckReport.getPossibleErrorSeverities();
-        List<CppcheckFile> styleErrors = cppcheckReport.getStyleSeverities();
-        List<CppcheckFile> possibleStyleSeverities = cppcheckReport.getPossibleStyleSeverities();
-        List<CppcheckFile> errorSeverities = cppcheckReport.getErrorSeverities();
-        List<CppcheckFile> noCategorySeverities = cppcheckReport.getNoCategorySeverities();
+        List<CppcheckFile> everyErrors = cppcheckReport.getAllErrors();
+        List<CppcheckFile> errorSeverities = cppcheckReport.getErrorSeverityList();
+        List<CppcheckFile> warningSeverities = cppcheckReport.getWarningSeverityList();
+        List<CppcheckFile> styleSeverities = cppcheckReport.getStyleSeverityList();
+        List<CppcheckFile> performanceSeverities = cppcheckReport.getPerformanceSeverityList();
+        List<CppcheckFile> informationSeverities = cppcheckReport.getInformationSeverityList();
+        List<CppcheckFile> noCategorySeverities = cppcheckReport.getNoCategorySeverityList();
+        List<CppcheckFile> portabilitySeverities = cppcheckReport.getPortabilitySeverityList();
 
-        assert possibileErrorSeverities != null;
-        assert possibleStyleSeverities != null;
-        assert errorSeverities != null;
         assert everyErrors != null;
-        assert styleErrors != null;
+        assert errorSeverities != null;
+        assert warningSeverities != null;
+        assert styleSeverities != null;
+        assert performanceSeverities != null;
         assert noCategorySeverities != null;
+        assert portabilitySeverities != null;
 
         Assert.assertEquals("Wrong computing of list of errors", everyErrors.size(),
-                noCategorySeverities.size() + possibleStyleSeverities.size() + errorSeverities.size() + possibileErrorSeverities.size() + styleErrors.size());
+                errorSeverities.size() + warningSeverities.size() + styleSeverities.size() + performanceSeverities.size() + informationSeverities.size() + noCategorySeverities.size() + portabilitySeverities.size());
 
-        Assert.assertEquals("Wrong total number of errors", nbErrors, everyErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'possible error'", nbSeveritiesPossibleError, possibileErrorSeverities.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'possible style'", nbSeveritiesPossibleStyle, possibleStyleSeverities.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'style'", nbStyleErrors, styleErrors.size());
-        Assert.assertEquals("Wrong total number of errors for the severity 'error'", nbSeveritiesError, errorSeverities.size());
-        Assert.assertEquals("Wrong total number of errors with no category", nbSeveritiesNoCategory, noCategorySeverities.size());
+        Assert.assertEquals("Wrong total number of errors", nbAllErrors, everyErrors.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'error'", nbError, errorSeverities.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'warning'", nbWarning, warningSeverities.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'style'", nbStyle, styleSeverities.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'performance'", nbPerformance, performanceSeverities.size());
+        Assert.assertEquals("Wrong total number of errors for the severity 'information'", nbInformation, informationSeverities.size());
+        Assert.assertEquals("Wrong total number of errors with no category", nbNoCategory, noCategorySeverities.size());
     }
 
 }

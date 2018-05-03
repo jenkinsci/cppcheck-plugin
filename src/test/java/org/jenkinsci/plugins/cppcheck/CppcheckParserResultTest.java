@@ -52,13 +52,13 @@ public class CppcheckParserResultTest extends AbstractWorkspaceTest {
     @Test
     public void testNullPattern() {
         CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null, false);
-        Assert.assertEquals("With none pattern, the default pattern must be " + CppcheckParserResult.DELAULT_REPORT_MAVEN, CppcheckParserResult.DELAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
+        Assert.assertEquals("With none pattern, the default pattern must be " + CppcheckParserResult.DEFAULT_REPORT_MAVEN, CppcheckParserResult.DEFAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
     }
 
     @Test
     public void testEmptyPattern() {
         CppcheckParserResult cppcheckParserResult = new CppcheckParserResult(listener, null, false);
-        Assert.assertEquals("With empty pattern, the default pattern must be " + CppcheckParserResult.DELAULT_REPORT_MAVEN, CppcheckParserResult.DELAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
+        Assert.assertEquals("With empty pattern, the default pattern must be " + CppcheckParserResult.DEFAULT_REPORT_MAVEN, CppcheckParserResult.DEFAULT_REPORT_MAVEN, cppcheckParserResult.getCppcheckReportPattern());
     }
 
     @Test
