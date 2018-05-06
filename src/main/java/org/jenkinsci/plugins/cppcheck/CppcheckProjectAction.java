@@ -3,8 +3,9 @@ package org.jenkinsci.plugins.cppcheck;
 import java.io.IOException;
 import java.util.Calendar;
 
-import hudson.model.Run;
+import hudson.model.Job;
 import hudson.model.Result;
+import hudson.model.Run;
 import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
 import hudson.util.Graph;
@@ -27,14 +28,14 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
         return getUrlName();
     }
 
-    public CppcheckProjectAction(final Run<?, ?> run,
+    public CppcheckProjectAction(final Job<?, ?> job,
     		CppcheckConfigGraph configGraph) {
-        super(run);
+        super(job);
         this.configGraph = configGraph;
     }
 
     public Run<?, ?> getLastFinishedBuild() {
-        Run<?, ?> lastBuild = run.getPreviousBuild();
+        Run<?, ?> lastBuild = job.getLastBuild();
         while (lastBuild != null && (lastBuild.isBuilding()
                 || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
             lastBuild = lastBuild.getPreviousBuild();
@@ -48,7 +49,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
      * @return the build action or null
      */
     public CppcheckBuildAction getLastFinishedBuildAction() {
-    	Run<?, ?> lastBuild = getLastFinishedBuild();
+        Run<?, ?> lastBuild = getLastFinishedBuild();
         return (lastBuild != null) ? lastBuild.getAction(CppcheckBuildAction.class) : null;
     }
 
@@ -82,12 +83,8 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     public Integer getLastResultBuild() {
-        for (Run<?, ?> b = run.getPreviousBuild(); b != null; b = b.getPreviousBuiltBuild()) {
-            CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
-            if (r != null)
-                return b.getNumber();
-        }
-        return null;
+		Run<?, ?> lastBuild = getLastFinishedBuild();
+        return (lastBuild != null) ? lastBuild.getNumber() : null;
     }
 
 

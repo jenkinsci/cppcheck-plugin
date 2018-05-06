@@ -1,8 +1,9 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
 import hudson.model.Actionable;
-import hudson.model.Run;
+import hudson.model.Job;
 import hudson.model.Action;
+import hudson.model.Run;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -14,14 +15,14 @@ import java.io.IOException;
  */
 public abstract class AbstractCppcheckProjectAction extends Actionable implements Action {
 
-    protected final Run<?, ?> run;
+    protected final Job<?, ?> job;
 
-    public AbstractCppcheckProjectAction(Run<?, ?> run) {
-        this.run = run;
+    public AbstractCppcheckProjectAction(Job<?, ?> job) {
+        this.job = job;
     }
 
     public Run<?, ?> getRun() {
-        return run;
+        return getLastFinishedBuild();
     }
 
     public String getIconFileName() {
