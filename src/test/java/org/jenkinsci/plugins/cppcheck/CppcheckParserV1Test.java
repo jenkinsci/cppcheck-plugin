@@ -77,7 +77,7 @@ public class CppcheckParserV1Test {
 
     @Test
     public void testcppcheck1() throws Exception {
-        processCheckstyle("version1/testcppcheck1.xml", 12, 8, 2, 2, 8, 0, 0);
+        processCheckstyle("version1/testcppcheck1.xml", 12, 8, 2, 2, 0, 0, 0);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CppcheckParserV1Test {
 
     @Test
     public void testcppcheckPart2() throws Exception {
-        processCheckstyle("version1/testcppcheck-part2.xml", 4, 3, 0, 1, 0, 0, 0);
+        processCheckstyle("version1/testcppcheck-part2.xml", 4, 1, 2, 1, 0, 0, 0);
 
     }
 
