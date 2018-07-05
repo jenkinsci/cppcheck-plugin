@@ -40,6 +40,7 @@
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/cppcheck-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/cppcheck-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/cppcheck-plugin</url>
         <tag>HEAD</tag>
     </scm>
   
