@@ -67,7 +67,7 @@ public class CppcheckAreaRenderer extends StackedAreaRenderer2 {
     private NumberOnlyBuildLabel getLabel(final CategoryDataset dataset, final int column) {
         return (NumberOnlyBuildLabel) dataset.getColumnKey(column);
     }
-    
+
     /**
      * Checks this instance for equality with an arbitrary object.
      *

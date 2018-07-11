@@ -40,7 +40,7 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
         this.result = result;
         this.healthReportPercentage = healthReportPercentage;
         
-        List<CppcheckProjectAction> projectActions = new ArrayList<>();
+        List<CppcheckProjectAction> projectActions = new ArrayList<CppcheckProjectAction>();
         projectActions.add(new CppcheckProjectAction(owner, config.getConfigGraph()));
         this.projectActions = projectActions;
     }

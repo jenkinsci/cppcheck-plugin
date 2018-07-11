@@ -38,7 +38,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckSourceContainer;
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
 import com.thalesgroup.hudson.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
-
+import hudson.model.Run;
 import hudson.model.HealthReport;
 import hudson.model.Run;
 import hudson.util.ChartUtil;

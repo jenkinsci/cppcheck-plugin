@@ -24,6 +24,8 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckProjectAction;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Result;
@@ -48,6 +50,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     @SuppressWarnings("unused")
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public final boolean isDisplayGraph() {
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();

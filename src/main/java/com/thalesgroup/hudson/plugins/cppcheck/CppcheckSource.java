@@ -108,7 +108,7 @@ public class CppcheckSource implements Serializable {
 
             splitSourceFile(highlightSource(is));
         } catch (IOException exception) {
-            sourceCode = "Can't read file: " + exception.getLocalizedMessage();
+            sourceCode = "Can't read file : " + exception.getLocalizedMessage();
         } catch (RuntimeException re) {
             sourceCode = "Problem for display the source code content: " + re.getLocalizedMessage();
         } finally {
@@ -224,7 +224,7 @@ public class CppcheckSource implements Serializable {
      *
      * @param file the source file to highlight
      * @return the source as an HTML string
-     * @throws IOException
+	 * @throws IOException if cannot read source or cannot write highlighted source
      */
     public final String highlightSource(final InputStream file) throws IOException {
 
