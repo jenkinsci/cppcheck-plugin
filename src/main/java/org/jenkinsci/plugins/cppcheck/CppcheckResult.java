@@ -1,8 +1,8 @@
 package org.jenkinsci.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.CppcheckSource;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
+import org.jenkinsci.plugins.cppcheck.CppcheckSource;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckFile;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.XmlFile;
 import hudson.model.Run;

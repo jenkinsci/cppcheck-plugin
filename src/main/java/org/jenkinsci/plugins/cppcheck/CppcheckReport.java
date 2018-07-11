@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.cppcheck;
 
-import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckFile;
+import org.jenkinsci.plugins.cppcheck.model.CppcheckFile;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 

@@ -43,19 +43,19 @@
         <url>https://github.com/jenkinsci/cppcheck-plugin</url>
         <tag>HEAD</tag>
     </scm>
-  
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <jaxb.api.version>2.2.1</jaxb.api.version>
         <jaxb.impl.version>2.2.1.1</jaxb.impl.version>
-        <jaxb2.maven.plugin.version>2.1</jaxb2.maven.plugin.version>
+        <jaxb2.maven.plugin.version>2.3</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
-	<jenkins.version>2.30</jenkins.version>
+        <jenkins.version>2.30</jenkins.version>
     </properties>
 
     <repositories>
@@ -122,6 +122,50 @@
     </dependencies>
 
     <build>
+     <pluginManagement>
+        <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only.
+                It has no influence on the Maven build itself. -->
+        	<plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.jacoco</groupId>
+                                    <artifactId>jacoco-maven-plugin</artifactId>
+                                    <versionRange>[0.5,)
+                                    </versionRange>
+                                    <goals>
+                                        <goal>prepare-agent</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <!-- m2e doesn't know what to do with jacoco,
+                                        let's ignore it or annoying error markers appear
+                                        see http://wiki.eclipse.org/M2E_plugin_execution_not_covered
+                                     -->
+                                    <ignore></ignore>
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+        	</plugin>
+    		<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+            	<configuration>
+                	<excludes>
+                    	<exclude>InjectedTest.java</exclude>
+	                </excludes>
+    	        </configuration>
+        	</plugin>
+  		</plugins>
+     </pluginManagement>
         <plugins>
 
             <plugin>
@@ -132,11 +176,10 @@
                     <execution>
                         <id>generatedCppcheck1</id>
                         <configuration>
-                            <packageName>com.thalesgroup.jenkinsci.plugins.cppcheck.model</packageName>
+                            <packageName>org.jenkinsci.plugins.cppcheck.model.v1</packageName>
                             <sources>
-                                <source>${basedir}/src/main/resources/com/thalesgroup/hudson/plugins/cppcheck/cppcheck-1.0.xsd</source>
+                                <source>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck/cppcheck-1.0.xsd</source>
                             </sources>
-                            <clearOutputDir>false</clearOutputDir>
                         </configuration>
                         <goals>
                             <goal>xjc</goal>
@@ -145,7 +188,7 @@
                     <execution>
                         <id>generatedCppcheck2</id>
                         <configuration>
-                            <packageName>org.jenkinsci.plugins.cppcheck.model</packageName>
+                            <packageName>org.jenkinsci.plugins.cppcheck.model.v2</packageName>
                             <sources>
                                 <source>${basedir}/src/main/resources/org/jenkinsci/plugins/cppcheck/cppcheck-2.0.xsd</source>
                             </sources>
@@ -156,16 +199,16 @@
                         </goals>
                     </execution>
                 </executions>
-	</plugin>
-	<plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-javadoc-plugin</artifactId>
-	    <!--<version>2.10.4</version>-->
-	    <configuration>
-                <!--Exclude packages:-->
-	        <excludePackageNames>org.jenkinsci.plugins.cppcheck.model:com.thalesgroup.jenkinsci.plugins.cppcheck.model</excludePackageNames>
-	    </configuration>																													     
-	</plugin>
+            </plugin>
+	        <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-javadoc-plugin</artifactId>
+	            <!--<version>2.10.4</version>-->
+	            <configuration>
+                    <!--Exclude packages:-->
+	                <excludePackageNames>org.jenkinsci.plugins.cppcheck.model.v1:org.jenkinsci.plugins.cppcheck.model.v2</excludePackageNames>
+                </configuration>
+	        </plugin>
         </plugins>
     </build>
 

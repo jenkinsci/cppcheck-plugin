@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
-
 import hudson.model.Run;
 import jenkins.tasks.SimpleBuildStep;
 import hudson.model.Action;
@@ -16,6 +14,8 @@ import hudson.model.HealthReport;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
+import org.jenkinsci.plugins.cppcheck.util.AbstractCppcheckBuildAction;
+
 
 /**
  * @author Gregory Boissinot
@@ -40,8 +40,8 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
         this.result = result;
         this.healthReportPercentage = healthReportPercentage;
         
-        List<CppcheckProjectAction> projectActions = new ArrayList<>();
-        projectActions.add(new CppcheckProjectAction(owner, config.getConfigGraph()));
+        List<CppcheckProjectAction> projectActions = new ArrayList<CppcheckProjectAction>();
+        projectActions.add(new CppcheckProjectAction(owner.getParent(), config.getConfigGraph()));
         this.projectActions = projectActions;
     }
 
