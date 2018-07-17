@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.16</version>
+        <version>3.9</version>
     </parent>
 
     <artifactId>cppcheck</artifactId>
@@ -52,10 +52,11 @@
         <jaxb.impl.version>2.2.1.1</jaxb.impl.version>
         <jaxb2.maven.plugin.version>2.1</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
-        <junit.version>4.8.2</junit.version>
+        <junit.version>4.12</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
-	<jenkins.version>2.30</jenkins.version>
+	<jenkins.version>2.60.3</jenkins.version>
+	<java.level>7</java.level>
     </properties>
 
     <repositories>
@@ -74,6 +75,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>structs</artifactId>
+            <version>1.7</version>
+        </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
