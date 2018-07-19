@@ -1,4 +1,6 @@
 package org.jenkinsci.plugins.cppcheck.config;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 
 import java.io.Serializable;
@@ -16,30 +18,32 @@ public class CppcheckConfig implements Serializable {
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
 
+    @DataBoundSetter
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
+    @DataBoundSetter
     public void setIgnoreBlankFiles(boolean ignoreBlankFiles) {
         this.ignoreBlankFiles = ignoreBlankFiles;
     }
-
+    @DataBoundSetter
     public void setAllowNoReport(boolean allowNoReport) {
         this.allowNoReport = allowNoReport;
     }
-
+    @DataBoundSetter
     public void setConfigSeverityEvaluation(CppcheckConfigSeverityEvaluation configSeverityEvaluation) {
         this.configSeverityEvaluation = configSeverityEvaluation;
     }
-
+    @DataBoundSetter
     public void setConfigGraph(CppcheckConfigGraph configGraph) {
         this.configGraph = configGraph;
     }
-
+    @DataBoundSetter
     public void setCppcheckReportPattern(String cppcheckReportPattern) {
         this.cppcheckReportPattern = cppcheckReportPattern;
     }
-
+    @DataBoundSetter
     public void setUseWorkspaceAsRootPath(boolean useWorkspaceAsRootPath) {
         this.useWorkspaceAsRootPath = useWorkspaceAsRootPath;
     }
@@ -57,6 +61,9 @@ public class CppcheckConfig implements Serializable {
         return useWorkspaceAsRootPath;
     }
 
+    public boolean getIgnoreBlankFiles() {
+        return ignoreBlankFiles;
+    }
     public boolean isIgnoreBlankFiles() {
         return ignoreBlankFiles;
     }
