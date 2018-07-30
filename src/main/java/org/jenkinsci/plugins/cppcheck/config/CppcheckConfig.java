@@ -1,5 +1,4 @@
 package org.jenkinsci.plugins.cppcheck.config;
-import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 

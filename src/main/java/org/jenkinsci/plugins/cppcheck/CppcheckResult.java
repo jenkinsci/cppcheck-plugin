@@ -6,6 +6,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
 import hudson.XmlFile;
 import hudson.model.Run;
+import hudson.model.Job;
 import hudson.model.Api;
 import hudson.model.Item;
 
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Gregory Boissinot
  */
@@ -32,7 +35,7 @@ public class CppcheckResult implements Serializable {
      * @deprecated Only for backward compatibility with version 1.14 and less.
      */
     @Deprecated
-    private transient CppcheckReport report;
+    private CppcheckReport report;
 
     /**
      * The Cppcheck container with all source files.
@@ -65,7 +68,7 @@ public class CppcheckResult implements Serializable {
      * 
      * @since 1.15
      */
-    public CppcheckResult(CppcheckStatistics statistics, Run<?, ?> owner) {
+    public CppcheckResult(@Nonnull CppcheckStatistics statistics, @Nonnull Run<?, ?> owner) {
         this.statistics = statistics;
         this.owner = owner;
     }
@@ -79,6 +82,7 @@ public class CppcheckResult implements Serializable {
      * 
      * @deprecated Use a different constructor instead.
      */
+    @Deprecated
     public CppcheckResult(CppcheckReport report,
             CppcheckSourceContainer cppcheckSourceContainer, Run<?, ?> owner) {
         this.report = report;

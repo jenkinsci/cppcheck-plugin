@@ -95,11 +95,11 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
 
     // Backward compatibility
     @Deprecated
-    private transient Run<?, ?> build;
+    private Run<?, ?> build;
 
     /** Backward compatibility with version 1.14 and less. */
     @Deprecated
-    private transient CppcheckConfig cppcheckConfig;
+    private CppcheckConfig cppcheckConfig;
 
     /**
      * Initializes members that were not present in previous versions of this plug-in.

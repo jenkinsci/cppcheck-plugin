@@ -2,7 +2,8 @@ package org.jenkinsci.plugins.cppcheck;
 
 import java.io.IOException;
 import java.util.Calendar;
-
+import hudson.model.AbstractProject;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.Result;
 import hudson.util.ChartUtil;
@@ -26,22 +27,63 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     public String getSearchUrl() {
         return getUrlName();
     }
-
     public CppcheckProjectAction(final Run<?, ?> run,
     		CppcheckConfigGraph configGraph) {
         super(run);
         this.configGraph = configGraph;
     }
 
+    private boolean isRunCompleted(Run<?, ?> run) {
+    	if (run == null) {
+    		return false;
+    	}
+
+    	if (run.isBuilding()) {
+    		return false;
+    	}
+    	
+  		if  (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
+  			return true;
+  		}
+  		
+  		return false;
+    }
+    
     public Run<?, ?> getLastFinishedBuild() {
-        Run<?, ?> lastBuild = run.getPreviousBuild();
-        while (lastBuild != null && (lastBuild.isBuilding()
-                || lastBuild.getAction(CppcheckBuildAction.class) == null)) {
-            lastBuild = lastBuild.getPreviousBuild();
-        }
-        return lastBuild;
+    	// get the very last build - no matter of its result or buildstate and search towards previous builds until the first successful or unstable result was found.
+    	Run<?, ?> prevCompletedRun = run.getPreviousBuild();
+
+    	Run<?, ?> lastRun = prevCompletedRun;
+    	if (lastRun != null)
+    	{
+    		while(lastRun != null && lastRun.getNextBuild() != null) {
+    			lastRun = lastRun.getNextBuild();
+    		}
+    	}
+    	else
+    	{
+    		return prevCompletedRun;    		
+    	}
+    	
+    	while(lastRun != null) {
+    		if (isRunCompleted(lastRun)) {
+        		return lastRun;    		
+    			
+    		}
+    		lastRun = lastRun.getPreviousBuild();
+    	}
+
+		return null;
     }
 
+    public final Run<?, ?> getProject() {
+        CppcheckBuildAction lastAction = getLastFinishedBuildAction();
+        return (lastAction != null) ? lastAction.getOwner() : null;
+    }
+    
+    public Run<?,?> getRun() {
+    	return super.run;
+    }
     /**
      * Get build action of the last finished build.
      * 
@@ -82,12 +124,11 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
     }
 
     public Integer getLastResultBuild() {
-        for (Run<?, ?> b = run.getPreviousBuild(); b != null; b = b.getPreviousBuiltBuild()) {
-            CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
-            if (r != null)
-                return b.getNumber();
-        }
-        return null;
+    	Run<?, ?> b = getLastFinishedBuild();
+    	if (b != null) {
+    		return b.getNumber();
+    	}
+    	return null;
     }
 
 
