@@ -47,7 +47,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
      */
     public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
 
-    private CppcheckConfig config;
+    private CppcheckConfig cppcheckConfig;
 
     @DataBoundConstructor
     public CppcheckPublisher() {this("", false, "", false, "", "", "", "", "", true, true, true, true, true, true, true, 500, 200, 0, true, false, false, false, false, false, false, false);}
@@ -76,11 +76,11 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                              boolean displayNoCategorySeverity,
                              boolean displayPortabilitySeverity) {
 
-        config = new CppcheckConfig();
+        cppcheckConfig = new CppcheckConfig();
 
-        config.setPattern(pattern);
-        config.setAllowNoReport(allowNoReport);
-        config.setIgnoreBlankFiles(ignoreBlankFiles);
+        cppcheckConfig.setPattern(pattern);
+        cppcheckConfig.setAllowNoReport(allowNoReport);
+        cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
         CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
                 severityError,
@@ -90,7 +90,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 severityInformation,
                 severityNoCategory,
                 severityPortability);
-        config.setConfigSeverityEvaluation(configSeverityEvaluation);
+        cppcheckConfig.setConfigSeverityEvaluation(configSeverityEvaluation);
         CppcheckConfigGraph configGraph = new CppcheckConfigGraph(
                 xSize, ySize, numBuildsInGraph,
                 displayAllErrors,
@@ -101,204 +101,204 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 displayInformationSeverity,
                 displayNoCategorySeverity,
                 displayPortabilitySeverity);
-        config.setConfigGraph(configGraph);
+        cppcheckConfig.setConfigGraph(configGraph);
     }
 
     @DataBoundSetter
     public void setPattern(String pattern) {
-        config.setPattern(pattern);
+        cppcheckConfig.setPattern(pattern);
     }
     public String getPattern() {
-        return config.getPattern();
+        return cppcheckConfig.getPattern();
     }
     @DataBoundSetter
     public void setThreshold(String threshold) {
-        config.getConfigSeverityEvaluation().setThreshold(threshold);
+        cppcheckConfig.getConfigSeverityEvaluation().setThreshold(threshold);
     }
     public String getThreshold() {
-        return config.getConfigSeverityEvaluation().getThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getThreshold();
     }
 
     @DataBoundSetter
     public void setNewThreshold(String newThreshold) {
-        config.getConfigSeverityEvaluation().setNewThreshold(newThreshold);
+        cppcheckConfig.getConfigSeverityEvaluation().setNewThreshold(newThreshold);
     }
     public String getNewThreshold() {
-        return config.getConfigSeverityEvaluation().getNewThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getNewThreshold();
     }
     @DataBoundSetter
     public void setFailureThreshold(String failureThreshold) {
-        config.getConfigSeverityEvaluation().setFailureThreshold(failureThreshold);
+        cppcheckConfig.getConfigSeverityEvaluation().setFailureThreshold(failureThreshold);
     }
     public String getFailureThreshold() {
-        return config.getConfigSeverityEvaluation().getFailureThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getFailureThreshold();
     }
     @DataBoundSetter
     public void setNewFailureThreshold(String newFailureThreshold) {
-        config.getConfigSeverityEvaluation().setNewFailureThreshold(newFailureThreshold);
+        cppcheckConfig.getConfigSeverityEvaluation().setNewFailureThreshold(newFailureThreshold);
     }
     public String getNewFailureThreshold() {
-        return config.getConfigSeverityEvaluation().getNewFailureThreshold();
+        return cppcheckConfig.getConfigSeverityEvaluation().getNewFailureThreshold();
     }
     @DataBoundSetter
     public void setHealthy(String healthy) {
-        config.getConfigSeverityEvaluation().setHealthy(healthy);
+        cppcheckConfig.getConfigSeverityEvaluation().setHealthy(healthy);
     }
     public String getHealthy() {
-        return config.getConfigSeverityEvaluation().getHealthy();
+        return cppcheckConfig.getConfigSeverityEvaluation().getHealthy();
     }
     @DataBoundSetter
     public void setUnHealthy(String unHealthy) {
-        config.getConfigSeverityEvaluation().setUnHealthy(unHealthy);
+        cppcheckConfig.getConfigSeverityEvaluation().setUnHealthy(unHealthy);
     }
     public String getUnHealthy() {
-        return config.getConfigSeverityEvaluation().getUnHealthy();
+        return cppcheckConfig.getConfigSeverityEvaluation().getUnHealthy();
     }
     @DataBoundSetter
     public void setIgnoreBlankFiles(boolean ignoreBlankFiles) {
-        config.setIgnoreBlankFiles(ignoreBlankFiles);
+        cppcheckConfig.setIgnoreBlankFiles(ignoreBlankFiles);
     }
     public boolean getIgnoreBlankFiles() {
-        return config.getIgnoreBlankFiles();
+        return cppcheckConfig.getIgnoreBlankFiles();
     }
     public boolean isIgnoreBlankFiles() {
-        return config.isIgnoreBlankFiles();
+        return cppcheckConfig.isIgnoreBlankFiles();
     }
     @DataBoundSetter
     public void setAllowNoReport(boolean allowNoReport) {
-        config.setAllowNoReport(allowNoReport);
+        cppcheckConfig.setAllowNoReport(allowNoReport);
     }
     public boolean getAllowNoReport() {
-        return config.getAllowNoReport();
+        return cppcheckConfig.getAllowNoReport();
     }
     @DataBoundSetter
     public void setSeverityError(boolean severityError) {
-        config.getConfigSeverityEvaluation().setSeverityError(severityError);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityError(severityError);
     }
     public boolean getSeverityError() {
-        return config.getConfigSeverityEvaluation().getSeverityError();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityError();
     }
     @DataBoundSetter
     public void setSeverityWarning(boolean severityWarning) {
-        config.getConfigSeverityEvaluation().setSeverityWarning(severityWarning);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityWarning(severityWarning);
     }
     public boolean getSeverityWarning() {
-        return config.getConfigSeverityEvaluation().getSeverityWarning();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityWarning();
     }
     @DataBoundSetter
     public void setSeverityStyle(boolean severityStyle) {
-        config.getConfigSeverityEvaluation().setSeverityStyle(severityStyle);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityStyle(severityStyle);
     }
     public boolean getSeverityStyle() {
-        return config.getConfigSeverityEvaluation().getSeverityStyle();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityStyle();
     }
     @DataBoundSetter
     public void setSeverityPerformance(boolean severityPerformance) {
-        config.getConfigSeverityEvaluation().setSeverityPerformance(severityPerformance);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityPerformance(severityPerformance);
     }
     public boolean getSeverityPerformance() {
-        return config.getConfigSeverityEvaluation().getSeverityPerformance();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityPerformance();
     }
     @DataBoundSetter
     public void setSeverityInformation(boolean severityInformation) {
-        config.getConfigSeverityEvaluation().setSeverityInformation(severityInformation);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityInformation(severityInformation);
     }
     public boolean getSeverityInformation() {
-        return config.getConfigSeverityEvaluation().getSeverityInformation();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityInformation();
     }
     @DataBoundSetter
     public void setSeverityNoCategory(boolean severityNoCategory) {
-        config.getConfigSeverityEvaluation().setSeverityNoCategory(severityNoCategory);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityNoCategory(severityNoCategory);
     }
     public boolean getSeverityNoCategory() {
-        return config.getConfigSeverityEvaluation().getSeverityNoCategory();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityNoCategory();
     }
     @DataBoundSetter
     public void setSeverityPortability(boolean severityPortability) {
-        config.getConfigSeverityEvaluation().setSeverityPortability(severityPortability);
+        cppcheckConfig.getConfigSeverityEvaluation().setSeverityPortability(severityPortability);
     }
     public boolean getSeverityPortability() {
-        return config.getConfigSeverityEvaluation().getSeverityPortability();
+        return cppcheckConfig.getConfigSeverityEvaluation().getSeverityPortability();
     }
     @DataBoundSetter
     public void setDisplayAllErrors(boolean displayAllErrors) {
-        config.getConfigGraph().setDisplayAllErrors(displayAllErrors);
+        cppcheckConfig.getConfigGraph().setDisplayAllErrors(displayAllErrors);
     }
     public boolean getDisplayAllErrors() {
-        return config.getConfigGraph().getDisplayAllErrors();
+        return cppcheckConfig.getConfigGraph().getDisplayAllErrors();
     }
     @DataBoundSetter
     public void setDisplayErrorSeverity(boolean displayErrorSeverity) {
-        config.getConfigGraph().setDisplayErrorSeverity(displayErrorSeverity);
+        cppcheckConfig.getConfigGraph().setDisplayErrorSeverity(displayErrorSeverity);
     }
     public boolean getDisplayErrorSeverity() {
-        return config.getConfigGraph().getDisplayErrorSeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayErrorSeverity();
     }
     @DataBoundSetter
     public void setDisplayWarningSeverity(boolean displayWarningSeverity) {
-        config.getConfigGraph().setDisplayWarningSeverity(displayWarningSeverity);
+        cppcheckConfig.getConfigGraph().setDisplayWarningSeverity(displayWarningSeverity);
     }
     public boolean getDisplayWarningSeverity() {
-        return config.getConfigGraph().getDisplayWarningSeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayWarningSeverity();
     }
     @DataBoundSetter
     public void setDisplayStyleSeverity(boolean displayStyleSeverity) {
-        config.getConfigGraph().setDisplayStyleSeverity(displayStyleSeverity);
+        cppcheckConfig.getConfigGraph().setDisplayStyleSeverity(displayStyleSeverity);
     }
     public boolean getDisplayStyleSeverity() {
-        return config.getConfigGraph().getDisplayStyleSeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayStyleSeverity();
     }
     @DataBoundSetter
     public void setDisplayPerformanceSeverity(boolean displayPerformanceSeverity) {
-        config.getConfigGraph().setDisplayPerformanceSeverity(displayPerformanceSeverity);
+        cppcheckConfig.getConfigGraph().setDisplayPerformanceSeverity(displayPerformanceSeverity);
     }
     public boolean getDisplayPerformanceSeverity() {
-        return config.getConfigGraph().getDisplayPerformanceSeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayPerformanceSeverity();
     }
     @DataBoundSetter
     public void setDisplayNoCategorySeverity(boolean displayNoCategorySeverity) {
-        config.getConfigGraph().setDisplayNoCategorySeverity(displayNoCategorySeverity);
+        cppcheckConfig.getConfigGraph().setDisplayNoCategorySeverity(displayNoCategorySeverity);
     }
     public boolean getDisplayNoCategorySeverity() {
-        return config.getConfigGraph().getDisplayNoCategorySeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayNoCategorySeverity();
     }
     @DataBoundSetter
     public void setDisplayPortabilitySeverity(boolean displayPortabilitySeverity) {
-        config.getConfigGraph().setDisplayPortabilitySeverity(displayPortabilitySeverity);
+        cppcheckConfig.getConfigGraph().setDisplayPortabilitySeverity(displayPortabilitySeverity);
     }
     public boolean getDisplayPortabilitySeverity() {
-        return config.getConfigGraph().getDisplayPortabilitySeverity();
+        return cppcheckConfig.getConfigGraph().getDisplayPortabilitySeverity();
     }
     @DataBoundSetter
     public void setXSize(int xSize) {
-        config.getConfigGraph().setXSize(xSize);
+        cppcheckConfig.getConfigGraph().setXSize(xSize);
     }
     public int getXSize() {
-        return config.getConfigGraph().getXSize();
+        return cppcheckConfig.getConfigGraph().getXSize();
     }
     @DataBoundSetter
     public void setYSize(int ySize) {
-        config.getConfigGraph().setYSize(ySize);
+        cppcheckConfig.getConfigGraph().setYSize(ySize);
     }
     public int getYSize() {
-        return config.getConfigGraph().getYSize();
+        return cppcheckConfig.getConfigGraph().getYSize();
     }
     @DataBoundSetter
     public void setNumBuildsInGraph(int numBuildsInGraph) {
-        config.getConfigGraph().setNumBuildsInGraph(numBuildsInGraph);
+        cppcheckConfig.getConfigGraph().setNumBuildsInGraph(numBuildsInGraph);
     }
     public int getNumBuildsInGraph() {
-        return config.getConfigGraph().getNumBuildsInGraph();
+        return cppcheckConfig.getConfigGraph().getNumBuildsInGraph();
     }
 
 
     @Deprecated
-    public CppcheckPublisher(CppcheckConfig config) {
-        this.config = config;
+    public CppcheckPublisher(CppcheckConfig cppcheckConfig) {
+        this.cppcheckConfig = cppcheckConfig;
     }
 
     public CppcheckConfig getCppcheckConfig() {
-        return config;
+        return cppcheckConfig;
     }
 
     protected boolean canContinue(final Result result) {
@@ -317,11 +317,11 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
                 
                 EnvVars env = build.getEnvironment(listener);
-                String expandedPattern = env.expand(config.getPattern());
+                String expandedPattern = env.expand(cppcheckConfig.getPattern());
                 
 
                 CppcheckParserResult parser = new CppcheckParserResult(listener,
-                                expandedPattern, config.isIgnoreBlankFiles());
+                                expandedPattern, cppcheckConfig.isIgnoreBlankFiles());
                 CppcheckReport cppcheckReport;
                 try {
                     cppcheckReport = workspace.act(parser);
@@ -333,7 +333,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
                 if (cppcheckReport == null) {
                     // Check if we're configured to allow not having a report
-                    if (config.getAllowNoReport()) {
+                    if (cppcheckConfig.getAllowNoReport()) {
                         return;
                     } else {
                         build.setResult(Result.FAILURE);
@@ -347,7 +347,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
                 CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
                 CppcheckConfigSeverityEvaluation severityEvaluation
-                        = config.getConfigSeverityEvaluation();
+                        = cppcheckConfig.getConfigSeverityEvaluation();
 
                 Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
                         listener, result.getNumberErrorsAccordingConfiguration(severityEvaluation, false),
@@ -358,7 +358,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                     build.setResult(buildResult);
                 }
 
-                CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, config,
+                CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig,
                         CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
 
                 build.addAction(buildAction);
@@ -384,11 +384,11 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
             
             EnvVars env = build.getEnvironment(listener);
-            String expandedPattern = env.expand(config.getPattern());
+            String expandedPattern = env.expand(cppcheckConfig.getPattern());
             
 
             CppcheckParserResult parser = new CppcheckParserResult(listener,
-                        expandedPattern, config.isIgnoreBlankFiles());
+                        expandedPattern, cppcheckConfig.isIgnoreBlankFiles());
             CppcheckReport cppcheckReport = null;
             try {
             	FilePath oWorkspacePath = build.getWorkspace(); 
@@ -404,7 +404,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
             if (cppcheckReport == null) {
                 // Check if we're configured to allow not having a report
-                if (config.getAllowNoReport()) {
+                if (cppcheckConfig.getAllowNoReport()) {
                     return true;
                 } else {
                     build.setResult(Result.FAILURE);
@@ -418,7 +418,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
             CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
             CppcheckConfigSeverityEvaluation severityEvaluation
-                    = config.getConfigSeverityEvaluation();
+                    = cppcheckConfig.getConfigSeverityEvaluation();
 
             Result buildResult = new CppcheckBuildResultEvaluator().evaluateBuildResult(
                     listener, result.getNumberErrorsAccordingConfiguration(severityEvaluation, false),
@@ -429,7 +429,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 build.setResult(buildResult);
             }
 
-            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, config,
+            CppcheckBuildAction buildAction = new CppcheckBuildAction(build, result, cppcheckConfig,
                     CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
 
             build.addAction(buildAction);
