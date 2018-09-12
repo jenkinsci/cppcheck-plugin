@@ -49,6 +49,9 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
     private CppcheckConfig config;
 
+    @Deprecated
+    private CppcheckConfig cppcheckConfig;
+
     @DataBoundConstructor
     public CppcheckPublisher() {this("", false, "", false, "", "", "", "", "", true, true, true, true, true, true, true, 500, 200, 0, true, false, false, false, false, false, false, false);}
 
@@ -102,6 +105,13 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 displayNoCategorySeverity,
                 displayPortabilitySeverity);
         config.setConfigGraph(configGraph);
+    }
+
+    protected Object readResolve() {
+	if (cppcheckConfig != null) {
+            config = cppcheckConfig;
+        }
+        return this;	
     }
 
     @DataBoundSetter
