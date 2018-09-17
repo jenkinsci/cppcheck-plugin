@@ -123,4 +123,11 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
     public Collection<? extends Action> getProjectActions() {
     	return this.projectActions;
     }
+
+    @Override
+    public void setOwner(Run<?,?> owner) {
+        super.setOwner(owner);
+
+        this.result.setOwner(owner);
+    }
 }

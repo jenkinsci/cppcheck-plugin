@@ -24,9 +24,10 @@ package com.thalesgroup.hudson.plugins.cppcheck.util;
 
 import hudson.model.*;
 import org.kohsuke.stapler.StaplerProxy;
+import jenkins.model.RunAction2;
 
-public abstract class AbstractCppcheckBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
-    protected Run<?, ?> owner;
+public abstract class AbstractCppcheckBuildAction extends Actionable implements RunAction2, HealthReportingAction, StaplerProxy {
+    protected transient Run<?, ?> owner;
 
     protected AbstractCppcheckBuildAction(Run<?, ?> owner) {
         this.owner = owner;
@@ -48,5 +49,17 @@ public abstract class AbstractCppcheckBuildAction extends Actionable implements 
 
     public Run<?, ?> getOwner() {
         return owner;
+    }
+
+    public void setOwner(Run<?,?> owner) {
+        this.owner = owner;
+    }
+
+    public void onAttached(Run<?,?> r) {
+        setOwner(r);
+    }
+
+    public void onLoad(Run<?,?> r) {
+        setOwner(r);
     }
 }

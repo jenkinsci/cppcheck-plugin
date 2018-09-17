@@ -119,6 +119,10 @@ public class CppcheckResult implements Serializable {
         return owner;
     }
 
+    public void setOwner(Run<?,?> owner) {
+        this.owner = owner;
+    }
+
     public CppcheckSourceContainer getCppcheckSourceContainer() {
         return lazyLoadSourceContainer();
     }
