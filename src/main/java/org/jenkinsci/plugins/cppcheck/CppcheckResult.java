@@ -119,7 +119,7 @@ public class CppcheckResult implements Serializable {
         return owner;
     }
 
-    public void setOwner(Run<?,?> owner) {
+    public synchronized void setOwner(Run<?,?> owner) {
         this.owner = owner;
     }
 

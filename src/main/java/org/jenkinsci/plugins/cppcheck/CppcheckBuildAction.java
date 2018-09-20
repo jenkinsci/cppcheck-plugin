@@ -4,6 +4,7 @@ package org.jenkinsci.plugins.cppcheck;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.thalesgroup.hudson.plugins.cppcheck.util.AbstractCppcheckBuildAction;
@@ -17,6 +18,8 @@ import org.jenkinsci.plugins.cppcheck.config.CppcheckConfig;
 import org.jenkinsci.plugins.cppcheck.config.CppcheckConfigSeverityEvaluation;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckBuildHealthEvaluator;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Gregory Boissinot
  */
@@ -24,9 +27,9 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
 
     public static final String URL_NAME = "cppcheckResult";
 
-    private CppcheckResult result;
+    private final CppcheckResult result;
+    private final CppcheckConfig config;
 
-    private List<CppcheckProjectAction> projectActions;
     /** 
      * The health report percentage.
      * 
@@ -34,15 +37,14 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
      */
     private int healthReportPercentage;
 
-    public CppcheckBuildAction(Run<?, ?> owner, CppcheckResult result, CppcheckConfig config,
+    public CppcheckBuildAction(@Nonnull Run<?, ?> owner, @Nonnull CppcheckResult result, @Nonnull CppcheckConfig config,
             int healthReportPercentage) {
         super(owner);
-        this.result = result;
-        this.healthReportPercentage = healthReportPercentage;
         
-        List<CppcheckProjectAction> projectActions = new ArrayList<>();
-        projectActions.add(new CppcheckProjectAction(owner, config.getConfigGraph()));
-        this.projectActions = projectActions;
+        this.result = result;
+        this.config = config;
+        this.healthReportPercentage = healthReportPercentage;
+
     }
 
     public String getIconFileName() {
@@ -63,6 +65,10 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
 
     public CppcheckResult getResult() {
         return this.result;
+    }
+
+    public CppcheckConfig getConfig() {
+        return this.config;
     }
 
     Run<?, ?> getBuild() {
@@ -121,11 +127,16 @@ public class CppcheckBuildAction extends AbstractCppcheckBuildAction implements 
     
     @Override
     public Collection<? extends Action> getProjectActions() {
-    	return this.projectActions;
+
+        if (this.owner == null) {
+            return Collections.emptySet();
+        } else {
+            return Collections.singleton(new CppcheckProjectAction(owner.getParent()));
+        }
     }
 
     @Override
-    public void setOwner(Run<?,?> owner) {
+    public synchronized void setOwner(Run<?,?> owner) {
         super.setOwner(owner);
 
         this.result.setOwner(owner);
