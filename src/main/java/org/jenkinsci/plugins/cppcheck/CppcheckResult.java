@@ -115,7 +115,7 @@ public class CppcheckResult implements Serializable {
         return statistics;
     }
 
-    public Run<?, ?> getOwner() {
+    public synchronized Run<?, ?> getOwner() {
         return owner;
     }
 
