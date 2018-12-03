@@ -53,7 +53,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     private CppcheckConfig cppcheckConfig;
 
     @DataBoundConstructor
-    public CppcheckPublisher() {this("", false, "", false, "", "", "", "", "", true, true, true, true, true, true, true, 500, 200, 0, true, false, false, false, false, false, false, false);}
+    public CppcheckPublisher() {this("", false, "", false, "", "", "", "", "", true, true, true, true, true, true, true, 500, 200, 0, true, false, false, false, false, false, false, false, false, false);}
 
     @Deprecated
     public CppcheckPublisher(String pattern,
@@ -77,12 +77,16 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                              boolean displayPerformanceSeverity,
                              boolean displayInformationSeverity,
                              boolean displayNoCategorySeverity,
-                             boolean displayPortabilitySeverity) {
+                             boolean displayPortabilitySeverity,
+                             boolean ignoreBuildResult,
+                             boolean dontUpdateBuildResult) {
 
         config = new CppcheckConfig();
 
         config.setPattern(pattern);
         config.setAllowNoReport(allowNoReport);
+        config.setIgnoreBuildResult(ignoreBuildResult);
+        config.setDontUpdateBuildResult(dontUpdateBuildResult);
         config.setIgnoreBlankFiles(ignoreBlankFiles);
         CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy, unHealthy,
@@ -180,6 +184,20 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     }
     public boolean getAllowNoReport() {
         return config.getAllowNoReport();
+    }
+    @DataBoundSetter
+    public void setIgnoreBuildResult(boolean ignoreBuildResult) {
+        config.setIgnoreBuildResult(ignoreBuildResult);
+    }
+    public boolean getIgnoreBuildResult() {
+        return config.getIgnoreBuildResult();
+    }
+    @DataBoundSetter
+    public void setDontUpdateBuildResult(boolean dontUpdateBuildResult) {
+        config.setDontUpdateBuildResult(dontUpdateBuildResult);
+    }
+    public boolean getDontUpdateBuildResult() {
+        return config.getDontUpdateBuildResult();
     }
     @DataBoundSetter
     public void setSeverityError(boolean severityError) {
@@ -312,7 +330,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     }
 
     protected boolean canContinue(final Result result) {
-        return result != Result.ABORTED && result != Result.FAILURE;
+        return (config.getIgnoreBuildResult() || result != Result.ABORTED && result != Result.FAILURE);
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -364,7 +382,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                         result.getNumberErrorsAccordingConfiguration(severityEvaluation, true),
                         severityEvaluation);
 
-                if (buildResult != Result.SUCCESS) {
+                if (config.getDontUpdateBuildResult() || buildResult != Result.SUCCESS) {
                     build.setResult(buildResult);
                 }
 
@@ -435,7 +453,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                     result.getNumberErrorsAccordingConfiguration(severityEvaluation, true),
                     severityEvaluation);
 
-            if (buildResult != Result.SUCCESS) {
+            if (config.getDontUpdateBuildResult() || buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
 
