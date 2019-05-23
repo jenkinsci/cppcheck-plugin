@@ -46,6 +46,13 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
      * @since 1.15
      */
     public static final String XML_FILE_DETAILS = "cppcheck_details.xml";
+   
+    /**
+     * XML file with source container data for baseline data. Also used in lazy loading. 
+     */
+    public static final String XML_FILE_BASELINE_DETAILS = "cppcheck_baseline_details.xml";
+    
+    private static final String BASELINE_SUBDIRECTORY = "/baseline";
 
     private CppcheckConfig config;
 
@@ -121,6 +128,15 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     public String getPattern() {
         return config.getPattern();
     }
+    
+    @DataBoundSetter
+    public void setBaselinePattern(String baselinePattern) {
+    	config.setBaselinePattern(baselinePattern);
+    }
+    public String getBaselinePattern() {
+    	return config.getBaselinePattern();
+    }
+    
     @DataBoundSetter
     public void setThreshold(String threshold) {
         config.getConfigSeverityEvaluation().setThreshold(threshold);
@@ -297,6 +313,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     public void setNumBuildsInGraph(int numBuildsInGraph) {
         config.getConfigGraph().setNumBuildsInGraph(numBuildsInGraph);
     }
+    
     public int getNumBuildsInGraph() {
         return config.getConfigGraph().getNumBuildsInGraph();
     }
@@ -326,20 +343,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
             if (this.canContinue(build.getResult())) {
                 CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
                 
-                EnvVars env = build.getEnvironment(listener);
-                String expandedPattern = env.expand(config.getPattern());
-                
-
-                CppcheckParserResult parser = new CppcheckParserResult(listener,
-                                expandedPattern, config.isIgnoreBlankFiles());
-                CppcheckReport cppcheckReport;
-                try {
-                    cppcheckReport = workspace.act(parser);
-                } catch (Exception e) {
-                    CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
-                    build.setResult(Result.FAILURE);
-                    return;
-                }
+                CppcheckReport cppcheckReport = generateCppcheckReport(build, workspace, listener, config.getPattern());
 
                 if (cppcheckReport == null) {
                     // Check if we're configured to allow not having a report
@@ -356,6 +360,8 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                                 workspace, cppcheckReport.getAllErrors());
 
                 CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+                result.setSourceContainerPath(XML_FILE_DETAILS);
+                
                 CppcheckConfigSeverityEvaluation severityEvaluation
                         = config.getConfigSeverityEvaluation();
 
@@ -373,13 +379,28 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 
                 build.addAction(buildAction);
 
-                XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),
-                        XML_FILE_DETAILS));
-                xmlSourceContainer.write(cppcheckSourceContainer);
+                writeAndCopyXmlFiles(build.getRootDir(), null, launcher, result.getSourceContainerPath(), 
+                		cppcheckSourceContainer);
 
-                copyFilesToBuildDirectory(build.getRootDir(), launcher.getChannel(),
-                        cppcheckSourceContainer.getInternalMap().values());
-
+                /**
+                * If config has a baseline pattern (optional), do the required parsing,
+                * report creation and writing to the build/baseline subdirectory
+                */
+                if(config.isHasBaselinePattern()) {
+                	
+                	CppcheckReport cppcheckBaselineReport = generateCppcheckReport(build, workspace, listener, config.getBaselinePattern());
+                	
+					if (cppcheckBaselineReport != null) {
+						CppcheckResult baselineResult = new CppcheckResult(cppcheckBaselineReport.getStatistics(), build);
+						baselineResult.setSourceContainerPath(XML_FILE_BASELINE_DETAILS);
+						result.setBaselineResult(baselineResult);
+						CppcheckSourceContainer cppcheckBaselineSourceContainer = new CppcheckSourceContainer(listener, workspace.withSuffix(BASELINE_SUBDIRECTORY),
+								workspace.withSuffix(BASELINE_SUBDIRECTORY), cppcheckBaselineReport.getAllErrors());
+						
+						writeAndCopyXmlFiles(build.getRootDir(), BASELINE_SUBDIRECTORY, launcher, baselineResult.getSourceContainerPath(), cppcheckBaselineSourceContainer);
+					}
+                }
+                
                 CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
             }
             return;
@@ -393,25 +414,8 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
         if (this.canContinue(build.getResult())) {
             CppcheckLogger.log(listener, "Starting the cppcheck analysis.");
             
-            EnvVars env = build.getEnvironment(listener);
-            String expandedPattern = env.expand(config.getPattern());
-            
-
-            CppcheckParserResult parser = new CppcheckParserResult(listener,
-                        expandedPattern, config.isIgnoreBlankFiles());
-            CppcheckReport cppcheckReport = null;
-            try {
-            	FilePath oWorkspacePath = build.getWorkspace(); 
-            	if( oWorkspacePath != null) {            		
-            		cppcheckReport = oWorkspacePath.act(parser);
-            	}
-            		
-            } catch (Exception e) {
-                CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
-                build.setResult(Result.FAILURE);
-                return false;
-            }
-
+        	CppcheckReport cppcheckReport = generateCppcheckReport(build, listener, config.getPattern());
+        	
             if (cppcheckReport == null) {
                 // Check if we're configured to allow not having a report
                 if (config.getAllowNoReport()) {
@@ -421,12 +425,14 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                     return false;
                 }
             }
-
+            
             CppcheckSourceContainer cppcheckSourceContainer
                     = new CppcheckSourceContainer(listener, build.getWorkspace(),
                             build.getModuleRoot(), cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            result.setSourceContainerPath(XML_FILE_DETAILS);
+            
             CppcheckConfigSeverityEvaluation severityEvaluation
                     = config.getConfigSeverityEvaluation();
 
@@ -443,17 +449,118 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                     CppcheckBuildAction.computeHealthReportPercentage(result, severityEvaluation));
 
             build.addAction(buildAction);
+            
+            writeAndCopyXmlFiles(build.getRootDir(), null, launcher, result.getSourceContainerPath(), 
+            		cppcheckSourceContainer);
 
-            XmlFile xmlSourceContainer = new XmlFile(new File(build.getRootDir(),
-                    XML_FILE_DETAILS));
-            xmlSourceContainer.write(cppcheckSourceContainer);
-
-            copyFilesToBuildDirectory(build.getRootDir(), launcher.getChannel(),
-                    cppcheckSourceContainer.getInternalMap().values());
+            
+			/**
+			* If config has a baseline pattern (optional), do the required parsing,
+			* report creation and writing to the build directory
+			*/
+            if(config.isHasBaselinePattern()) {
+            	CppcheckReport cppcheckBaselineReport = generateCppcheckReport(build, listener, config.getBaselinePattern());
+				
+				if (cppcheckBaselineReport != null) {
+					CppcheckResult baselineResult = new CppcheckResult(cppcheckBaselineReport.getStatistics(), build);
+					baselineResult.setSourceContainerPath(XML_FILE_BASELINE_DETAILS);
+					
+					result.setBaselineResult(new CppcheckResult(cppcheckBaselineReport.getStatistics(), build));
+					
+					CppcheckSourceContainer cppcheckBaselineSourceContainer = new CppcheckSourceContainer(listener, 
+							build.getWorkspace().withSuffix(BASELINE_SUBDIRECTORY), 
+							build.getModuleRoot().withSuffix(BASELINE_SUBDIRECTORY), 
+							cppcheckBaselineReport.getAllErrors());
+					
+					writeAndCopyXmlFiles(build.getRootDir(), BASELINE_SUBDIRECTORY, launcher, baselineResult.getSourceContainerPath(),
+							cppcheckBaselineSourceContainer);
+					
+				}
+            }
 
             CppcheckLogger.log(listener, "Ending the cppcheck analysis.");
         }
         return true;
+    }
+    
+    /**
+     * 
+     * @param build					The current build
+     * @param workspace				The workspace the build is performing in
+     * @param launcher		
+     * @param listener		
+     * @param pattern				The pattern found from either config.getPattern() or config.getBaselinePattern()
+     * @return						The corresponding CppcheckReport
+     * @throws IOException			If the files could not be read
+     * @throws InterruptedException	If the user cancels the processing
+     */
+    private CppcheckReport generateCppcheckReport(@Nonnull Run<?, ?> build, @Nonnull FilePath workspace, 
+    			@Nonnull TaskListener listener, String pattern) throws IOException, InterruptedException {
+    	
+		EnvVars env = build.getEnvironment(listener);
+		String expandedPattern = env.expand(pattern);
+		
+		CppcheckParserResult parser = new CppcheckParserResult(listener, 
+				expandedPattern, config.isIgnoreBlankFiles());
+		
+		CppcheckReport cppcheckReport;
+		
+		try {
+			cppcheckReport = workspace.act(parser);
+		} catch (Exception e) {
+			CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
+			build.setResult(Result.FAILURE);
+			return null;
+		}
+		
+		return cppcheckReport;
+    		
+    	
+    }
+    
+    private CppcheckReport generateCppcheckReport(AbstractBuild<?, ?> build, BuildListener listener, String pattern) {
+    	
+    	try {
+    		FilePath oWorkspacePath = build.getWorkspace();
+    		if (oWorkspacePath != null) {
+    			return generateCppcheckReport(build, oWorkspacePath, listener, pattern);
+    		}
+    	
+    	} catch (Exception e) {
+    		CppcheckLogger.log(listener, "Error on cppcheck analysis: " + e);
+    		build.setResult(Result.FAILURE);
+    		return null;
+    		
+    	}
+    	
+    	return null;
+    }
+    
+    
+    /**
+     * Handles writing and copying of Xml files generated from the Cppcheck analysis to the workspace.
+     * 
+     * @param rootDir					The root directory of the build
+     * @param child						An optional child parameter. Used when baseline is specified. 
+     * @param launcher
+     * @param sourceContainerPath		The name of the file on disk for the sourceContainer
+     * @param sourceContainer			
+     * @throws IOException				If the files could not be written
+     * @throws InterruptedException		If the user cancels the processing
+     */
+    private void writeAndCopyXmlFiles(@Nonnull File rootDir, String child, @Nonnull Launcher launcher, @Nonnull String sourceContainerPath, 
+    			@Nonnull CppcheckSourceContainer sourceContainer) throws IOException, InterruptedException {
+    	
+    	XmlFile xmlSourceContainer = new XmlFile(new File(rootDir, sourceContainerPath));
+    	xmlSourceContainer.write(sourceContainer);
+    	
+    	if (child != null) {
+    		rootDir = new File(rootDir, child);
+    		rootDir.mkdirs();
+    	}
+    	
+    	copyFilesToBuildDirectory(rootDir, launcher.getChannel(), sourceContainer.getInternalMap().values());
+    	
     }
 
 

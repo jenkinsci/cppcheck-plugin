@@ -49,7 +49,7 @@ public class CppcheckResult implements Serializable {
     /**
      * The build owner.
      */
-    private transient Run<?, ?> owner;
+    private Run<?, ?> owner;
 
     /**
      * The Cppcheck report statistics.
@@ -57,6 +57,19 @@ public class CppcheckResult implements Serializable {
      * @since 1.15
      */
     private CppcheckStatistics statistics;
+    
+    /**
+     * A reference to the baseline result we compare against in getDiffs(), 
+     * if we wish to specify this explicitly. Can be null, and is then computed
+     * based on previous builds.
+     */
+    private CppcheckResult baselineResult;
+    
+    /**
+     * The path to the sourceContainer for this result in the file system. 
+     * If it is null, the default CppcheckPublisher.XML_FILE_DETAILS will be used.
+     */
+    private String sourceContainerPath;
 
     /**
      * Constructor.
@@ -125,6 +138,28 @@ public class CppcheckResult implements Serializable {
 
     public CppcheckSourceContainer getCppcheckSourceContainer() {
         return lazyLoadSourceContainer();
+    }
+    
+    /**
+     * Used in cases where we don't want to use the default
+     * CppcheckPublisher.XML_FILE_DETAILS path. E.g. when
+     * this instance represents a baseline result. 
+     * 
+     * @param path The path to be set
+     */
+    public void setSourceContainerPath(String path) {
+    	if (path == null) {
+    		this.sourceContainerPath = CppcheckPublisher.XML_FILE_DETAILS;
+    	} else {
+    		this.sourceContainerPath = path;
+    	}
+    }
+    
+    public String getSourceContainerPath() {
+    	if (this.sourceContainerPath != null) {
+    		return this.sourceContainerPath;
+    	}
+    	return CppcheckPublisher.XML_FILE_DETAILS;
     }
 
     /**
@@ -215,17 +250,30 @@ public class CppcheckResult implements Serializable {
             return defaultValue;
         }
     }
+    
+    /**
+     * Sets the baseline result, that we can compare aginst
+     * as opposed to comparing to a result found from previous builds.
+     * 
+     * @param baselineResult 	the result we want to compare against
+     */
+    public void setBaselineResult(CppcheckResult baselineResult) {
+    	this.baselineResult = baselineResult;
+    }
 
     /**
-     * Gets the previous Cppcheck result for the build result.
+     * Gets the Cppcheck result for the build result, either 
+     * set explicitly or the result of the previous build
      *
      * @return the previous Cppcheck result or null
      */
     public CppcheckResult getPreviousResult() {
-        CppcheckBuildAction previousAction = getPreviousAction();
-        CppcheckResult previousResult = null;
-        if (previousAction != null) {
-            previousResult = previousAction.getResult();
+        CppcheckResult previousResult = this.baselineResult;
+        if (previousResult == null) {
+			CppcheckBuildAction previousAction = getPreviousAction();
+			if (previousAction != null) {
+				previousResult = previousAction.getResult();
+			}
         }
 
         return previousResult;
@@ -248,19 +296,19 @@ public class CppcheckResult implements Serializable {
     }
 
     /**
-     * Get differences between current and previous statistics.
+     * Get differences between current and previous statistics. These can be computed based on previous build
+     * or specified explicitly using setPreviousStatistics().
      * 
      * @return the differences
      */
     public CppcheckStatistics getDiff(){
         CppcheckStatistics current = getStatistics();
         CppcheckResult previousResult = getPreviousResult();
-
         if(previousResult == null) {
-            return new CppcheckStatistics();
+        	return new CppcheckStatistics();
         }
 
-        CppcheckStatistics previous = previousResult.getStatistics();
+		CppcheckStatistics previous = previousResult.getStatistics();
 
         return new CppcheckStatistics(
                 current.getNumberErrorSeverity() - previous.getNumberErrorSeverity(),
@@ -397,7 +445,6 @@ public class CppcheckResult implements Serializable {
         // Exact match first
         for(CppcheckWorkspaceFile curFile : curValues) {
             CppcheckFile curCppFile = curFile.getCppcheckFile();
-
             for(CppcheckWorkspaceFile prevFile : prevValues) {
                 CppcheckFile prevCppFile = prevFile.getCppcheckFile();
 
@@ -410,7 +457,7 @@ public class CppcheckResult implements Serializable {
                 }
             }
         }
-
+        
         // Approximate match of the rest (ignore line numbers)
         for(CppcheckWorkspaceFile curFile : curValues) {
             if(curFile.getDiffState() != null) {
@@ -526,7 +573,7 @@ public class CppcheckResult implements Serializable {
         	if(owner != null) {       		
         		XmlFile xmlSourceContainer = null;
             	xmlSourceContainer = new XmlFile(new File(owner.getRootDir(),
-                        CppcheckPublisher.XML_FILE_DETAILS));
+                        getSourceContainerPath()));
 
                 return (CppcheckSourceContainer) xmlSourceContainer.read();
         	}
