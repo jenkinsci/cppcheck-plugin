@@ -2,6 +2,7 @@ package org.jenkinsci.plugins.cppcheck;
 
 import java.io.IOException;
 import java.util.Calendar;
+import javax.annotation.Nonnull;
 import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -21,77 +22,38 @@ import com.thalesgroup.hudson.plugins.cppcheck.graph.CppcheckGraph;
  * @author Gregory Boissinot
  */
 public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
-    /** Cppcheck graph configuration. */
-    private final CppcheckConfigGraph configGraph;
 
     public String getSearchUrl() {
         return getUrlName();
     }
-    public CppcheckProjectAction(final Run<?, ?> run,
-    		CppcheckConfigGraph configGraph) {
-        super(run);
-        this.configGraph = configGraph;
+
+    public CppcheckProjectAction(@Nonnull final Job<?, ?> job) {
+        super(job);
     }
 
-    private boolean isRunCompleted(Run<?, ?> run) {
-    	if (run == null) {
-    		return false;
-    	}
-
-    	if (run.isBuilding()) {
-    		return false;
-    	}
-    	
-  		if  (run.getResult() == Result.SUCCESS || run.getResult() == Result.UNSTABLE) {
-  			return true;
-  		}
-  		
-  		return false;
-    }
-    
+	@Override
     public Run<?, ?> getLastFinishedBuild() {
-    	// get the very last build - no matter of its result or buildstate and search towards previous builds until the first successful or unstable result was found.
-    	Run<?, ?> prevCompletedRun = run.getPreviousBuild();
 
-    	Run<?, ?> lastRun = prevCompletedRun;
-    	if (lastRun != null)
-    	{
-    		while(lastRun != null && lastRun.getNextBuild() != null) {
-    			lastRun = lastRun.getNextBuild();
-    		}
-    	}
-    	else
-    	{
-    		return prevCompletedRun;    		
-    	}
-    	
-    	while(lastRun != null) {
-    		if (isRunCompleted(lastRun)) {
-        		return lastRun;    		
-    			
-    		}
-    		lastRun = lastRun.getPreviousBuild();
-    	}
+    	Run<?, ?> lastBuild = getJob().getLastBuild();
+        while (lastBuild != null
+                && (lastBuild.isBuilding() || lastBuild.getAction(CppcheckBuildAction.class) == null))
+        {
+            lastBuild = lastBuild.getPreviousBuild();
+        }
 
+        return lastBuild;
+    }
+
+	@Override
+    public Run<?, ?> getLastResultBuild() {
+		for (Run<?, ?> b = getJob().getLastBuild(); b != null; b = b.getPreviousBuiltBuild())
+		{
+			CppcheckBuildAction r = b.getAction(CppcheckBuildAction.class);
+
+			if (r != null)
+				return b;
+		}
 		return null;
-    }
-
-    public final Run<?, ?> getProject() {
-        CppcheckBuildAction lastAction = getLastFinishedBuildAction();
-        return (lastAction != null) ? lastAction.getOwner() : null;
-    }
-    
-    public Run<?,?> getRun() {
-    	return super.run;
-    }
-    /**
-     * Get build action of the last finished build.
-     * 
-     * @return the build action or null
-     */
-    public CppcheckBuildAction getLastFinishedBuildAction() {
-    	Run<?, ?> lastBuild = getLastFinishedBuild();
-        return (lastBuild != null) ? lastBuild.getAction(CppcheckBuildAction.class) : null;
     }
 
     public final boolean isDisplayGraph() {   	
@@ -101,36 +63,24 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
             return false;
         }
 
-        //Affect previous
-        b = b.getPreviousBuild();
-        if (b != null) {
+		// Affect previous
+		for (b = b.getPreviousBuild(); b != null; b = b.getPreviousBuild())
+		{
+			if (b.getResult() == null || b.getResult().isWorseOrEqualTo(Result.FAILURE))
+				continue;
 
-            for (; b != null; b = b.getPreviousBuild()) {
-                if (b.getResult().isWorseOrEqualTo(Result.FAILURE)) {
-                    continue;
-                }
-                CppcheckBuildAction action = b.getAction(CppcheckBuildAction.class);
-                if (action == null || action.getResult() == null) {
-                    continue;
-                }
-                CppcheckResult result = action.getResult();
-                if (result == null)
-                    continue;
+			CppcheckBuildAction action = b.getAction(CppcheckBuildAction.class);
+			if (action == null || 
+                action.getResult() == null || 
+                action.getConfig() == null || 
+                action.getConfig().getConfigGraph() == null)
+				continue;
 
-                return true;
-            }
-        }
-        return false;
+			return true;
+		}
+
+		return false;
     }
-
-    public Integer getLastResultBuild() {
-    	Run<?, ?> b = getLastFinishedBuild();
-    	if (b != null) {
-    		return b.getNumber();
-    	}
-    	return null;
-    }
-
 
     public String getDisplayName() {
         return Messages.cppcheck_CppcheckResults();
@@ -153,16 +103,28 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
             return;
         }
 
-        Graph g = new CppcheckGraph(lastBuild, getDataSetBuilder().build(),
-                Messages.cppcheck_NumberOfErrors(),
-                configGraph.getXSize(),
-                configGraph.getYSize());
+    	Run<?, ?> lastBuildWithResult = getLastResultBuild();
+        CppcheckBuildAction lastAction = lastBuildWithResult.getAction(CppcheckBuildAction.class);
+        CppcheckConfigGraph configGraph = (lastAction != null) ? 
+                                            ((lastAction.getConfig() != null) ? 
+                                                lastAction.getConfig().getConfigGraph() : null) : null;
+
+        if (configGraph == null) {
+            rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
+            return;
+        }
+
+        Graph g = new CppcheckGraph(lastBuild, getDataSetBuilder(configGraph).build(), Messages.cppcheck_NumberOfErrors(),
+                                    configGraph.getXSize(), configGraph.getYSize());
         g.doPng(req, rsp);
     }
 
-    private DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> getDataSetBuilder() {
+    private DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> getDataSetBuilder(CppcheckConfigGraph configGraph) {
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb
                 = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
+
+        if (configGraph == null)
+            return dsb;
 
         Run<?,?> lastBuild = getLastFinishedBuild();
         CppcheckBuildAction lastAction = lastBuild.getAction(CppcheckBuildAction.class);
@@ -171,7 +133,7 @@ public class CppcheckProjectAction extends AbstractCppcheckProjectAction {
 
         // numBuildsInGraph <= 1 means unlimited
         for (CppcheckBuildAction a = lastAction;
-             a != null && (configGraph.getNumBuildsInGraph() <= 1 || numBuilds < configGraph.getNumBuildsInGraph());
+             (a != null) && (configGraph.getNumBuildsInGraph() <= 1 || numBuilds < configGraph.getNumBuildsInGraph());
              a = a.getPreviousResult(), ++numBuilds) {
 
             ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.getOwner());

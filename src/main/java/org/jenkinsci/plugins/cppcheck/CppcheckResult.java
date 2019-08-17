@@ -115,8 +115,12 @@ public class CppcheckResult implements Serializable {
         return statistics;
     }
 
-    public Run<?, ?> getOwner() {
+    public synchronized Run<?, ?> getOwner() {
         return owner;
+    }
+
+    public synchronized void setOwner(Run<?,?> owner) {
+        this.owner = owner;
     }
 
     public CppcheckSourceContainer getCppcheckSourceContainer() {
