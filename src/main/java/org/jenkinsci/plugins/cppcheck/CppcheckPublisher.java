@@ -426,9 +426,13 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                 }
             }
             
+            FilePath workspace = build.getWorkspace();
+            FilePath moduleRoot = build.getModuleRoot();
+            		
+            
             CppcheckSourceContainer cppcheckSourceContainer
-                    = new CppcheckSourceContainer(listener, build.getWorkspace(),
-                            build.getModuleRoot(), cppcheckReport.getAllErrors());
+                    = new CppcheckSourceContainer(listener, workspace,
+                            moduleRoot, cppcheckReport.getAllErrors());
 
             CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
             result.setSourceContainerPath(XML_FILE_DETAILS);
@@ -458,7 +462,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 			* If config has a baseline pattern (optional), do the required parsing,
 			* report creation and writing to the build directory
 			*/
-            if(config.isHasBaselinePattern()) {
+            if(config.isHasBaselinePattern() && workspace != null && moduleRoot != null) {
             	CppcheckReport cppcheckBaselineReport = generateCppcheckReport(build, listener, config.getBaselinePattern());
 				
 				if (cppcheckBaselineReport != null) {
@@ -468,8 +472,8 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
 					result.setBaselineResult(new CppcheckResult(cppcheckBaselineReport.getStatistics(), build));
 					
 					CppcheckSourceContainer cppcheckBaselineSourceContainer = new CppcheckSourceContainer(listener, 
-							build.getWorkspace().withSuffix(BASELINE_SUBDIRECTORY), 
-							build.getModuleRoot().withSuffix(BASELINE_SUBDIRECTORY), 
+							workspace.withSuffix(BASELINE_SUBDIRECTORY), 
+							moduleRoot.withSuffix(BASELINE_SUBDIRECTORY), 
 							cppcheckBaselineReport.getAllErrors());
 					
 					writeAndCopyXmlFiles(build.getRootDir(), BASELINE_SUBDIRECTORY, launcher, baselineResult.getSourceContainerPath(),
@@ -553,13 +557,16 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
     	
     	XmlFile xmlSourceContainer = new XmlFile(new File(rootDir, sourceContainerPath));
     	xmlSourceContainer.write(sourceContainer);
+    	boolean allDirectoriesExist = rootDir.isDirectory();
     	
     	if (child != null) {
     		rootDir = new File(rootDir, child);
-    		rootDir.mkdirs();
+    		allDirectoriesExist = rootDir.mkdirs();
     	}
     	
-    	copyFilesToBuildDirectory(rootDir, launcher.getChannel(), sourceContainer.getInternalMap().values());
+    	if(allDirectoriesExist) {
+    		copyFilesToBuildDirectory(rootDir, launcher.getChannel(), sourceContainer.getInternalMap().values());
+    	}
     	
     }
 

@@ -49,7 +49,7 @@ public class CppcheckResult implements Serializable {
     /**
      * The build owner.
      */
-    private Run<?, ?> owner;
+    private transient Run<?, ?> owner;
 
     /**
      * The Cppcheck report statistics.
