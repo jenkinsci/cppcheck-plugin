@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.9</version>
+        <version>3.43</version>
     </parent>
 
     <artifactId>cppcheck</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Cppcheck Plug-in</name>
-    <version>1.25-SNAPSHOT</version>
+    <version>1.26-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Cppcheck+Plugin</url>
 
     <licenses>
@@ -48,15 +48,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <jaxb.api.version>2.2.1</jaxb.api.version>
-        <jaxb.impl.version>2.2.1.1</jaxb.impl.version>
+        <jaxb.version>2.3.0</jaxb.version>
         <jaxb2.maven.plugin.version>2.1</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
         <junit.version>4.12</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
 	<jenkins.version>2.60.3</jenkins.version>
-	<java.level>7</java.level>
+	<java.level>8</java.level>
     </properties>
 
     <repositories>
@@ -80,16 +79,12 @@
             <artifactId>structs</artifactId>
             <version>1.7</version>
         </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>${jaxb.api.version}</version>
-        </dependency>
+
 
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jaxb.impl.version}</version>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>jaxb</artifactId>
+            <version>${jaxb.version}</version>
         </dependency>
 
         <dependency>
