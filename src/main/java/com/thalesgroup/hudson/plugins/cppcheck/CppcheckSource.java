@@ -92,7 +92,7 @@ public class CppcheckSource implements Serializable {
             if (tempFile.exists()) {
                 is = new FileInputStream(tempFile);
             } else {
-                throw new IOException("File doesn't exist: " + tempFile.getAbsoluteName());
+                throw new IOException("File doesn't exist: " + tempFile.getAbsoluteFile());
             }
 
             splitSourceFile(highlightSource(is));
