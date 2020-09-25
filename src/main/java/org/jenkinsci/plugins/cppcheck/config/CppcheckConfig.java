@@ -12,6 +12,7 @@ public class CppcheckConfig implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String pattern;
+    private String baselinePattern;
     private boolean ignoreBlankFiles;
     private boolean allowNoReport;
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
@@ -20,6 +21,11 @@ public class CppcheckConfig implements Serializable {
     @DataBoundSetter
     public void setPattern(String pattern) {
         this.pattern = pattern;
+    }
+   
+    @DataBoundSetter
+    public void setBaselinePattern(String baselinePattern) {
+    	this.baselinePattern = baselinePattern;
     }
 
     @DataBoundSetter
@@ -49,6 +55,14 @@ public class CppcheckConfig implements Serializable {
 
     public String getPattern() {
         return pattern;
+    }
+    
+    public String getBaselinePattern() {
+    	return baselinePattern;
+    }
+    
+    public boolean isHasBaselinePattern() {
+    	return getBaselinePattern() != null;
     }
 
     @Deprecated
