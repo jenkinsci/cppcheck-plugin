@@ -6,6 +6,28 @@
 
     <h2>${%Details}</h2>
 
+	<script src="${rootURL}/plugin/cppcheck/js/jquery-3.1.1.js"></script>
+	<script src="${rootURL}/plugin/cppcheck/js/jquery.tablesorter.min.js"></script>
+	<script src="${rootURL}/plugin/cppcheck/js/jquery.tablesorter.widgets.js"></script>
+	<link rel="stylesheet" href="${rootURL}/plugin/cppcheck/css/theme.blue.css"></link>
+
+	<script id="js">$(function() {
+
+        // initial sort set using sortList option
+        $(".sortableTable").tablesorter({
+                theme : 'blue',
+                // sort on the first column and second column in ascending order
+                sortList: [[0,0],[1,0]]
+        });
+
+        // initial sort set using data-sortlist attribute (see HTML below)
+        $(".sortableTable").tablesorter({
+                theme : 'blue'
+        });
+
+	});</script>
+
+
     <style type="text/css">
     #cppcheckDetails { width: auto; }
     #cppcheckDetails td { white-space: normal; }
@@ -24,7 +46,7 @@
         <li><a href="source.all?before=5&amp;after=5&amp;states=unchanged">${%unchanged}</a></li>
     </ul>
 
-    <table class="pane sortable" id="cppcheckDetails">
+    <table class="sortableTable" id="cppcheckDetails">
         <thead>
             <tr>
                 <td class="pane-header">${%State}</td>
@@ -71,4 +93,11 @@
             </j:forEach>
         </tbody>
     </table>
+<script>
+$(function() 
+    { 
+        $("#cppcheckDetails").tablesorter(); 
+    } 
+); 
+</script>
 </j:jelly>
