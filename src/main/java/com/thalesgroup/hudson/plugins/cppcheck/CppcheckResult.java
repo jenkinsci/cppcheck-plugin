@@ -43,6 +43,8 @@ import java.util.Map;
 public class CppcheckResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final String PULL_REQUEST_TO_HASH = "PULL_REQUEST_TO_HASH";
+    private static final String GIT_COMMIT = "GIT_COMMIT";
 
     /**
      * The Cppcheck report
@@ -157,6 +159,18 @@ public class CppcheckResult implements Serializable {
      * @return the previous Cppcheck Build Action
      */
     private CppcheckBuildAction getPreviousAction() {
+        String pull_request_to_hash = owner.getBuildVariables().get(PULL_REQUEST_TO_HASH);
+        if (pull_request_to_hash != null) {
+            AbstractBuild<?, ?> lOwner = owner.getPreviousBuild();
+            while (lOwner != null) {
+                String commit_hash = lOwner.getBuildVariables().get(GIT_COMMIT);
+                if (pull_request_to_hash.equals(commit_hash)) {
+                    return lOwner.getAction(CppcheckBuildAction.class);
+                }
+                lOwner = lOwner.getPreviousBuild();
+            }
+        }
+
         AbstractBuild<?, ?> previousBuild = owner.getPreviousBuild();
         if (previousBuild != null) {
             return previousBuild.getAction(CppcheckBuildAction.class);
