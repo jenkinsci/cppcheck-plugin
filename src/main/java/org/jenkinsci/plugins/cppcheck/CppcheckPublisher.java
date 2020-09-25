@@ -426,7 +426,7 @@ public class CppcheckPublisher extends Recorder implements SimpleBuildStep {
                     = new CppcheckSourceContainer(listener, build.getWorkspace(),
                             build.getModuleRoot(), cppcheckReport.getAllErrors());
 
-            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build);
+            CppcheckResult result = new CppcheckResult(cppcheckReport.getStatistics(), build, cppcheckSourceContainer);
             CppcheckConfigSeverityEvaluation severityEvaluation
                     = config.getConfigSeverityEvaluation();
 
