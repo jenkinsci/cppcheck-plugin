@@ -14,6 +14,8 @@ public class CppcheckConfig implements Serializable {
     private String pattern;
     private boolean ignoreBlankFiles;
     private boolean allowNoReport;
+    private boolean ignoreBuildResult;
+    private boolean dontUpdateBuildResult;
     private CppcheckConfigSeverityEvaluation configSeverityEvaluation = new CppcheckConfigSeverityEvaluation();
     private CppcheckConfigGraph configGraph = new CppcheckConfigGraph();
 
@@ -30,6 +32,17 @@ public class CppcheckConfig implements Serializable {
     public void setAllowNoReport(boolean allowNoReport) {
         this.allowNoReport = allowNoReport;
     }
+
+    @DataBoundSetter
+    public void setIgnoreBuildResult(boolean ignoreBuildResult) {
+        this.ignoreBuildResult = ignoreBuildResult;
+    }
+
+    @DataBoundSetter
+    public void setDontUpdateBuildResult(boolean dontUpdateBuildResult) {
+        this.dontUpdateBuildResult = dontUpdateBuildResult;
+    }
+
     @DataBoundSetter
     public void setConfigSeverityEvaluation(CppcheckConfigSeverityEvaluation configSeverityEvaluation) {
         this.configSeverityEvaluation = configSeverityEvaluation;
@@ -69,6 +82,14 @@ public class CppcheckConfig implements Serializable {
 
     public boolean getAllowNoReport() {
         return allowNoReport;
+    }
+
+    public boolean getIgnoreBuildResult() {
+        return ignoreBuildResult;
+    }
+
+    public boolean getDontUpdateBuildResult() {
+        return dontUpdateBuildResult;
     }
 
     public CppcheckConfigSeverityEvaluation getConfigSeverityEvaluation() {
