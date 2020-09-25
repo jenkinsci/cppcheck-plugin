@@ -92,18 +92,7 @@ public class CppcheckSource implements Serializable {
             if (tempFile.exists()) {
                 is = new FileInputStream(tempFile);
             } else {
-                // Reading real workspace file is more incorrect than correct,
-                // but the code is left here for backward compatibility with
-                // plugin version 1.14 and less
-                if (cppcheckWorkspaceFile.getFileName() == null) {
-                    throw new IOException("The file doesn't exist.");
-                }
-
-                File file = new File(cppcheckWorkspaceFile.getFileName());
-                if (!file.exists()) {
-                    throw new IOException("Can't access the file: " + file.toURI());
-                }
-                is = new FileInputStream(file);
+                throw new IOException("File doesn't exist: " + tempFile.getAbsoluteFile());
             }
 
             splitSourceFile(highlightSource(is));
