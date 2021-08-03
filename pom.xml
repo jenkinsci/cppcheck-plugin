@@ -49,12 +49,12 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <jaxb.version>2.3.0</jaxb.version>
-        <jaxb2.maven.plugin.version>2.1</jaxb2.maven.plugin.version>
+        <jaxb2.maven.plugin.version>2.5.0</jaxb2.maven.plugin.version>
         <java2html.version>5.0</java2html.version>
         <junit.version>4.12</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <dashboard.view.version>2.0</dashboard.view.version>
-	<jenkins.version>2.60.3</jenkins.version>
+	<jenkins.version>2.164</jenkins.version>
 	<java.level>8</java.level>
     </properties>
 
