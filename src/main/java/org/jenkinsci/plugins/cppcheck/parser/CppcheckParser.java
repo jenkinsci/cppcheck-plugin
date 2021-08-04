@@ -7,6 +7,8 @@ import org.jenkinsci.plugins.cppcheck.model.Errors;
 import org.jenkinsci.plugins.cppcheck.model.Results;
 import org.jenkinsci.plugins.cppcheck.util.CppcheckLogger;
 
+import com.sun.xml.bind.v2.ContextFactory;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -37,11 +39,12 @@ public class CppcheckParser implements Serializable {
         CppcheckReport report;
         AtomicReference<JAXBContext> jc = new AtomicReference<JAXBContext>();
         try {
-            jc.set(JAXBContext.newInstance(
+            jc.set(ContextFactory.createContext(new Class[] {
                     org.jenkinsci.plugins.cppcheck.model.Error.class,
                     org.jenkinsci.plugins.cppcheck.model.Errors.class,
                     org.jenkinsci.plugins.cppcheck.model.Cppcheck.class,
-                    org.jenkinsci.plugins.cppcheck.model.Results.class));
+			        org.jenkinsci.plugins.cppcheck.model.Results.class
+				}, null));
             Unmarshaller unmarshaller = jc.get().createUnmarshaller();
             org.jenkinsci.plugins.cppcheck.model.Results results = (org.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
             if (results.getCppcheck() == null) {
@@ -50,7 +53,10 @@ public class CppcheckParser implements Serializable {
             report = getReportVersion2(results);
         } catch (JAXBException jxe) {
             try {
-                jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class));
+                jc.set(ContextFactory.createContext(new Class[] {
+					com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, 
+					com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class
+				}, null));
                 Unmarshaller unmarshaller = jc.get().createUnmarshaller();
                 com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
                 report = getReportVersion1(results);
