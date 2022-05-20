@@ -1,7 +1,7 @@
 Cppcheck Plugin
 ===============
 
-This plugin generates the trend report for [CppCheck](http://cppcheck.wiki.sourceforge.net/), a tool for static C/C++ code analysis.
+This plugin generates the trend report for [CppCheck](https://sourceforge.net/p/cppcheck/wiki/Home/), a tool for static C/C++ code analysis.
 
 # Description
 
@@ -14,11 +14,11 @@ The following features are provided by this plug-in:
 - Results summary and results details including new issues and solved issues.
 - Listing of source code with highlighted issues.
 - Show all violations highlighted on a single page.
-- [Dashboard View](https://wiki.jenkins.io/display/JENKINS/Dashboard+View) portlet showing number of issues per job.
+- [Dashboard View](https://plugins.jenkins.io/dashboard-view/) portlet showing number of issues per job.
 - Remote access API ([REST API](https://wiki.jenkins-ci.org/display/JENKINS/Remote+access+API)).
 - Works with most project/job types.
 
-Please use the [Mailing Lists](https://wiki.jenkins.io/display/JENKINS/Mailing+Lists) or [issue tracker](http://issues.jenkins-ci.org/) to ask questions, create feature request or bug reports.
+Please use the [Mailing Lists](https://www.jenkins.io/mailing-lists/) or [issue tracker](http://issues.jenkins.io/) to ask questions, create feature request or bug reports.
 
 # Usage
 
@@ -137,4 +137,4 @@ Example of JSON data:
 # Known Issues
 
 [View these issues in
-Jira](https://issues.jenkins-ci.org/secure/IssueNavigator.jspa?reset=true&jqlQuery=project%20=%20JENKINS%20AND%20status%20in%20%28Open,%20%22In%20Progress%22,%20Reopened%29%20AND%20component%20=%20%27cppcheck-plugin%27&tempMax=1000&src=confmacro)
+Jira](https://issues.jenkins.io/secure/IssueNavigator.jspa?reset=true&jqlQuery=project%20=%20JENKINS%20AND%20status%20in%20%28Open,%20%22In%20Progress%22,%20Reopened%29%20AND%20component%20=%20%27cppcheck-plugin%27&tempMax=1000&src=confmacro)
