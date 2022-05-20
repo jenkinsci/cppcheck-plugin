@@ -84,7 +84,7 @@ sed -i 's%\(<location file="\)%\1SUBDIRECTORY/%' cppcheck.xml
 
 The `sed` command above adds `SUBDIRECTORY/` to the beginning of the paths in the `location` elements. Note this method is not limited only to `sed`, you can use whatever tool that is able to replace string in a file.
 
-```sh
+```xml
 <location file="INPUT_DIRECTORY/mainwindow.cpp" line="1134"/>
 <location file="SUBDIRECTORY/INPUT_DIRECTORY/mainwindow.cpp" line="1134"/>
 ```
