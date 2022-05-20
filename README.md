@@ -25,7 +25,7 @@ Please use the [Mailing Lists](https://www.jenkins.io/mailing-lists/) or [issue 
 - Install [Cppcheck](https://cppcheck.sourceforge.io/) tool to the system. If you use master Jenkins server and several build slaves, install it to all slaves that will run the analysis.
 - For each job configuration page:
     - Add **Execute shell** build step to generate Cppcheck report or create the report file in your build scripts (Ant, Maven, Make, ...).
-    - Activate **Publish Cppcheck results** in **Post-build Actions** and provide at least the path to the generated Cppcheck report (cppcheck.xml).
+    - Activate **Publish Cppcheck results** in **Post-build Actions** and provide at least the path to the generated Cppcheck report (`cppcheck.xml`).
     - Optionally configure build status evaluation (**Advanced** button).
     - Optionally configure graph (second level **Advanced** button).
 - **Always prefer new XML version 2 for the output format.** XML version 1 is supported in the plugin too, but Cppcheck doesn't report some issues with the legacy format.
@@ -45,7 +45,7 @@ cppcheck -j 4 --enable=all --inconclusive --xml --xml-version=2 SOURCE_DIRECTORY
 
 ## Report in a sub-directory of the workspace (advanced)
 
-**The plugin expects that all paths in the input report file (**`cppcheck.xml`**) are relative to the workspace root directory.** If the Cppcheck tool is executed from a sub-directory, the plugin will be unable to pair the paths in the report with the files on disk and **the source codes with the highlighted errors won't be available in the details**.
+**The plugin expects that all paths in the input report file (`cppcheck.xml`) are relative to the workspace root directory.** If the Cppcheck tool is executed from a sub-directory, the plugin will be unable to pair the paths in the report with the files on disk and **the source codes with the highlighted errors won't be available in the details**.
 
 ```
 # In the workspace root directory
