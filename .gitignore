@@ -1,10 +1,15 @@
 target
+
+# mvn hpi:run
 work
-*.ipr
+
+# IntelliJ IDEA project files
 *.iml
 *.iws
-/.project
-/.classpath
-/.settings
-/Makefile
+*.ipr
 .idea
+
+# Eclipse project files
+.settings
+.classpath
+.project
