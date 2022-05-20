@@ -30,7 +30,7 @@ Please use the [Mailing Lists](https://www.jenkins.io/mailing-lists/) or [issue 
     - Optionally configure graph (second level **Advanced** button).
 - **Always prefer new XML version 2 for the output format.** XML version 1 is supported in the plugin too, but Cppcheck doesn't report some issues with the legacy format.
 
-```
+```sh
 # Minimal set of arguments
 cppcheck --xml --xml-version=2 SOURCE_DIRECTORY 2> cppcheck.xml
 
@@ -47,7 +47,7 @@ cppcheck -j 4 --enable=all --inconclusive --xml --xml-version=2 SOURCE_DIRECTORY
 
 **The plugin expects that all paths in the input report file (`cppcheck.xml`) are relative to the workspace root directory.** If the Cppcheck tool is executed from a sub-directory, the plugin will be unable to pair the paths in the report with the files on disk and **the source codes with the highlighted errors won't be available in the details**.
 
-```
+```sh
 # In the workspace root directory
 cd SUBDIRECTORY
 cppcheck --enable=all --inconclusive --xml --xml-version=2 INPUT_DIRECTORY 2> cppcheck.xml
@@ -55,7 +55,7 @@ cppcheck --enable=all --inconclusive --xml --xml-version=2 INPUT_DIRECTORY 2> cp
 
 See the warning in the Console Output below. The invalid absolute path is missing `SUBDIRECTORY` between `workspace` and `INPUT_DIRECTORY` directories.
 
-```
+```sh
 [Cppcheck] Starting the cppcheck analysis.
 [Cppcheck] Processing 1 files with the pattern '**/cppcheck.xml'.
 [Cppcheck] [WARNING] - The source file 'file:/SHORTENED/work/jobs/JOB_NAME/workspace/INPUT_DIRECTORY/mainwindow.cpp'
@@ -65,7 +65,7 @@ doesn't exist on the slave. The ability to display its source code has been remo
 
 There are basically two solutions for this issue. The first one is to execute the Cppcheck analysis directly from the workspace root directory to make `SUBDIRECTORY` part of the path.
 
-```
+```sh
 # In the workspace root directory
 # cd SUBDIRECTORY
 # cppcheck --enable=all --inconclusive --xml --xml-version=2 INPUT_DIRECTORY 2> cppcheck.xml
@@ -75,16 +75,16 @@ cppcheck --enable=all --inconclusive --xml --xml-version=2 SUBDIRECTORY/INPUT_DI
 
 But the above solution is not much suitable for larger projects that are using for example recursive GNU/Make based build scripts where the Cppcheck analysis is executed for each sub-project (sub-directory). It is better to modify the paths in the report files after they are created.
 
-```
+```sh
 # In the workspace root directory
 cd SUBDIRECTORY
 cppcheck --enable=all --inconclusive --xml --xml-version=2 INPUT_DIRECTORY 2> cppcheck.xml
 sed -i 's%\(<location file="\)%\1SUBDIRECTORY/%' cppcheck.xml
 ```
 
-The `sed` command above adds "`SUBDIRECTORY/`" to the beginning of the paths in the `location` elements. Note this method is not limited only to `sed`, you can use whatever tool that is able to replace string in a file.
+The `sed` command above adds `SUBDIRECTORY/` to the beginning of the paths in the `location` elements. Note this method is not limited only to `sed`, you can use whatever tool that is able to replace string in a file.
 
-```
+```sh
 <location file="INPUT_DIRECTORY/mainwindow.cpp" line="1134"/>
 <location file="SUBDIRECTORY/INPUT_DIRECTORY/mainwindow.cpp" line="1134"/>
 ```
@@ -105,7 +105,7 @@ Data
 
 Example of XML data:
 
-```
+```xml
 <cppcheckStatistics>
     <numberErrorSeverity>0</numberErrorSeverity>
     <numberInformationSeverity>7</numberInformationSeverity>
@@ -120,8 +120,7 @@ Example of XML data:
 
 Example of JSON data:
 
-```
-
+```json
 {
     "numberErrorSeverity" : 0,
     "numberInformationSeverity" : 7,
