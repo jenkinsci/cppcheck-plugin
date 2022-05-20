@@ -22,7 +22,7 @@ Please use the [Mailing Lists](https://www.jenkins.io/mailing-lists/) or [issue 
 
 # Usage
 
-- Install [Cppcheck](http://cppcheck.sourceforge.net/) tool to the system. If you use master Jenkins server and several build slaves, install it to all slaves that will run the analysis.
+- Install [Cppcheck](https://cppcheck.sourceforge.io/) tool to the system. If you use master Jenkins server and several build slaves, install it to all slaves that will run the analysis.
 - For each job configuration page:
     - Add **Execute shell** build step to generate Cppcheck report or create the report file in your build scripts (Ant, Maven, Make, ...).
     - Activate **Publish Cppcheck results** in **Post-build Actions** and provide at least the path to the generated Cppcheck report (cppcheck.xml).
@@ -136,5 +136,4 @@ Example of JSON data:
 
 # Known Issues
 
-[View these issues in
-Jira](https://issues.jenkins.io/secure/IssueNavigator.jspa?reset=true&jqlQuery=project%20=%20JENKINS%20AND%20status%20in%20%28Open,%20%22In%20Progress%22,%20Reopened%29%20AND%20component%20=%20%27cppcheck-plugin%27&tempMax=1000&src=confmacro)
+[View these issues in Jira](https://issues.jenkins.io/browse/?jql=project+%3D+JENKINS+AND+status+in+%28Open%2C+%22In+Progress%22%2C+Reopened%29+AND+component+%3D+%27cppcheck-plugin%27)
