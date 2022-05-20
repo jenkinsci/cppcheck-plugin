@@ -56,11 +56,18 @@ public class CppcheckParser implements Serializable {
         CppcheckReport report;
         AtomicReference<JAXBContext> jc = new AtomicReference<JAXBContext>();
         try {
-            jc.set(JAXBContext.newInstance(
-                    org.jenkinsci.plugins.cppcheck.model.Error.class,
-                    org.jenkinsci.plugins.cppcheck.model.Errors.class,
-                    org.jenkinsci.plugins.cppcheck.model.Cppcheck.class,
-                    org.jenkinsci.plugins.cppcheck.model.Results.class));
+            Thread t = Thread.currentThread();
+            ClassLoader orig = t.getContextClassLoader();
+            t.setContextClassLoader(CppcheckParser.class.getClassLoader());
+            try {
+                jc.set(JAXBContext.newInstance(
+                        org.jenkinsci.plugins.cppcheck.model.Error.class,
+                        org.jenkinsci.plugins.cppcheck.model.Errors.class,
+                        org.jenkinsci.plugins.cppcheck.model.Cppcheck.class,
+                        org.jenkinsci.plugins.cppcheck.model.Results.class));
+            } finally {
+                t.setContextClassLoader(orig);
+            }
             Unmarshaller unmarshaller = jc.get().createUnmarshaller();
             org.jenkinsci.plugins.cppcheck.model.Results results = (org.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
             if (results.getCppcheck() == null) {
@@ -69,7 +76,14 @@ public class CppcheckParser implements Serializable {
             report = getReportVersion2(results);
         } catch (JAXBException jxe) {
             try {
-                jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class));
+                Thread t = Thread.currentThread();
+                ClassLoader orig = t.getContextClassLoader();
+                t.setContextClassLoader(CppcheckParser.class.getClassLoader());
+                try {
+                    jc.set(JAXBContext.newInstance(com.thalesgroup.jenkinsci.plugins.cppcheck.model.Error.class, com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results.class));
+                } finally {
+                    t.setContextClassLoader(orig);
+                }
                 Unmarshaller unmarshaller = jc.get().createUnmarshaller();
                 com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results results = (com.thalesgroup.jenkinsci.plugins.cppcheck.model.Results) unmarshaller.unmarshal(file);
                 report = getReportVersion1(results);
