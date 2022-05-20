@@ -105,7 +105,7 @@ public class CppcheckWorkspaceFile implements Serializable {
 
     public String getTempName(final Run<?, ?> owner) {
         if (fileName != null) {
-            return owner.getParent().getRootDir().getAbsolutePath() + "/"
+            return owner.getRootDir().getAbsolutePath() + "/"
                     + DIR_WORKSPACE_FILES + "/"
                     + Integer.toHexString(fileName.hashCode()) + ".tmp";
         }
