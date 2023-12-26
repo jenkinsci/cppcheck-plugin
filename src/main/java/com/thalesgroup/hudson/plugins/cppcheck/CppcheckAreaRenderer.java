@@ -84,7 +84,7 @@ public class CppcheckAreaRenderer extends StackedAreaRenderer2 {
         }
         CppcheckAreaRenderer that = (CppcheckAreaRenderer) obj;
 
-        if (this.url != that.url) {
+        if (this.url.equals(that.url)) {
             return false;
         }
         return super.equals(obj);
