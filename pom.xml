@@ -4,7 +4,8 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.42</version>
+        <version>4.76</version>
+        <relativePath />
     </parent>
 
     <artifactId>cppcheck</artifactId>
@@ -48,7 +49,7 @@
     <properties>
         <revision>1.27</revision>
         <changelist>-SNAPSHOT</changelist>
-        <jenkins.version>2.332.1</jenkins.version>
+        <jenkins.version>2.401.3 </jenkins.version>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     </properties>
 
@@ -70,8 +71,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.332.x</artifactId>
-                <version>1466.v85a_616ea_b_87c</version>
+                <artifactId>bom-2.401.x</artifactId>
+                <version>2675.v1515e14da_7a_6</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
