@@ -32,8 +32,8 @@ import de.java2html.options.JavaSourceConversionOptions;
 import hudson.model.Run;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.io.*;
@@ -185,7 +185,7 @@ public class CppcheckSource implements Serializable {
      * @param message the message to write
      */
     private void outputEscaped(final StringBuilder output, final String message) {
-        output.append(StringEscapeUtils.escapeHtml(message));
+        output.append(StringEscapeUtils.escapeHtml4(message));
     }
 
     /**

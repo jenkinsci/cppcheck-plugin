@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 
@@ -133,7 +133,7 @@ public class CppcheckSourceAll {
                 builder.append("<span class=\"lineNumber\">");
                 builder.append(String.format(numberFormat, current));
                 builder.append("</span> ");// The space separates line number and code
-                builder.append(StringEscapeUtils.escapeHtml(line));
+                builder.append(StringEscapeUtils.escapeHtml4(line));
                 builder.append("</div>\n");
             }
 

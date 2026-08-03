@@ -25,7 +25,7 @@ package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.ModelObject;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
@@ -114,7 +114,7 @@ public class CppcheckFile implements ModelObject, Serializable {
     }
     
     public String getMessageHtml() {
-        return StringEscapeUtils.escapeHtml(message);
+        return StringEscapeUtils.escapeHtml4(message);
     }
 
     public void setMessage(String message) {
@@ -145,7 +145,7 @@ public class CppcheckFile implements ModelObject, Serializable {
     }
     
     public String getVerboseHtml() {
-        return StringEscapeUtils.escapeHtml(verbose);
+        return StringEscapeUtils.escapeHtml4(verbose);
     }
 
     public void setVerbose(String verbose) {

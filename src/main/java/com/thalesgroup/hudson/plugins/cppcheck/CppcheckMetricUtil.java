@@ -1,7 +1,7 @@
 package com.thalesgroup.hudson.plugins.cppcheck;
 
 import com.thalesgroup.hudson.plugins.cppcheck.config.CppcheckConfig;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class CppcheckMetricUtil {
 
