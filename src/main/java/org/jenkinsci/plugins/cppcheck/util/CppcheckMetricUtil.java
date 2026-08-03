@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.cppcheck.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Gregory Boissinot

@@ -25,7 +25,7 @@ package com.thalesgroup.hudson.plugins.cppcheck.model;
 
 import hudson.model.Run;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.cppcheck.CppcheckDiffState;
 
 import java.io.File;

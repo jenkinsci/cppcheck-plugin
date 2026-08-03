@@ -70,7 +70,7 @@ public class CppcheckParserResult implements FilePath.FileCallable<CppcheckRepor
                 mergeReport(cppcheckReportResult, cppcheckReport);
             }
         } catch (Exception e) {
-            String stack_trace = org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(e);
+            String stack_trace = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
             CppcheckLogger.log(listener, "Parsing throws exceptions. " + e.getMessage());
             CppcheckLogger.log(listener, stack_trace);
             return null;

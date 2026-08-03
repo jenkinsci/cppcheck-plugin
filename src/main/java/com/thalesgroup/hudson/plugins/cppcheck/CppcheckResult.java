@@ -29,7 +29,7 @@ import com.thalesgroup.hudson.plugins.cppcheck.model.CppcheckWorkspaceFile;
 import hudson.model.AbstractBuild;
 import hudson.model.Api;
 import hudson.model.Item;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
